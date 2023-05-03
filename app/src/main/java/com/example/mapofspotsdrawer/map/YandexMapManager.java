@@ -4,6 +4,7 @@ import com.example.mapofspotsdrawer.model.Placemark;
 import com.yandex.mapkit.Animation;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.CameraPosition;
+import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.mapview.MapView;
 
 import java.util.List;
@@ -32,8 +33,16 @@ public class YandexMapManager implements IMapManager{
         mapView.getMap().setRotateGesturesEnabled(true);
     }
 
+    private void addPlacemark(Placemark placemarkInfo) {
+        PlacemarkMapObject placemark =
+                mapView.getMap().getMapObjects().addPlacemark(placemarkInfo.getPosition());
+        placemark.setText(placemarkInfo.getLabelText());
+    }
+
     @Override
     public void addPlacemarks(List<Placemark> placemarkInfos) {
-
+        for (Placemark placemark : placemarkInfos) {
+            addPlacemark(placemark);
+        }
     }
 }
