@@ -1,4 +1,4 @@
-package com.example.mapofspotsdrawer.ui.AllSpots;
+package com.example.mapofspotsdrawer.ui.all_spots;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

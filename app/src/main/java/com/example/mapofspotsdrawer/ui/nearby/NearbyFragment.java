@@ -1,23 +1,33 @@
-package com.example.mapofspotsdrawer.ui.AllSpots;
+package com.example.mapofspotsdrawer.ui.nearby;
+
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
-import com.example.mapofspotsdrawer.databinding.FragmentAllSpotsBinding;
+import com.example.mapofspotsdrawer.R;
+import com.example.mapofspotsdrawer.databinding.FragmentFavoriteBinding;
+import com.example.mapofspotsdrawer.databinding.FragmentNearbyBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
+import com.example.mapofspotsdrawer.ui.favorite.FavoriteViewModel;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 
-public class AllSpotsFragment extends Fragment {
+public class NearbyFragment extends Fragment {
 
-    private FragmentAllSpotsBinding binding;
+    private FragmentNearbyBinding binding;
+    private NearbyViewModel mViewModel;
+
+    public static NearbyFragment newInstance() {
+        return new NearbyFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,12 +35,13 @@ public class AllSpotsFragment extends Fragment {
         MapKitFactory.initialize(this.requireContext());
     }
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        AllSpotsViewModel allSpotsViewModel =
-                new ViewModelProvider(this).get(AllSpotsViewModel.class);
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        NearbyViewModel favoriteViewModel =
+                new ViewModelProvider(this).get(NearbyViewModel.class);
 
-        binding = FragmentAllSpotsBinding.inflate(inflater, container, false);
+        binding = FragmentNearbyBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         YandexMapManager.getInstance().setMapView(binding.mapview);
