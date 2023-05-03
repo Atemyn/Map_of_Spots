@@ -50,7 +50,7 @@ public class AllSpotsFragment extends Fragment {
         MapKitFactory.getInstance().onStart();
         binding.mapview.onStart();
         YandexMapManager mapManager = YandexMapManager.getInstance();
-
+        // TODO Переделать, чтобы состояние сохранялось при повороте экрана.
         mapManager.moveMapTo(new Point(55.751574, 37.573856), 5.0f);
     }
 

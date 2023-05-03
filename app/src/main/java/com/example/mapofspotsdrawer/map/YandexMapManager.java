@@ -21,6 +21,7 @@ public class YandexMapManager implements IMapManager{
 
     public void setMapView(MapView mapView) {
         this.mapView = mapView;
+        mapView.getMap().setRotateGesturesEnabled(true);
     }
 
     public void setApiKey(String apiKey) {
@@ -40,7 +41,6 @@ public class YandexMapManager implements IMapManager{
                 new CameraPosition(position, zoom, 0.0f, 0.0f),
                 new Animation(Animation.Type.SMOOTH, 1),
                 null);
-        mapView.getMap().setRotateGesturesEnabled(true);
     }
 
     private void addPlacemark(Placemark placemarkInfo) {
