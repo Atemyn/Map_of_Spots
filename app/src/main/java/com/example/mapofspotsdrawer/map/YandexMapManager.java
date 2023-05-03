@@ -2,6 +2,7 @@ package com.example.mapofspotsdrawer.map;
 
 import com.example.mapofspotsdrawer.model.Placemark;
 import com.yandex.mapkit.Animation;
+import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.CameraPosition;
 import com.yandex.mapkit.map.PlacemarkMapObject;
@@ -13,6 +14,8 @@ public class YandexMapManager implements IMapManager{
     private static final YandexMapManager instance = new YandexMapManager();
     private MapView mapView = null;
 
+    private String apiKey = null;
+
     private YandexMapManager() {
     }
 
@@ -20,12 +23,19 @@ public class YandexMapManager implements IMapManager{
         this.mapView = mapView;
     }
 
-    public YandexMapManager getInstance() {
+    public void setApiKey(String apiKey) {
+        if (this.apiKey == null) {
+            this.apiKey = apiKey;
+            MapKitFactory.setApiKey(apiKey);
+        }
+    }
+
+    public static YandexMapManager getInstance() {
         return instance;
     }
 
     @Override
-    public void initMap(Point position, float zoom) {
+    public void moveMapTo(Point position, float zoom) {
         mapView.getMap().move(
                 new CameraPosition(position, zoom, 0.0f, 0.0f),
                 new Animation(Animation.Type.SMOOTH, 1),

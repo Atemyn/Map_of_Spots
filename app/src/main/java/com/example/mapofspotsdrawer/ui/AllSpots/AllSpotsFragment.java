@@ -11,10 +11,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mapofspotsdrawer.databinding.FragmentAllSpotsBinding;
+import com.example.mapofspotsdrawer.map.YandexMapManager;
+import com.yandex.mapkit.MapKitFactory;
+import com.yandex.mapkit.geometry.Point;
 
 public class AllSpotsFragment extends Fragment {
 
     private FragmentAllSpotsBinding binding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MapKitFactory.initialize(this.requireContext());
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -24,7 +33,25 @@ public class AllSpotsFragment extends Fragment {
         binding = FragmentAllSpotsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        YandexMapManager.getInstance().setMapView(binding.mapview);
         return root;
+    }
+
+    @Override
+    public void onStop() {
+        binding.mapview.onStop();
+        MapKitFactory.getInstance().onStop();
+        super.onStop();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        MapKitFactory.getInstance().onStart();
+        binding.mapview.onStart();
+        YandexMapManager mapManager = YandexMapManager.getInstance();
+
+        mapManager.moveMapTo(new Point(55.751574, 37.573856), 5.0f);
     }
 
     @Override
