@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.mapofspotsdrawer.ui.AllSpots.AllSpotsFragment"
+        android:label="@string/menu_all_spots"
+        tools:layout="@layout/fragment_all_spots" />
+
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.example.mapofspotsdrawer.ui.favorite.FavoriteFragment"
+        android:label="@string/menu_favorite"
+        tools:layout="@layout/fragment_favorite" />
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.example.mapofspotsdrawer.ui.profile.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
+</navigation>

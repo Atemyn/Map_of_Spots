@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">MapOfSpotsDrawer</string>
+    <string name="navigation_drawer_open">Открыть меню</string>
+    <string name="navigation_drawer_close">Закрыть меню</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_all_spots">Все споты</string>
+    <string name="menu_favorite">Избранное</string>
+    <string name="menu_profile">Профиль</string>
+
+    <string name="title_favorite">Избранные</string>
+    <string name="title_spots">Все споты</string>
+    <string name="title_profile">Профиль</string>
+    <string name="mapkit_api_key"
+        tools:ignore="TypographyDashes">7f04d30b-f7d6-4c8b-b90b-e088d4999767</string>
+    <string name="menu_text">Меню</string>
+</resources>
