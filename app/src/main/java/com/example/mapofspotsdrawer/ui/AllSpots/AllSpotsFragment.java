@@ -24,8 +24,6 @@ public class AllSpotsFragment extends Fragment {
         binding = FragmentAllSpotsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textAllSpots;
-        allSpotsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
