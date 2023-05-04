@@ -12,6 +12,7 @@
     <string name="menu_profile">Профиль</string>
     <string name="menu_nearby">Поблизости</string>
     <string name="menu_settings">Настройки</string>
+    <string name="menu_about">О приложении</string>
 
     <string name="title_favorite">Избранные</string>
     <string name="title_spots">Все споты</string>
