@@ -26,6 +26,11 @@
     <fragment
         android:id="@+id/nav_nearby"
         android:name="com.example.mapofspotsdrawer.ui.nearby.NearbyFragment"
-        android:label="@string/menu_profile"
+        android:label="@string/menu_nearby"
         tools:layout="@layout/fragment_nearby" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.example.mapofspotsdrawer.ui.settings.SettingsFragment"
+        android:label="@string/menu_settings" />
 </navigation>

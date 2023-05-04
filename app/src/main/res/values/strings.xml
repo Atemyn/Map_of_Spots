@@ -8,13 +8,28 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_all_spots">Все споты</string>
-    <string name="menu_favorite">Избранное</string>
+    <string name="menu_favorite">Избранные</string>
     <string name="menu_profile">Профиль</string>
+    <string name="menu_nearby">Поблизости</string>
+    <string name="menu_settings">Настройки</string>
 
     <string name="title_favorite">Избранные</string>
     <string name="title_spots">Все споты</string>
     <string name="title_profile">Профиль</string>
-    <string name="mapkit_api_key"
-        tools:ignore="TypographyDashes">7f04d30b-f7d6-4c8b-b90b-e088d4999767</string>
+    <string name="mapkit_api_key" tools:ignore="TypographyDashes">7f04d30b-f7d6-4c8b-b90b-e088d4999767</string>
     <string name="menu_text">Меню</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>
