@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.example.mapofspotsdrawer.databinding.FragmentCreateSpotBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
-import com.example.mapofspotsdrawer.ui.favorite.FavoriteViewModel;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 

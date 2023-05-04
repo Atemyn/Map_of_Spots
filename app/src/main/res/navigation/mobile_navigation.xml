@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_all_spots" />
 
     <fragment
+        android:id="@+id/nav_create_spot"
+        android:name="com.example.mapofspotsdrawer.ui.create_spot.CreateSpotFragment"
+        android:label="@string/menu_create_spot"
+        tools:layout="@layout/fragment_create_spot" />
+
+    <fragment
         android:id="@+id/nav_favorite"
         android:name="com.example.mapofspotsdrawer.ui.favorite.FavoriteFragment"
         android:label="@string/menu_favorite"

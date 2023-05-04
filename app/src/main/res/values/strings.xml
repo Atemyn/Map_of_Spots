@@ -8,6 +8,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_all_spots">Все споты</string>
+    <string name="menu_create_spot">Добавить спот</string>
     <string name="menu_favorite">Избранные</string>
     <string name="menu_profile">Профиль</string>
     <string name="menu_nearby">Поблизости</string>

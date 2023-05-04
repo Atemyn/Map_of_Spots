@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_all_spots"
             android:title="@string/menu_all_spots" />
         <item
+            android:id="@+id/nav_create_spot"
+            android:icon="@drawable/ic_create_spot"
+            android:title="@string/menu_create_spot" />
+        <item
             android:id="@+id/nav_favorite"
             android:icon="@drawable/ic_favorite"
             android:title="@string/menu_favorite" />
