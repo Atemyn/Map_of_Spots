@@ -12,11 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.mapofspotsdrawer.R;
-import com.example.mapofspotsdrawer.databinding.FragmentFavoriteBinding;
 import com.example.mapofspotsdrawer.databinding.FragmentNearbyBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
-import com.example.mapofspotsdrawer.ui.favorite.FavoriteViewModel;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 

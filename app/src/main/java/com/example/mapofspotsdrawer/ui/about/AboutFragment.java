@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.mapofspotsdrawer.databinding.FragmentAboutBinding;
-import com.example.mapofspotsdrawer.ui.profile.ProfileViewModel;
 
 public class AboutFragment extends Fragment {
 
