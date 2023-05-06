@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.example.mapofspotsdrawer.databinding.FragmentRegisterBinding;
+import com.example.mapofspotsdrawer.ui.auth.validation.BirthDateTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.EmailTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.NameTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.PasswordTextWatcher;
@@ -42,6 +43,7 @@ public class RegisterFragment extends Fragment {
         binding.etName.addTextChangedListener(new NameTextWatcher(binding.etName));
         binding.etEmail.addTextChangedListener(new EmailTextWatcher(binding.etEmail));
         binding.etPhoneNumber.addTextChangedListener(new PhoneNumberTextWatcher(binding.etPhoneNumber));
+        binding.etBirthDate.addTextChangedListener(new BirthDateTextWatcher(binding.etBirthDate));
         binding.etPassword.addTextChangedListener(new PasswordTextWatcher(binding.etPassword));
         binding.etRepassword.addTextChangedListener(new PasswordTextWatcher(binding.etRepassword));
         View.OnClickListener editTextOnClickListener = new View.OnClickListener() {
