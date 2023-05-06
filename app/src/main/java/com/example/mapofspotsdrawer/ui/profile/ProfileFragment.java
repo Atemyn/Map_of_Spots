@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentProfileBinding;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
-import com.example.mapofspotsdrawer.ui.auth.login.LoginFragment;
 
 public class ProfileFragment extends Fragment {
 
