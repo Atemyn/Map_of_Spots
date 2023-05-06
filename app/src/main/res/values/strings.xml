@@ -48,4 +48,6 @@
     <string name="register_button_text">Зарегистрироваться</string>
     <string name="re_type_password">Пароль еще раз</string>
     <string name="your_name">Логин</string>
+
+    <string name="server_url">185.249.227.104:8080</string>
 </resources>
