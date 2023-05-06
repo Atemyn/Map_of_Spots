@@ -24,10 +24,9 @@ public class PasswordTextWatcher implements TextWatcher {
             et_password.setError("Введите пароль");
         } else if (password.length() < 6) {
             et_password.setError("Пароль должен быть длиной не менее 6 символов");
-        }
-        else if (password.length() > 50) {
+        } else if (password.length() > 50) {
             et_password.setError("Пароль должен быть длиной не более 50 символов");
-        }else {
+        } else {
             et_password.setError(null);
         }
     }

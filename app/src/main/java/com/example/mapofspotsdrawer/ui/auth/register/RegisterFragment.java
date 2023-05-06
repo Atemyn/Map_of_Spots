@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.example.mapofspotsdrawer.databinding.FragmentRegisterBinding;
+import com.example.mapofspotsdrawer.ui.auth.validation.EmailTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.NameTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.PasswordTextWatcher;
 
@@ -36,6 +37,7 @@ public class RegisterFragment extends Fragment {
 
         date = Calendar.getInstance();
 
+        binding.etEmail.addTextChangedListener(new EmailTextWatcher(binding.etEmail));
         binding.etName.addTextChangedListener(new NameTextWatcher(binding.etName));
         binding.etPassword.addTextChangedListener(new PasswordTextWatcher(binding.etPassword));
         binding.etRepassword.addTextChangedListener(new PasswordTextWatcher(binding.etRepassword));

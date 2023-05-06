@@ -20,15 +20,14 @@ public class NameTextWatcher implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        String password = et_name.getText().toString();
-        if (password.isEmpty())  {
+        String name = et_name.getText().toString();
+        if (name.isEmpty())  {
             et_name.setError("Введите логин");
-        } else if (password.length() < 2) {
+        } else if (name.length() < 2) {
             et_name.setError("Логин должен быть длиной не менее 2 символов");
-        }
-        else if (password.length() > 30) {
+        } else if (name.length() > 30) {
             et_name.setError("Логин должен быть длиной не более 30 символов");
-        }else {
+        } else {
             et_name.setError(null);
         }
     }

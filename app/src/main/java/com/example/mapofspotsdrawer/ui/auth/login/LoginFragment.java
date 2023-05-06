@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mapofspotsdrawer.databinding.FragmentLoginBinding;
+import com.example.mapofspotsdrawer.ui.auth.validation.EmailTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.PasswordTextWatcher;
 
 public class LoginFragment extends Fragment {
@@ -25,6 +26,7 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 
+        binding.etEmail.addTextChangedListener(new EmailTextWatcher(binding.etEmail));
         binding.etPassword.addTextChangedListener(new PasswordTextWatcher(binding.etPassword));
 
         return binding.getRoot();
