@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentProfileBinding;
+import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
 import com.example.mapofspotsdrawer.ui.auth.login.LoginFragment;
 
 public class ProfileFragment extends Fragment {
@@ -38,13 +39,14 @@ public class ProfileFragment extends Fragment {
     }
 
     private boolean isLoggedIn() {
+        // TODO Добавить проверку токена авторизации в SharedPreferences.
         // Проверка, авторизован ли пользователь
         return false;
     }
 
     public void showLoginFragment() {
         requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new LoginFragment())
+                .replace(R.id.fragment_container, new AuthFragment())
                 .commit();
     }
 
