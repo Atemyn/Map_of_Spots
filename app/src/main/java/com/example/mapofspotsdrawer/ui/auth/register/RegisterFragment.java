@@ -16,6 +16,7 @@ import com.example.mapofspotsdrawer.databinding.FragmentRegisterBinding;
 import com.example.mapofspotsdrawer.ui.auth.validation.EmailTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.NameTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.PasswordTextWatcher;
+import com.example.mapofspotsdrawer.ui.auth.validation.PhoneNumberTextWatcher;
 
 import java.util.Calendar;
 
@@ -37,8 +38,10 @@ public class RegisterFragment extends Fragment {
 
         date = Calendar.getInstance();
 
-        binding.etEmail.addTextChangedListener(new EmailTextWatcher(binding.etEmail));
+        // Установка TextWatcher'ов для валидации полей.
         binding.etName.addTextChangedListener(new NameTextWatcher(binding.etName));
+        binding.etEmail.addTextChangedListener(new EmailTextWatcher(binding.etEmail));
+        binding.etPhoneNumber.addTextChangedListener(new PhoneNumberTextWatcher(binding.etPhoneNumber));
         binding.etPassword.addTextChangedListener(new PasswordTextWatcher(binding.etPassword));
         binding.etRepassword.addTextChangedListener(new PasswordTextWatcher(binding.etRepassword));
         View.OnClickListener editTextOnClickListener = new View.OnClickListener() {

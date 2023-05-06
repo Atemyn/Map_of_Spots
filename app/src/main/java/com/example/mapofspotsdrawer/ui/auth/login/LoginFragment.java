@@ -26,6 +26,7 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 
+        // Установка TextWatcher'ов для валидации полей.
         binding.etEmail.addTextChangedListener(new EmailTextWatcher(binding.etEmail));
         binding.etPassword.addTextChangedListener(new PasswordTextWatcher(binding.etPassword));
 
