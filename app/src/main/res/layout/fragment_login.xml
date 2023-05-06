@@ -9,7 +9,7 @@
         android:id="@+id/login_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/login"
+        android:text="@string/login_title"
         android:textSize="50sp"
         android:fontFamily="@font/zing_rust"
         android:layout_marginStart="25dp"
@@ -62,7 +62,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="15dp"
         android:textColor="@android:color/white"
-        android:text="@string/login"/>
+        android:text="@string/login_button_text"/>
 
     <ImageView
         android:layout_width="30dp"

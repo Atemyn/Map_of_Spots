@@ -35,14 +35,17 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="swipe_left_for_register">Swipe Left for Register</string>
-    <string name="login">Login</string>
-    <string name="password">Password</string>
-    <string name="e_mail">Email</string>
-    <string name="tag">Let\'s join us and \nBuild your relationship with others</string>
-    <string name="swipe_right_for_login">Swipe Right for Login</string>
-    <string name="register">Register</string>
-    <string name="re_type_password">Re-type Password</string>
-    <string name="your_name">Full Name</string>
+    <string name="swipe_left_for_register">Проведите пальцем влево для регистрации</string>
+    <string name="login_title">Авторизация</string>
+    <string name="login_button_text">Войти</string>
+    <string name="password">Пароль</string>
+    <string name="e_mail">Адрес электронной почты</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="birth_date">Дата рождения</string>
+    <string name="tag">Присоединяйтесь и настройте\nприложение под себя</string>
+    <string name="swipe_right_for_login">Проведите пальцем вправо для авторизации</string>
+    <string name="register_title">Регистрация</string>
+    <string name="register_button_text">Зарегистрироваться</string>
+    <string name="re_type_password">Пароль еще раз</string>
+    <string name="your_name">Логин</string>
 </resources>

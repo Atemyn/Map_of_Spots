@@ -11,7 +11,7 @@
         android:id="@+id/register_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/register"
+        android:text="@string/register_title"
         android:textAlignment="center"
         android:textSize="50sp"
         android:layout_marginStart="25dp"
@@ -55,6 +55,34 @@
         android:autofillHints="emailAddress" />
 
     <EditText
+        android:id="@+id/et_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="@string/phone_number"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:padding="15dp"
+        android:inputType="phone"
+        android:textSize="15sp"
+        android:autofillHints="phone" />
+
+    <EditText
+        android:id="@+id/et_birth_date"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="@string/birth_date"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:padding="15dp"
+        android:focusableInTouchMode="false"
+        android:autofillHints="Дата начала периода"
+        android:inputType="date"
+        android:textSize="15sp" />
+
+
+    <EditText
         android:id="@+id/et_password"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -93,7 +121,7 @@
             android:layout_marginBottom="30dp"
             android:layout_centerInParent="true"
             android:textColor="@android:color/white"
-            android:text="@string/register"/>
+            android:text="@string/register_button_text"/>
 
         <ImageView
             android:layout_width="30dp"
