@@ -44,7 +44,7 @@ import retrofit2.Response;
 
 public class RegisterFragment extends Fragment {
 
-    FragmentRegisterBinding binding;
+    private FragmentRegisterBinding binding;
 
     private RetrofitService retrofitService;
     private Calendar date;

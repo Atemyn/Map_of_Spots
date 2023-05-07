@@ -10,12 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mapofspotsdrawer.databinding.FragmentLoginBinding;
+import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.auth.validation.EmailTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.PasswordTextWatcher;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class LoginFragment extends Fragment {
 
-    FragmentLoginBinding binding;
+    private FragmentLoginBinding binding;
+
+    private RetrofitService retrofitService;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -31,5 +37,13 @@ public class LoginFragment extends Fragment {
         binding.etPassword.addTextChangedListener(new PasswordTextWatcher(binding.etPassword));
 
         return binding.getRoot();
+    }
+
+    private JSONObject createJSONObject() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("email", binding.etEmail.getText().toString());
+        jsonObject.put("password", binding.etPassword.getText().toString());
+
+        return jsonObject;
     }
 }
