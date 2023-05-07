@@ -175,7 +175,13 @@ public class RegisterFragment extends Fragment {
 
         JsonElement jsonElement = new Gson().fromJson(responseBody, JsonElement.class);
         if (jsonElement.getAsJsonObject().get("jwtToken") == null) {
-            disableProgressBarAndShowNotification("Ошибка получения токена авторизации");
+            if (jsonElement.getAsJsonObject().get("userDTO") == null) {
+                disableProgressBarAndShowNotification("Ошибка получения токена авторизации");
+            }
+            else {
+                disableProgressBarAndShowNotification(
+                        jsonElement.getAsJsonObject().get("userDTO").getAsString());
+            }
             return null;
         }
         String jwtToken = jsonElement.getAsJsonObject().get("jwtToken").getAsString();
