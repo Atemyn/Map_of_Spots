@@ -103,9 +103,7 @@ public class RegisterFragment extends Fragment {
                 binding.etPassword, binding.etRepassword);
 
         if(!authValidator.isRegistrationDataValid()) {
-            requireActivity().runOnUiThread(() ->
-                    binding.progressBar.setVisibility(View.GONE));
-            Toast.makeText(getActivity(), "Введенные данные неверны", Toast.LENGTH_LONG).show();
+            disableProgressBarAndShowNotification("Введенные данные неверны");
             return;
         }
 
@@ -138,33 +136,22 @@ public class RegisterFragment extends Fragment {
 
 
                                 } catch (IOException e) {
-                                    requireActivity().runOnUiThread(() ->
-                                            binding.progressBar.setVisibility(View.GONE));
-                                    Toast.makeText(getActivity(),
-                                            "Ошибка получения тела ответа", Toast.LENGTH_LONG).show();
+                                    disableProgressBarAndShowNotification("Ошибка получения тела ответа");
                                 }
                             } else {
-                                requireActivity().runOnUiThread(() ->
-                                        binding.progressBar.setVisibility(View.GONE));
-                                Toast.makeText(getActivity(),
-                                        "Ошибка обработки запроса на сервере", Toast.LENGTH_LONG).show();
+                                disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
                             }
                         }
 
                         @Override
                         public void onFailure(@NonNull Call<ResponseBody> call,
                                               @NonNull Throwable t) {
-                            requireActivity().runOnUiThread(() ->
-                                    binding.progressBar.setVisibility(View.GONE));
-                            Toast.makeText(getActivity(),
-                                    "Ошибка отправки запроса на сервер", Toast.LENGTH_LONG).show();
+                            disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
                         }
                     });
         }
         catch (JSONException e) {
-            requireActivity().runOnUiThread(() ->
-                    binding.progressBar.setVisibility(View.GONE));
-            Toast.makeText(getActivity(), "Ошибка формирования запроса к серверу", Toast.LENGTH_LONG).show();
+            disableProgressBarAndShowNotification("Ошибка формирования запроса к серверу");
         }
     }
 
@@ -181,16 +168,14 @@ public class RegisterFragment extends Fragment {
 
     private String processResponseBody(Response<ResponseBody> response) throws IOException {
         if (response.body() == null) {
-            Toast.makeText(getActivity(),
-                    "Ошибка получения тела ответа", Toast.LENGTH_LONG).show();
+            disableProgressBarAndShowNotification("Ошибка получения тела ответа");
             return null;
         }
         String responseBody = response.body().string();
 
         JsonElement jsonElement = new Gson().fromJson(responseBody, JsonElement.class);
         if (jsonElement.getAsJsonObject().get("jwtToken") == null) {
-            Toast.makeText(getActivity(),
-                    "Ошибка получения токена авторизации", Toast.LENGTH_LONG).show();
+            disableProgressBarAndShowNotification("Ошибка получения токена авторизации");
             return null;
         }
         String jwtToken = jsonElement.getAsJsonObject().get("jwtToken").getAsString();
@@ -200,6 +185,13 @@ public class RegisterFragment extends Fragment {
                 .edit().putString("jwtToken", jwtToken).apply();
 
         return jwtToken;
+    }
+
+    private void disableProgressBarAndShowNotification(String message) {
+        requireActivity().runOnUiThread(() ->
+                binding.progressBar.setVisibility(View.GONE));
+        Toast.makeText(getActivity(),
+                message, Toast.LENGTH_LONG).show();
     }
 
     private void showProfileDataFragment() {
