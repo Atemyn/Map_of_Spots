@@ -53,6 +53,10 @@ public class LoginFragment extends Fragment {
         binding.etEmail.addTextChangedListener(new EmailTextWatcher(binding.etEmail));
         binding.etPassword.addTextChangedListener(new PasswordTextWatcher(binding.etPassword));
 
+        retrofitService = new RetrofitService(getString(R.string.server_url));
+
+        binding.btnLogin.setOnClickListener(view -> authorizeUser());
+
         return binding.getRoot();
     }
 
@@ -149,7 +153,7 @@ public class LoginFragment extends Fragment {
             }
             else {
                 Toast.makeText(getActivity(),
-                        "Пользователя с такими данными не существует",
+                        "Введенные данные неверны",
                         Toast.LENGTH_LONG).show();
             }
             return null;
