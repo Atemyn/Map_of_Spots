@@ -123,7 +123,7 @@ public class RegisterFragment extends Fragment {
                     RequestBody.create(MediaType.parse("application/json"),
                             createJSONObject().toString());
 
-            binding.progressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.VISIBLE);
 
             // Создание API для совершения запроса к серверу.
             AuthAPI authAPI = retrofitService.getRetrofit().create(AuthAPI.class);
