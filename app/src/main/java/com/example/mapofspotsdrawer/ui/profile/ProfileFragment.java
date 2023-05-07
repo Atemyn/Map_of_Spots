@@ -23,7 +23,7 @@ public class ProfileFragment extends Fragment {
         View root = binding.getRoot();
 
         if (isLoggedIn()) {
-            showProfileFragment();
+            showProfileDataFragment();
         } else {
             showLoginFragment();
         }
@@ -45,13 +45,13 @@ public class ProfileFragment extends Fragment {
 
     public void showLoginFragment() {
         requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new AuthFragment())
+                .replace(R.id.fragment_container, new AuthFragment(), "caller_fragment_tag")
                 .commit();
     }
 
-    public void showProfileFragment() {
+    public void showProfileDataFragment() {
         requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ProfileFragment())
+                .replace(R.id.fragment_container, new ProfileDataFragment())
                 .commit();
     }
 }

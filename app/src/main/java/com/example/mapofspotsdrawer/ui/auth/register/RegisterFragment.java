@@ -25,6 +25,7 @@ import com.example.mapofspotsdrawer.ui.auth.validation.EmailTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.NameTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.PasswordTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.PhoneNumberTextWatcher;
+import com.example.mapofspotsdrawer.ui.profile.ProfileDataFragment;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
@@ -32,7 +33,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -94,16 +98,7 @@ public class RegisterFragment extends Fragment {
         binding.btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.progressBar.setVisibility(View.VISIBLE);
                 registerUser();
-                binding.progressBar.setVisibility(View.GONE);
-
-                // Чтение jwtToken из SharedPreferences.
-                String jwtToken = PreferenceManager.getDefaultSharedPreferences(requireActivity())
-                        .getString("jwtToken", null);
-                if (jwtToken != null && !jwtToken.isEmpty()) {
-                    System.out.println("Ура");
-                }
             }
         });
 
@@ -116,6 +111,9 @@ public class RegisterFragment extends Fragment {
                 binding.etPassword, binding.etRepassword);
 
         if(!authValidator.isRegistrationDataValid()) {
+            requireActivity().runOnUiThread(() -> {
+                binding.progressBar.setVisibility(View.GONE);
+            });
             Toast.makeText(getActivity(), "Введенные данные неверны", Toast.LENGTH_LONG).show();
             return;
         }
@@ -124,6 +122,8 @@ public class RegisterFragment extends Fragment {
             RequestBody requestBody =
                     RequestBody.create(MediaType.parse("application/json"),
                             createJSONObject().toString());
+
+            binding.progressBar.setVisibility(View.GONE);
 
             // Создание API для совершения запроса к серверу.
             AuthAPI authAPI = retrofitService.getRetrofit().create(AuthAPI.class);
@@ -135,30 +135,28 @@ public class RegisterFragment extends Fragment {
                                                @NonNull Response<ResponseBody> response) {
                             if (response.isSuccessful()) {
                                 try {
-                                    if (response.body() == null) {
-                                        Toast.makeText(getActivity(),
-                                                "Ошибка получения тела ответа", Toast.LENGTH_LONG).show();
+                                    String jwtToken = processResponseBody(response);
+                                    if (jwtToken == null) {
                                         return;
                                     }
-                                    String responseBody = response.body().string();
 
-                                    JsonElement jsonElement = new Gson().fromJson(responseBody, JsonElement.class);
-                                    if (jsonElement.getAsJsonObject().get("jwtToken") == null) {
-                                        Toast.makeText(getActivity(),
-                                                "Ошибка получения токена авторизации", Toast.LENGTH_LONG).show();
-                                        return;
-                                    }
-                                    String jwtToken = jsonElement.getAsJsonObject().get("jwtToken").getAsString();
+                                    requireActivity().runOnUiThread(() -> {
+                                        binding.progressBar.setVisibility(View.GONE);
+                                        showProfileDataFragment();
+                                    });
 
-                                    // Запись jwtToken'а в SharedPreferences.
-                                    PreferenceManager.getDefaultSharedPreferences(requireActivity())
-                                            .edit().putString("jwtToken", jwtToken).apply();
 
                                 } catch (IOException e) {
+                                    requireActivity().runOnUiThread(() -> {
+                                        binding.progressBar.setVisibility(View.GONE);
+                                    });
                                     Toast.makeText(getActivity(),
                                             "Ошибка получения тела ответа", Toast.LENGTH_LONG).show();
                                 }
                             } else {
+                                requireActivity().runOnUiThread(() -> {
+                                    binding.progressBar.setVisibility(View.GONE);
+                                });
                                 Toast.makeText(getActivity(),
                                         "Ошибка обработки запроса на сервере", Toast.LENGTH_LONG).show();
                             }
@@ -167,11 +165,18 @@ public class RegisterFragment extends Fragment {
                         @Override
                         public void onFailure(@NonNull Call<ResponseBody> call,
                                               @NonNull Throwable t) {
-                            Toast.makeText(getActivity(), "Ошибка обращения к серверу", Toast.LENGTH_LONG).show();
+                            requireActivity().runOnUiThread(() -> {
+                                binding.progressBar.setVisibility(View.GONE);
+                            });
+                            Toast.makeText(getActivity(),
+                                    "Ошибка отправки запроса на сервер", Toast.LENGTH_LONG).show();
                         }
                     });
         }
         catch (JSONException e) {
+            requireActivity().runOnUiThread(() -> {
+                binding.progressBar.setVisibility(View.GONE);
+            });
             Toast.makeText(getActivity(), "Ошибка формирования запроса к серверу", Toast.LENGTH_LONG).show();
         }
     }
@@ -185,5 +190,34 @@ public class RegisterFragment extends Fragment {
         jsonObject.put("password", binding.etPassword.getText().toString());
 
         return jsonObject;
+    }
+
+    private String processResponseBody(Response<ResponseBody> response) throws IOException {
+        if (response.body() == null) {
+            Toast.makeText(getActivity(),
+                    "Ошибка получения тела ответа", Toast.LENGTH_LONG).show();
+            return null;
+        }
+        String responseBody = response.body().string();
+
+        JsonElement jsonElement = new Gson().fromJson(responseBody, JsonElement.class);
+        if (jsonElement.getAsJsonObject().get("jwtToken") == null) {
+            Toast.makeText(getActivity(),
+                    "Ошибка получения токена авторизации", Toast.LENGTH_LONG).show();
+            return null;
+        }
+        String jwtToken = jsonElement.getAsJsonObject().get("jwtToken").getAsString();
+
+        // Запись jwtToken'а в SharedPreferences.
+        PreferenceManager.getDefaultSharedPreferences(requireActivity())
+                .edit().putString("jwtToken", jwtToken).apply();
+
+        return jwtToken;
+    }
+
+    private void showProfileDataFragment() {
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new ProfileDataFragment())
+                .commit();
     }
 }
