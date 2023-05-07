@@ -50,4 +50,18 @@
     <string name="your_name">Логин</string>
 
     <string name="server_url">http://185.249.227.104:8080</string>
+    <string name="user_image">Фото пользователя</string>
+    <string name="iv_name_desc">Иконка имени</string>
+    <string name="iv_email_desc">Иконка для email</string>
+    <string name="iv_phone_number_desc">Иконка для номера телефона</string>
+    <string name="card_name_desc">Логин</string>
+    <string name="card_name">Логин отсутствует</string>
+    <string name="card_email_desc">Адрес электронной почты</string>
+    <string name="card_email">E-mail отсутствует</string>
+    <string name="card_phone_number_desc">Номер телефона</string>
+    <string name="card_phone_number">Номер телефона отсутствует</string>
+    <string name="card_birth_date_desc">Дата рождения</string>
+    <string name="card_birth_date">Дата рождения отсутствует</string>
+    <string name="card_registration_date_desc">Дата регистрации</string>
+    <string name="card_registration_date">Дата регистрации отсутствует</string>
 </resources>

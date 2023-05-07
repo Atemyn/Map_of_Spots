@@ -13,10 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mapofspotsdrawer.R;
+import com.example.mapofspotsdrawer.databinding.FragmentProfileDataBinding;
 
 public class ProfileDataFragment extends Fragment {
 
-    private ProfileDataViewModel mViewModel;
+    private FragmentProfileDataBinding binding;
 
     public static ProfileDataFragment newInstance() {
         return new ProfileDataFragment();
@@ -26,13 +27,6 @@ public class ProfileDataFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_profile_data, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(ProfileDataViewModel.class);
-        // TODO: Use the ViewModel
     }
 
 }
