@@ -67,6 +67,14 @@
         android:textSize="15sp"
         android:autofillHints="phone" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_marginStart="175dp"
+        android:visibility="gone"/>
+
     <EditText
         android:id="@+id/et_birth_date"
         android:layout_width="match_parent"
