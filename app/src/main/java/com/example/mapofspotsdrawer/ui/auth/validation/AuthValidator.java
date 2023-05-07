@@ -39,7 +39,7 @@ public class AuthValidator {
 
     }
 
-    public boolean validateRegistration() {
+    public boolean isRegistrationDataValid() {
         if (et_name == null || et_email == null ||
                 et_phone_number == null || et_birth_date == null ||
                 et_password == null || et_repassword == null) {
@@ -48,10 +48,11 @@ public class AuthValidator {
 
         return (isNameCorrect() && isEmailCorrect() && isPhoneNumberCorrect()
                 && isBirthDateCorrect() && isPasswordCorrect(this.et_password)
-                && isPasswordCorrect(this.et_repassword));
+                && isPasswordCorrect(this.et_repassword) &&
+                this.et_password.getText().toString().equals(this.et_repassword.getText().toString()));
     }
 
-    public boolean validateAuthorization() {
+    public boolean isAuthorizationDataValid() {
         if (et_email == null || et_password == null) {
             return false;
         }
