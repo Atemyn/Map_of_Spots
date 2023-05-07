@@ -33,10 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Semaphore;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -95,12 +92,7 @@ public class RegisterFragment extends Fragment {
 
         retrofitService = new RetrofitService(getString(R.string.server_url));
 
-        binding.btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                registerUser();
-            }
-        });
+        binding.btnRegister.setOnClickListener(view -> registerUser());
 
         return binding.getRoot();
     }
@@ -111,9 +103,8 @@ public class RegisterFragment extends Fragment {
                 binding.etPassword, binding.etRepassword);
 
         if(!authValidator.isRegistrationDataValid()) {
-            requireActivity().runOnUiThread(() -> {
-                binding.progressBar.setVisibility(View.GONE);
-            });
+            requireActivity().runOnUiThread(() ->
+                    binding.progressBar.setVisibility(View.GONE));
             Toast.makeText(getActivity(), "Введенные данные неверны", Toast.LENGTH_LONG).show();
             return;
         }
@@ -147,16 +138,14 @@ public class RegisterFragment extends Fragment {
 
 
                                 } catch (IOException e) {
-                                    requireActivity().runOnUiThread(() -> {
-                                        binding.progressBar.setVisibility(View.GONE);
-                                    });
+                                    requireActivity().runOnUiThread(() ->
+                                            binding.progressBar.setVisibility(View.GONE));
                                     Toast.makeText(getActivity(),
                                             "Ошибка получения тела ответа", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                requireActivity().runOnUiThread(() -> {
-                                    binding.progressBar.setVisibility(View.GONE);
-                                });
+                                requireActivity().runOnUiThread(() ->
+                                        binding.progressBar.setVisibility(View.GONE));
                                 Toast.makeText(getActivity(),
                                         "Ошибка обработки запроса на сервере", Toast.LENGTH_LONG).show();
                             }
@@ -165,18 +154,16 @@ public class RegisterFragment extends Fragment {
                         @Override
                         public void onFailure(@NonNull Call<ResponseBody> call,
                                               @NonNull Throwable t) {
-                            requireActivity().runOnUiThread(() -> {
-                                binding.progressBar.setVisibility(View.GONE);
-                            });
+                            requireActivity().runOnUiThread(() ->
+                                    binding.progressBar.setVisibility(View.GONE));
                             Toast.makeText(getActivity(),
                                     "Ошибка отправки запроса на сервер", Toast.LENGTH_LONG).show();
                         }
                     });
         }
         catch (JSONException e) {
-            requireActivity().runOnUiThread(() -> {
-                binding.progressBar.setVisibility(View.GONE);
-            });
+            requireActivity().runOnUiThread(() ->
+                    binding.progressBar.setVisibility(View.GONE));
             Toast.makeText(getActivity(), "Ошибка формирования запроса к серверу", Toast.LENGTH_LONG).show();
         }
     }
