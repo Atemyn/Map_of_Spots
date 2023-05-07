@@ -18,7 +18,7 @@ import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.AuthAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentRegisterBinding;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
-import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
+
 import com.example.mapofspotsdrawer.ui.auth.validation.AuthValidator;
 import com.example.mapofspotsdrawer.ui.auth.validation.BirthDateTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.EmailTextWatcher;
@@ -32,11 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
-import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -95,6 +91,22 @@ public class RegisterFragment extends Fragment {
 
         retrofitService = new RetrofitService(getString(R.string.server_url));
 
+        binding.btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.progressBar.setVisibility(View.VISIBLE);
+                registerUser();
+                binding.progressBar.setVisibility(View.GONE);
+
+                // Чтение jwtToken из SharedPreferences.
+                String jwtToken = PreferenceManager.getDefaultSharedPreferences(requireActivity())
+                        .getString("jwtToken", null);
+                if (jwtToken != null && !jwtToken.isEmpty()) {
+                    System.out.println("Ура");
+                }
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -131,6 +143,11 @@ public class RegisterFragment extends Fragment {
                                     String responseBody = response.body().string();
 
                                     JsonElement jsonElement = new Gson().fromJson(responseBody, JsonElement.class);
+                                    if (jsonElement.getAsJsonObject().get("jwtToken") == null) {
+                                        Toast.makeText(getActivity(),
+                                                "Ошибка получения токена авторизации", Toast.LENGTH_LONG).show();
+                                        return;
+                                    }
                                     String jwtToken = jsonElement.getAsJsonObject().get("jwtToken").getAsString();
 
                                     // Запись jwtToken'а в SharedPreferences.
