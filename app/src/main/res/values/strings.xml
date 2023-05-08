@@ -64,4 +64,5 @@
     <string name="card_birth_date">Дата рождения отсутствует</string>
     <string name="card_registration_date_desc">Дата регистрации</string>
     <string name="card_registration_date">Дата регистрации отсутствует</string>
+    <string name="btn_sign_out">Выйти из учетной записи</string>
 </resources>
