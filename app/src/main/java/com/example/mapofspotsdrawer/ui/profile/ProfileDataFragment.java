@@ -12,8 +12,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mapofspotsdrawer.R;
+import com.example.mapofspotsdrawer.api.AuthAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentProfileDataBinding;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
+import com.example.mapofspotsdrawer.ui.auth.validation.AuthValidator;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProfileDataFragment extends Fragment {
 
