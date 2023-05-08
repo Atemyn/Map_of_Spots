@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentProfileBinding;
@@ -38,9 +39,11 @@ public class ProfileFragment extends Fragment {
     }
 
     private boolean isLoggedIn() {
-        // TODO Добавить проверку токена авторизации в SharedPreferences.
+        // TODO: Добавить сравнение токена из SharedPreferences и с сервера.
         // Проверка, авторизован ли пользователь
-        return false;
+        String token = PreferenceManager.getDefaultSharedPreferences(requireActivity())
+                .getString("jwtToken", null);
+        return token != null && !token.isEmpty();
     }
 
     public void showLoginFragment() {
