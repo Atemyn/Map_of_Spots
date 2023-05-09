@@ -13,22 +13,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.mapofspotsdrawer.R;
-import com.example.mapofspotsdrawer.api.AuthAPI;
 import com.example.mapofspotsdrawer.api.UserAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentProfileDataBinding;
 import com.example.mapofspotsdrawer.model.User;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
-import com.example.mapofspotsdrawer.ui.auth.validation.AuthValidator;
-
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.time.LocalDate;
-
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -118,14 +107,17 @@ public class ProfileDataFragment extends Fragment {
             binding.tvPhoneNumber.setText(phone);
         }
 
-        String birthday = user.getBirthday();
-        if (birthday != null) {
-            binding.tvBirthDate.setText(birthday);
+        if (user.getBirthday() != null) {
+            String[] birthday = user.getBirthday().split("-");
+            String correctFormatBirthday = birthday[2] + "." + birthday[1] + "." + birthday[0];
+            binding.tvBirthDate.setText(correctFormatBirthday);
         }
 
-        String registrationDate = user.getRegistrationDate();
-        if (registrationDate != null) {
-            binding.tvRegistrationDate.setText(registrationDate);
+        if (user.getRegistrationDate() != null) {
+            String[] registrationDate = user.getRegistrationDate().split("-");
+            String correctFormatRegistrationDate = registrationDate[2]
+                    + "." + registrationDate[1] + "." + registrationDate[0];
+            binding.tvRegistrationDate.setText(correctFormatRegistrationDate);
         }
     }
 
