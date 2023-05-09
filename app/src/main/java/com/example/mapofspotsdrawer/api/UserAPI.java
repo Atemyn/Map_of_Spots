@@ -8,5 +8,5 @@ import retrofit2.http.Header;
 
 public interface UserAPI {
     @GET("api/get-user-info")
-    Call<User> getData(@Header("Authorization") String jwtToken);
+    Call<User> getUserInfo(@Header("Authorization") String jwtToken);
 }
