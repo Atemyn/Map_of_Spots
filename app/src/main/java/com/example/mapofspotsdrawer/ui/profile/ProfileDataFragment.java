@@ -1,6 +1,5 @@
 package com.example.mapofspotsdrawer.ui.profile;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,7 +13,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mapofspotsdrawer.R;
@@ -27,7 +25,6 @@ import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import java.util.function.Function;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,10 +37,6 @@ public class ProfileDataFragment extends Fragment {
     private ProfileDataViewModel profileDataViewModel;
 
     private RetrofitService retrofitService;
-
-    public static ProfileDataFragment newInstance() {
-        return new ProfileDataFragment();
-    }
 
 
     @Override
@@ -213,9 +206,8 @@ public class ProfileDataFragment extends Fragment {
                             }
 
                             setUserInfoTextViews(user);
-                            requireActivity().runOnUiThread(() -> {
-                                binding.progressBar.setVisibility(View.GONE);
-                            });
+                            requireActivity().runOnUiThread(()
+                                    -> binding.progressBar.setVisibility(View.GONE));
                         }
                         else {
                             disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
