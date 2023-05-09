@@ -18,6 +18,11 @@ import com.example.mapofspotsdrawer.databinding.FragmentProfileDataBinding;
 import com.example.mapofspotsdrawer.model.User;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -107,17 +112,17 @@ public class ProfileDataFragment extends Fragment {
             binding.tvPhoneNumber.setText(phone);
         }
 
+        DateTimeFormatter formatter
+                = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault());
+
         if (user.getBirthday() != null) {
-            String[] birthday = user.getBirthday().split("-");
-            String correctFormatBirthday = birthday[2] + "." + birthday[1] + "." + birthday[0];
-            binding.tvBirthDate.setText(correctFormatBirthday);
+            LocalDate birthday = LocalDate.parse(user.getBirthday());
+            binding.tvBirthDate.setText(birthday.format(formatter));
         }
 
         if (user.getRegistrationDate() != null) {
-            String[] registrationDate = user.getRegistrationDate().split("-");
-            String correctFormatRegistrationDate = registrationDate[2]
-                    + "." + registrationDate[1] + "." + registrationDate[0];
-            binding.tvRegistrationDate.setText(correctFormatRegistrationDate);
+            LocalDate registrationDate = LocalDate.parse(user.getRegistrationDate());
+            binding.tvRegistrationDate.setText(registrationDate.format(formatter));
         }
     }
 
