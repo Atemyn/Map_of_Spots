@@ -8,8 +8,8 @@ public class ProfileDataViewModel extends ViewModel {
     private String name;
     private String email;
     private String phone;
-    private LocalDate birthday;
-    private LocalDate registrationDate;
+    private String birthday;
+    private String registrationDate;
 
     public String getName() {
         return name;
@@ -35,19 +35,19 @@ public class ProfileDataViewModel extends ViewModel {
         this.phone = phone;
     }
 
-    public LocalDate getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
-    public LocalDate getRegistrationDate() {
+    public String getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(LocalDate registrationDate) {
+    public void setRegistrationDate(String registrationDate) {
         this.registrationDate = registrationDate;
     }
 }
