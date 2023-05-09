@@ -10,16 +10,21 @@ import androidx.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.AuthAPI;
+import com.example.mapofspotsdrawer.api.UserAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentProfileDataBinding;
+import com.example.mapofspotsdrawer.model.User;
+import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
 import com.example.mapofspotsdrawer.ui.auth.validation.AuthValidator;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -31,6 +36,8 @@ import retrofit2.Response;
 public class ProfileDataFragment extends Fragment {
 
     private FragmentProfileDataBinding binding;
+
+    private RetrofitService retrofitService;
 
     public static ProfileDataFragment newInstance() {
         return new ProfileDataFragment();
@@ -48,7 +55,85 @@ public class ProfileDataFragment extends Fragment {
             showLoginFragment();
         });
 
+        retrofitService = new RetrofitService(getString(R.string.server_url));
+
+        getUserInfo();
+
         return binding.getRoot();
+    }
+
+    private void getUserInfo() {
+
+        String bearer = "Bearer " + PreferenceManager.getDefaultSharedPreferences(requireActivity())
+                .getString("jwtToken", null);
+
+        binding.progressBar.setVisibility(View.VISIBLE);
+
+        // Создание API для совершения запроса к серверу.
+        UserAPI userAPI = retrofitService.getRetrofit().create(UserAPI.class);
+
+        userAPI.getUserInfo(bearer)
+                .enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(@NonNull Call<User> call,
+                                           @NonNull Response<User> response) {
+                        if (response.isSuccessful()) {
+                            User user = response.body();
+                            if (user == null) {
+                                disableProgressBarAndShowNotification("Ошибка получения тела ответа");
+                                return;
+                            }
+
+                            setUserInfoTextViews(user);
+                            requireActivity().runOnUiThread(() -> {
+                                binding.progressBar.setVisibility(View.GONE);
+                            });
+                        }
+                        else {
+                            disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<User> call,
+                                          @NonNull Throwable t) {
+                        disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
+                    }
+                });
+    }
+
+    private void setUserInfoTextViews(User user) {
+        String name = user.getName();
+        if (name != null && !name.isEmpty()) {
+            binding.tvName.setText(name);
+        }
+
+        String email = user.getEmail();
+        if (email != null && !email.isEmpty()) {
+            binding.tvEmail.setText(email);
+        }
+
+        String phone = user.getPhone();
+        if (phone != null && !phone.isEmpty()) {
+            binding.tvPhoneNumber.setText(phone);
+        }
+
+        String birthday = user.getBirthday();
+        if (birthday != null) {
+            binding.tvBirthDate.setText(birthday);
+        }
+
+        String registrationDate = user.getRegistrationDate();
+        if (registrationDate != null) {
+            binding.tvRegistrationDate.setText(registrationDate);
+        }
+    }
+
+    private void disableProgressBarAndShowNotification(String message) {
+        requireActivity().runOnUiThread(() ->
+                binding.progressBar.setVisibility(View.GONE));
+        Toast.makeText(getActivity(),
+                message, Toast.LENGTH_LONG).show();
     }
 
     public void showLoginFragment() {

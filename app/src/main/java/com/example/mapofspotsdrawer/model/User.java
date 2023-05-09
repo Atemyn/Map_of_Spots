@@ -7,20 +7,20 @@ public class User {
 
     private String email;
 
-    private String phoneNumber;
+    private String phone;
 
-    private LocalDate birthDate;
+    private String birthday;
 
-    private LocalDate registrationDate;
+    private String registrationDate;
 
     public User() {
     }
 
-    public User(String name, String email, String phoneNumber, LocalDate birthDate, LocalDate registrationDate) {
+    public User(String name, String email, String phone, String birthday, String registrationDate) {
         this.name = name;
         this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.birthDate = birthDate;
+        this.phone = phone;
+        this.birthday = birthday;
         this.registrationDate = registrationDate;
     }
 
@@ -40,27 +40,27 @@ public class User {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public LocalDate getBirthDate() {
-        return birthDate;
+    public String getBirthday() {
+        return birthday;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthday(String birthDate) {
+        this.birthday = birthday;
     }
 
-    public LocalDate getRegistrationDate() {
+    public String getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(LocalDate registrationDate) {
+    public void setRegistrationDate(String registrationDate) {
         this.registrationDate = registrationDate;
     }
 
@@ -69,8 +69,8 @@ public class User {
         return "User{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", birthDate=" + birthDate +
+                ", phone='" + phone + '\'' +
+                ", birthDate=" + birthday +
                 ", registrationDate=" + registrationDate +
                 '}';
     }
