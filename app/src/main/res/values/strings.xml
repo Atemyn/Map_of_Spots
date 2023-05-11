@@ -68,4 +68,11 @@
     <string name="btn_sign_out">Выйти из учетной записи</string>
     <string name="spot_name">Название спота</string>
     <string name="spot_image_slide">Слайд с картинкой спота</string>
+    <string name="spot_description">Описание спота</string>
+    <string name="place_type">Тип помещения:</string>
+    <string name="spot_type">Тип спота:</string>
+    <string name="spot_type_name">Название типа спота</string>
+    <string name="place_type_name">Название типа помещения</string>
+    <string name="spot_creation_date_desc">Создано:</string>
+    <string name="spot_creation_date">Дата создания</string>
 </resources>
