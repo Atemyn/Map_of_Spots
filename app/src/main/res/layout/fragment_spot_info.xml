@@ -5,9 +5,41 @@
     android:layout_height="match_parent"
     tools:context=".ui.spot.SpotInfoFragment">
 
-    <TextView
-        android:layout_width="match_parent"
+    <ScrollView
         android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_width="match_parent" >
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/spot_name"
+                android:textSize="25sp"
+                android:textColor="@color/black"
+                android:padding="12dp"
+                android:layout_marginStart="15dp"
+                android:textStyle="bold" />
+
+            <HorizontalScrollView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" >
+
+                <LinearLayout
+                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal" >
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </FrameLayout>
