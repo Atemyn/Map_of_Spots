@@ -37,7 +37,7 @@ dependencies {
     implementation 'androidx.databinding:databinding-runtime:8.0.1'
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'me.relex:circleindicator:2.1.4'
+    implementation 'me.relex:circleindicator:2.1.6'
     implementation 'com.yandex.android:maps.mobile:4.2.2-full'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
