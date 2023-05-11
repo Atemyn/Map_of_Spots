@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +42,27 @@ public class SpotInfoFragment extends Fragment {
 
         ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(getContext(), images);
         binding.imageSlider.setAdapter(imageSliderAdapter);
+
+        binding.indicator.setViewPager(binding.imageSlider);
+
+        imageSliderAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                binding.indicator.setViewPager(binding.imageSlider);
+                imageSliderAdapter.setCurrentIndex(binding.imageSlider.getCurrentItem());
+            }
+        });
+
+        binding.imageSlider.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                imageSliderAdapter.setCurrentIndex(position);
+            }
+        });
+
+        imageSliderAdapter.setCurrentIndex(binding.imageSlider.getCurrentItem());
 
         return binding.getRoot();
     }

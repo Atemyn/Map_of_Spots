@@ -17,6 +17,8 @@ public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.
 
     private int[] images;
 
+    private int currentIndex;
+
     public ImageSliderAdapter(Context context, int[] images) {
         this.context = context;
         this.images = images;
@@ -38,6 +40,10 @@ public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.
     @Override
     public int getItemCount() {
         return images.length;
+    }
+
+    public void setCurrentIndex(int currentIndex) {
+        this.currentIndex = currentIndex;
     }
 
     static class SliderViewHolder extends RecyclerView.ViewHolder {
