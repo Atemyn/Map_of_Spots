@@ -26,10 +26,11 @@
                 android:textStyle="bold" />
 
             <HorizontalScrollView
-                android:layout_height="wrap_content"
+                android:layout_height="275dp"
                 android:layout_width="match_parent" >
 
                 <LinearLayout
+                    android:id="@+id/linear_layout_images"
                     android:layout_height="match_parent"
                     android:layout_width="wrap_content"
                     android:orientation="horizontal" >

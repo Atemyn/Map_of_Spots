@@ -12,7 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentAboutBinding;
+import com.example.mapofspotsdrawer.ui.profile.ProfileDataFragment;
+import com.example.mapofspotsdrawer.ui.spot.SpotInfoFragment;
 
 public class AboutFragment extends Fragment {
 
@@ -27,8 +30,15 @@ public class AboutFragment extends Fragment {
         binding = FragmentAboutBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textAbout;
-        aboutViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        binding.btnSpotInfoTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(binding.fragmentContainer.getId(), new SpotInfoFragment())
+                        .commit();
+            }
+        });
+
         return root;
     }
 
