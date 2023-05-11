@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentRegisterBinding;
 import com.example.mapofspotsdrawer.databinding.FragmentSpotInfoBinding;
+import com.example.mapofspotsdrawer.ui.adapter.ImageSliderAdapter;
 
 public class SpotInfoFragment extends Fragment {
 
@@ -37,6 +38,8 @@ public class SpotInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentSpotInfoBinding.inflate(inflater, container, false);
 
+        ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(getContext(), images);
+        binding.imageSlider.setAdapter(imageSliderAdapter);
 
         return binding.getRoot();
     }

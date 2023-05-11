@@ -67,4 +67,5 @@
     <string name="card_registration_date">Дата регистрации отсутствует</string>
     <string name="btn_sign_out">Выйти из учетной записи</string>
     <string name="spot_name">Название спота</string>
+    <string name="spot_image_slide">Слайд с картинкой спота</string>
 </resources>
