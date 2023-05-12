@@ -27,8 +27,6 @@ public class CreateSpotFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        CreateSpotViewModel createSpotViewModel =
-                new ViewModelProvider(this).get(CreateSpotViewModel.class);
 
         binding = FragmentCreateSpotBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -50,7 +48,7 @@ public class CreateSpotFragment extends Fragment {
         MapKitFactory.getInstance().onStart();
         binding.mapview.onStart();
         YandexMapManager mapManager = YandexMapManager.getInstance();
-        // TODO Переделать, чтобы состояние сохранялось при повороте экрана.
+
         mapManager.moveMapTo(new Point(55.751574, 37.573856), 5.0f);
     }
 
