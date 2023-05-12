@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.create_spot.CreateSpotInfoFragment">
+
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" >
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/select_spot_position" />
+
+            <com.yandex.mapkit.mapview.MapView
+                android:id="@+id/mapview_create_spot"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp"/>
+
+            <EditText
+                android:id="@+id/et_spot_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/et_spot_name"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:padding="15dp"
+                android:inputType="textPersonName"
+                android:textSize="15sp"
+                android:autofillHints="spot_name" />
+
+            <EditText
+                android:id="@+id/et_spot_description"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/et_spot_description"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:padding="15dp"
+                android:inputType="textLongMessage"
+                android:textSize="15sp"
+                android:autofillHints="spot_description" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

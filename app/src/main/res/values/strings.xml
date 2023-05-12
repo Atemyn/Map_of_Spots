@@ -75,4 +75,7 @@
     <string name="place_type_name">Название типа помещения</string>
     <string name="spot_creation_date_desc">Создано:</string>
     <string name="spot_creation_date">Дата создания</string>
+    <string name="select_spot_position">Отметьте положение спота на карте</string>
+    <string name="et_spot_name">Название спота</string>
+    <string name="et_spot_description">Описание спота</string>
 </resources>
