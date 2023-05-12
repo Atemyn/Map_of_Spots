@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.create_spot.CreateSpotInfoFragment">
@@ -55,6 +56,28 @@
                 android:inputType="textLongMessage"
                 android:textSize="15sp"
                 android:autofillHints="spot_description" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical"
+                android:layout_margin="30dp">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/image_slider_create_spot"
+                    android:layout_height="240dp"
+                    android:layout_width="match_parent" />
+
+                <me.relex.circleindicator.CircleIndicator3
+                    android:id="@+id/indicator_create_spot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:ci_drawable="@drawable/circle_indicator"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_marginBottom="15dp"/>
+
+            </FrameLayout>
 
         </LinearLayout>
 
