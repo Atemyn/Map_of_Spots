@@ -17,6 +17,7 @@ public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -46,13 +47,13 @@ public class ProfileFragment extends Fragment {
         return token != null && !token.isEmpty();
     }
 
-    public void showLoginFragment() {
+    private void showLoginFragment() {
         requireActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new AuthFragment(), "caller_fragment_tag")
                 .commit();
     }
 
-    public void showProfileDataFragment() {
+    private void showProfileDataFragment() {
         requireActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new ProfileDataFragment())
                 .commit();

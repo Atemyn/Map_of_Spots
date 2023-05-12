@@ -1,14 +1,18 @@
 package com.example.mapofspotsdrawer.ui.create_spot;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 import com.example.mapofspotsdrawer.databinding.FragmentCreateSpotInfoBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
@@ -33,6 +37,8 @@ public class CreateSpotInfoFragment extends Fragment {
         View root = binding.getRoot();
 
         YandexMapManager.getInstance().setMapView(binding.mapviewCreateSpot);
+
+
         return root;
     }
 
@@ -57,6 +63,12 @@ public class CreateSpotInfoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private boolean isInMapView(float x, float y) {
+        Rect rect = new Rect();
+        binding.mapviewCreateSpot.getGlobalVisibleRect(rect);
+        return rect.contains((int) x, (int) y);
     }
 
 }

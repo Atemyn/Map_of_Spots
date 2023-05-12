@@ -6,81 +6,91 @@
     android:layout_height="match_parent"
     tools:context=".ui.create_spot.CreateSpotInfoFragment">
 
-    <ScrollView
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" >
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:nestedScrollingEnabled="true" >
 
-        <LinearLayout
-            android:layout_height="wrap_content"
+        <TextView
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:orientation="vertical" >
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/select_spot_position" />
 
-            <TextView
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="20dp"
-                android:text="@string/select_spot_position" />
+        <com.yandex.mapkit.mapview.MapView
+            android:id="@+id/mapview_create_spot"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"/>
 
-            <com.yandex.mapkit.mapview.MapView
-                android:id="@+id/mapview_create_spot"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="30dp"/>
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_view_create_spot"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" >
 
-            <EditText
-                android:id="@+id/et_spot_name"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="@string/et_spot_name"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="5dp"
-                android:padding="15dp"
-                android:inputType="textPersonName"
-                android:textSize="15sp"
-                android:autofillHints="spot_name" />
-
-            <EditText
-                android:id="@+id/et_spot_description"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="@string/et_spot_description"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="5dp"
-                android:padding="15dp"
-                android:inputType="textLongMessage"
-                android:textSize="15sp"
-                android:autofillHints="spot_description" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_vertical"
-                android:layout_margin="30dp">
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:nestedScrollingEnabled="true" >
 
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/image_slider_create_spot"
-                    android:layout_height="240dp"
-                    android:layout_width="match_parent" />
+                <EditText
+                    android:id="@+id/et_spot_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="@string/et_spot_name"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:padding="15dp"
+                    android:inputType="textPersonName"
+                    android:textSize="15sp"
+                    android:autofillHints="spot_name" />
 
-                <me.relex.circleindicator.CircleIndicator3
-                    android:id="@+id/indicator_create_spot"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/et_spot_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="@string/et_spot_description"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:padding="15dp"
+                    android:inputType="textLongMessage"
+                    android:textSize="15sp"
+                    android:autofillHints="spot_description" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:ci_drawable="@drawable/circle_indicator"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:layout_marginBottom="15dp"/>
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_margin="30dp">
 
-            </FrameLayout>
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/image_slider_create_spot"
+                        android:layout_height="240dp"
+                        android:layout_width="match_parent" />
 
-        </LinearLayout>
+                    <me.relex.circleindicator.CircleIndicator3
+                        android:id="@+id/indicator_create_spot"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:ci_drawable="@drawable/circle_indicator"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:layout_marginBottom="15dp"/>
 
-    </ScrollView>
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
 
 </FrameLayout>
