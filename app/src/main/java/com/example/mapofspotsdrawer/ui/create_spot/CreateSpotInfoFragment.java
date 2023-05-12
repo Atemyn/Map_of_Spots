@@ -5,19 +5,18 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 
 import com.example.mapofspotsdrawer.databinding.FragmentCreateSpotInfoBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.map.InputListener;
+import com.yandex.mapkit.map.Map;
 
 public class CreateSpotInfoFragment extends Fragment {
 
@@ -55,6 +54,18 @@ public class CreateSpotInfoFragment extends Fragment {
         MapKitFactory.getInstance().onStart();
         binding.mapviewCreateSpot.onStart();
         YandexMapManager mapManager = YandexMapManager.getInstance();
+
+        binding.mapviewCreateSpot.getMap().addInputListener(new InputListener() {
+            @Override
+            public void onMapTap(@NonNull Map map, @NonNull Point point) {
+                mapManager.setMapObject(point, requireActivity());
+            }
+
+            @Override
+            public void onMapLongTap(@NonNull Map map, @NonNull Point point) {
+
+            }
+        });
 
         mapManager.moveMapTo(new Point(55.751574, 37.573856), 5.0f);
     }

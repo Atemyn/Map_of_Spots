@@ -1,5 +1,16 @@
 package com.example.mapofspotsdrawer.map;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.widget.ImageButton;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+
+import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.model.Placemark;
 import com.yandex.mapkit.Animation;
 import com.yandex.mapkit.MapKitFactory;
@@ -7,6 +18,7 @@ import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.CameraPosition;
 import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.mapview.MapView;
+import com.yandex.runtime.image.ImageProvider;
 
 import java.util.List;
 
@@ -15,6 +27,8 @@ public class YandexMapManager implements IMapManager{
     private MapView mapView = null;
 
     private String apiKey = null;
+
+    private PlacemarkMapObject singleMapObject;
 
     private YandexMapManager() {
     }
@@ -43,9 +57,35 @@ public class YandexMapManager implements IMapManager{
                 null);
     }
 
+    public void setMapObject(Point point, Context context) {
+        if (this.singleMapObject == null) {
+            this.singleMapObject
+                    = mapView.getMap().getMapObjects().addPlacemark(point,
+                    ImageProvider.fromBitmap(
+                            getBitmapFromVectorDrawable(context, R.drawable.ic_spot_placemark)));
+        }
+        else {
+            singleMapObject.setGeometry(point);
+        }
+    }
+
+    private Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+
+        assert drawable != null;
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
     private void addPlacemark(Placemark placemarkInfo) {
         PlacemarkMapObject placemark =
-                mapView.getMap().getMapObjects().addPlacemark(placemarkInfo.getPosition());
+                mapView.getMap().getMapObjects().addPlacemark(
+                        placemarkInfo.getPosition());
         placemark.setText(placemarkInfo.getLabelText());
     }
 
