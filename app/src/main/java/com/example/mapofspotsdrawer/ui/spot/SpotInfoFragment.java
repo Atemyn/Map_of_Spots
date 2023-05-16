@@ -18,7 +18,10 @@ import android.widget.ImageView;
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentRegisterBinding;
 import com.example.mapofspotsdrawer.databinding.FragmentSpotInfoBinding;
+import com.example.mapofspotsdrawer.model.Spot;
+import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.ImageSliderAdapter;
+import com.example.mapofspotsdrawer.ui.profile.ProfileDataViewModel;
 
 public class SpotInfoFragment extends Fragment {
 
@@ -32,6 +35,14 @@ public class SpotInfoFragment extends Fragment {
 
     public static SpotInfoFragment newInstance() {
         return new SpotInfoFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        spotInfoViewModel
+                = new ViewModelProvider(this).get(SpotInfoViewModel.class);
     }
 
     @Override
@@ -64,7 +75,39 @@ public class SpotInfoFragment extends Fragment {
 
         imageSliderAdapter.setCurrentIndex(binding.imageSlider.getCurrentItem());
 
+        Spot spot = null;
+        Bundle args = getArguments();
+        if (args != null) {
+            spot = (Spot) args.getSerializable("spot");
+        }
+
+        setNameTextView(spot);
+        setDescriptionTextView(spot);
+
         return binding.getRoot();
     }
 
+    private void setNameTextView(Spot spot) {
+        String name = spotInfoViewModel.getName();
+        if (name != null && !name.isEmpty()) {
+            binding.tvName.setText(name);
+        }
+        else if (spot != null &&
+                spot.getName() != null && !spot.getName().isEmpty()) {
+            spotInfoViewModel.setName(spot.getName());
+            binding.tvName.setText(spot.getName());
+        }
+    }
+
+    private void setDescriptionTextView(Spot spot) {
+        String description = spotInfoViewModel.getDescription();
+        if (description != null && !description.isEmpty()) {
+            binding.tvDescription.setText(description);
+        }
+        else if (spot != null &&
+                spot.getDescription() != null && !spot.getDescription().isEmpty()) {
+            spotInfoViewModel.setDescription(spot.getDescription());
+            binding.tvDescription.setText(spot.getDescription());
+        }
+    }
 }
