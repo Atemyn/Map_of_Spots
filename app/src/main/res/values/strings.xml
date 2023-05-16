@@ -82,4 +82,5 @@
     <string name="et_spot_description">Описание спота</string>
     <string name="spot_update_date_desc">Последний раз обновлено:</string>
     <string name="spot_update_date">Дата обновления отсутствует</string>
+    <string name="spot_type_item_text">Тип спота отсутствует</string>
 </resources>

@@ -18,7 +18,7 @@ public class SpotInfoViewModel extends ViewModel {
 
     private List<ImageInfoDto> imageInfoDtoList;
 
-    private List<Integer> spotTypeIds;
+    private List<String> spotTypeNames;
 
     private List<Integer> sportTypeIds;
 
@@ -64,12 +64,12 @@ public class SpotInfoViewModel extends ViewModel {
         this.imageInfoDtoList = imageInfoDtoList;
     }
 
-    public List<Integer> getSpotTypeIds() {
-        return spotTypeIds;
+    public List<String> getSpotTypeNames() {
+        return spotTypeNames;
     }
 
-    public void setSpotTypeIds(List<Integer> spotTypeIds) {
-        this.spotTypeIds = spotTypeIds;
+    public void setSpotTypeNames(List<String> spotTypeNames) {
+        this.spotTypeNames = spotTypeNames;
     }
 
     public List<Integer> getSportTypeIds() {
