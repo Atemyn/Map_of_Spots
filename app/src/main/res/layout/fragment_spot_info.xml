@@ -116,10 +116,10 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_place_type_desc"
+                    android:id="@+id/tv_space_type_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/place_type"
+                    android:text="@string/space_type"
                     android:textSize="15sp"
                     android:layout_marginStart="15dp"
                     android:textColor="@color/black"
@@ -127,10 +127,10 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_place_type"
+                    android:id="@+id/tv_space_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/place_type_name"
+                    android:text="@string/space_type_name"
                     android:textSize="15sp"
                     android:layout_marginStart="15dp"
                     android:textColor="@color/black"

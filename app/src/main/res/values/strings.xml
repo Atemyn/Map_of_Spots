@@ -69,12 +69,12 @@
     <string name="spot_name">Название спота отсутствует</string>
     <string name="spot_image_slide">Слайд с картинкой спота</string>
     <string name="spot_description">Описание спота отсутствует</string>
-    <string name="place_type">Тип помещения:</string>
+    <string name="space_type">Тип помещения:</string>
     <string name="spot_types">Типы спота:</string>
     <string name="spot_types_names">Типы спота отсутствуют</string>
     <string name="sport_types">Виды спорта:</string>
     <string name="sport_types_names">Виды спорта отсутствуют</string>
-    <string name="place_type_name">Тип помещения отсутствует</string>
+    <string name="space_type_name">Тип помещения отсутствует</string>
     <string name="spot_creation_date_desc">Создано:</string>
     <string name="spot_creation_date">Дата создания отсутствует</string>
     <string name="select_spot_position">Отметьте положение спота на карте</string>

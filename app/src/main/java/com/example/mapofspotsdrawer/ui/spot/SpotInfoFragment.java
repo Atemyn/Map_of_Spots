@@ -104,6 +104,7 @@ public class SpotInfoFragment extends Fragment {
         setDescriptionTextView(spot);
         setSpotTypesListView(spot, spotTypes);
         setSportTypesListView(spot, sportTypes);
+        setSpaceTypeTextView(spot, spaceTypes);
 
         return binding.getRoot();
     }
@@ -210,6 +211,25 @@ public class SpotInfoFragment extends Fragment {
                             R.layout.list_view_item, sportTypeNames);
             binding.lvSportTypes.setAdapter(adapter);
             UIUtils.setListViewHeightBasedOnItems(binding.lvSportTypes);
+        }
+    }
+
+    private void setSpaceTypeTextView(Spot spot, List<SpaceType> spaceTypes) {
+        String spaceTypeName = spotInfoViewModel.getSpaceTypeName();
+        if (spaceTypeName != null && !spaceTypeName.isEmpty()) {
+            binding.tvSpaceType.setText(spaceTypeName);
+        }
+        else if (spot != null && spot.getSpaceTypeId() != null &&
+                spaceTypes != null && !spaceTypes.isEmpty()) {
+            Integer spaceTypeId = spot.getSpaceTypeId();
+            for (SpaceType spaceType : spaceTypes) {
+                if (Objects.equals(spaceType.getId(), spaceTypeId)) {
+                    spaceTypeName = spaceType.getName();
+                    spotInfoViewModel.setSpaceTypeName(spaceTypeName);
+                    binding.tvSpaceType.setText(spaceTypeName);
+                    break;
+                }
+            }
         }
     }
 }
