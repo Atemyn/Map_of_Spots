@@ -82,17 +82,20 @@ public class YandexMapManager implements IMapManager{
         return bitmap;
     }
 
-    private void addPlacemark(Placemark placemarkInfo) {
+    @Override
+    public void addPlacemark(Placemark placemarkInfo, Context context) {
         PlacemarkMapObject placemark =
                 mapView.getMap().getMapObjects().addPlacemark(
-                        placemarkInfo.getPosition());
+                        placemarkInfo.getPosition(), ImageProvider.fromBitmap(
+                                getBitmapFromVectorDrawable(context,
+                                        R.drawable.ic_spot_placemark)));
         placemark.setText(placemarkInfo.getLabelText());
     }
 
     @Override
-    public void addPlacemarks(List<Placemark> placemarkInfos) {
+    public void addPlacemarks(List<Placemark> placemarkInfos, Context context) {
         for (Placemark placemark : placemarkInfos) {
-            addPlacemark(placemark);
+            addPlacemark(placemark, context);
         }
     }
 }

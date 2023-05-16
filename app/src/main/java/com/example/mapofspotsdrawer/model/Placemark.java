@@ -6,7 +6,7 @@ public class Placemark {
     private final Point position;
     private final String labelText;
 
-    Placemark(Point position, String labelText) {
+    public Placemark(Point position, String labelText) {
         this.position = position;
         this.labelText = labelText;
     }

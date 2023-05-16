@@ -12,11 +12,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.SpotAPI;
-import com.example.mapofspotsdrawer.api.SpotTypeAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentAllSpotsBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
+import com.example.mapofspotsdrawer.model.Placemark;
 import com.example.mapofspotsdrawer.model.Spot;
-import com.example.mapofspotsdrawer.model.SpotType;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
@@ -60,7 +59,14 @@ public class AllSpotsFragment extends Fragment {
     }
 
     private void showSpotsOnMap(List<Spot> spots) {
+        YandexMapManager mapManager = YandexMapManager.getInstance();
 
+        for (Spot spot: spots) {
+            Placemark placemark = new Placemark(new Point(spot.getLatitude(),
+                    spot.getLongitude()), spot.getName());
+
+            mapManager.addPlacemark(placemark, getContext());
+        }
     }
 
     private void getSpotTypes() {
