@@ -2,11 +2,14 @@ package com.example.mapofspotsdrawer;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Toast;
 
+import com.example.mapofspotsdrawer.api.SpaceTypeAPI;
 import com.example.mapofspotsdrawer.api.SportTypeAPI;
 import com.example.mapofspotsdrawer.api.SpotTypeAPI;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
+import com.example.mapofspotsdrawer.model.SpaceType;
 import com.example.mapofspotsdrawer.model.SportType;
 import com.example.mapofspotsdrawer.model.SpotType;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getSpotTypes(RetrofitService retrofitService) {
-        // binding.progressBar.setVisibility(View.VISIBLE);
+        binding.progressBar.setVisibility(View.VISIBLE);
 
         // Создание API для совершения запроса к серверу.
         SpotTypeAPI spotTypeAPI = retrofitService.getRetrofit().create(SpotTypeAPI.class);
@@ -94,8 +97,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getSportTypes(RetrofitService retrofitService) {
-        // binding.progressBar.setVisibility(View.VISIBLE);
-
         // Создание API для совершения запроса к серверу.
         SportTypeAPI spotTypeAPI = retrofitService.getRetrofit().create(SportTypeAPI.class);
 
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                                            @NonNull Response<List<SportType>> response) {
                         if (response.isSuccessful()) {
                             if(processSportTypesResponseBody(response.body())) {
-
+                                getSpaceTypes(retrofitService);
                             }
                             else {
                                 disableProgressBarAndShowNotification("Ошибка получения тела ответа");
@@ -119,6 +120,36 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@NonNull Call<List<SportType>> call,
+                                          @NonNull Throwable t) {
+                        disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
+                    }
+                });
+    }
+
+    private void getSpaceTypes(RetrofitService retrofitService) {
+        // Создание API для совершения запроса к серверу.
+        SpaceTypeAPI spotTypeAPI = retrofitService.getRetrofit().create(SpaceTypeAPI.class);
+
+        spotTypeAPI.getAllSpaceTypes()
+                .enqueue(new Callback<List<SpaceType>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<SpaceType>> call,
+                                           @NonNull Response<List<SpaceType>> response) {
+                        if (response.isSuccessful()) {
+                            if(processSpaceTypesResponseBody(response.body())) {
+                                binding.progressBar.setVisibility(View.GONE);
+                            }
+                            else {
+                                disableProgressBarAndShowNotification("Ошибка получения тела ответа");
+                            }
+                        }
+                        else {
+                            disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<SpaceType>> call,
                                           @NonNull Throwable t) {
                         disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
                     }
@@ -151,10 +182,23 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    private boolean processSpaceTypesResponseBody(List<SpaceType> spaceTypes) {
+        if (spaceTypes != null && spaceTypes.size() != 0) {
+            Gson gson = new Gson();
+            String json = gson.toJson(spaceTypes);
+
+            PreferenceManager.getDefaultSharedPreferences(this)
+                    .edit().putString("space_types", json).apply();
+
+            return true;
+        }
+        return false;
+    }
+
 
     private void disableProgressBarAndShowNotification(String message) {
-/*        requireActivity().runOnUiThread(() ->
-                binding.progressBar.setVisibility(View.GONE));*/
+        this.runOnUiThread(() ->
+                binding.progressBar.setVisibility(View.GONE));
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
