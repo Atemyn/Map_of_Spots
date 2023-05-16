@@ -4,16 +4,19 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.mapofspotsdrawer.model.Spot;
+
+import java.util.List;
+
 public class AllSpotsViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private List<Spot> spots;
 
-    public AllSpotsViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+    public List<Spot> getSpots() {
+        return spots;
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public void setSpots(List<Spot> spots) {
+        this.spots = spots;
     }
 }
