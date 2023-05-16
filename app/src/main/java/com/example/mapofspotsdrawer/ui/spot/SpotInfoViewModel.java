@@ -20,9 +20,9 @@ public class SpotInfoViewModel extends ViewModel {
 
     private List<String> spotTypeNames;
 
-    private List<Integer> sportTypeIds;
+    private List<String> sportTypeNames;
 
-    private Integer spaceTypeId;
+    private String spaceTypeName;
 
     public String getName() {
         return name;
@@ -72,19 +72,19 @@ public class SpotInfoViewModel extends ViewModel {
         this.spotTypeNames = spotTypeNames;
     }
 
-    public List<Integer> getSportTypeIds() {
-        return sportTypeIds;
+    public List<String> getSportTypeNames() {
+        return sportTypeNames;
     }
 
-    public void setSportTypeIds(List<Integer> sportTypeIds) {
-        this.sportTypeIds = sportTypeIds;
+    public void setSportTypeNames(List<String> sportTypeNames) {
+        this.sportTypeNames = sportTypeNames;
     }
 
-    public Integer getSpaceTypeId() {
-        return spaceTypeId;
+    public String getSpaceTypeName() {
+        return spaceTypeName;
     }
 
-    public void setSpaceTypeId(Integer spaceTypeId) {
-        this.spaceTypeId = spaceTypeId;
+    public void setSpaceTypeName(String spaceTypeName) {
+        this.spaceTypeName = spaceTypeName;
     }
 }

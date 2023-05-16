@@ -103,6 +103,7 @@ public class SpotInfoFragment extends Fragment {
         setNameTextView(spot);
         setDescriptionTextView(spot);
         setSpotTypesListView(spot, spotTypes);
+        setSportTypesListView(spot, sportTypes);
 
         return binding.getRoot();
     }
@@ -184,6 +185,31 @@ public class SpotInfoFragment extends Fragment {
                             R.layout.list_view_item, spotTypeNames);
             binding.lvSpotTypes.setAdapter(adapter);
             UIUtils.setListViewHeightBasedOnItems(binding.lvSpotTypes);
+        }
+    }
+    private void setSportTypesListView(Spot spot, List<SportType> sportTypes) {
+        List<String> sportTypeNames = spotInfoViewModel.getSportTypeNames();
+        if (sportTypeNames != null && !sportTypeNames.isEmpty()) {
+            ArrayAdapter<String> adapter =
+                    new ArrayAdapter<>(getContext(),
+                            R.layout.list_view_item, sportTypeNames);
+            binding.lvSportTypes.setAdapter(adapter);
+            UIUtils.setListViewHeightBasedOnItems(binding.lvSportTypes);
+        }
+        else if (spot != null &&
+                spot.getSportTypeIds() != null && !spot.getSportTypeIds().isEmpty() &&
+                sportTypes != null && !sportTypes.isEmpty()) {
+            sportTypeNames = spot.getSportTypeIds().stream()
+                    .flatMap(id -> sportTypes.stream().filter(s -> Objects.equals(s.getId(), id)))
+                    .map(SportType::getName)
+                    .collect(Collectors.toList());
+
+            spotInfoViewModel.setSportTypeNames(sportTypeNames);
+            ArrayAdapter<String> adapter =
+                    new ArrayAdapter<>(getContext(),
+                            R.layout.list_view_item, sportTypeNames);
+            binding.lvSportTypes.setAdapter(adapter);
+            UIUtils.setListViewHeightBasedOnItems(binding.lvSportTypes);
         }
     }
 }
