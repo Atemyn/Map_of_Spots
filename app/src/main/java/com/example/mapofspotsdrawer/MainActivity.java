@@ -2,15 +2,14 @@ package com.example.mapofspotsdrawer;
 
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
 import android.widget.Toast;
 
-import com.example.mapofspotsdrawer.api.AuthAPI;
+import com.example.mapofspotsdrawer.api.SportTypeAPI;
 import com.example.mapofspotsdrawer.api.SpotTypeAPI;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
+import com.example.mapofspotsdrawer.model.SportType;
 import com.example.mapofspotsdrawer.model.SpotType;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
-import com.example.mapofspotsdrawer.ui.auth.validation.AuthValidator;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -25,14 +24,8 @@ import androidx.preference.PreferenceManager;
 import com.example.mapofspotsdrawer.databinding.ActivityMainBinding;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -81,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                                                @NonNull Response<List<SpotType>> response) {
                         if (response.isSuccessful()) {
                             if(processSpotTypesResponseBody(response.body())) {
-
+                                getSportTypes(retrofitService);
                             }
                             else {
                                 disableProgressBarAndShowNotification("Ошибка получения тела ответа");
@@ -100,6 +93,38 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    private void getSportTypes(RetrofitService retrofitService) {
+        // binding.progressBar.setVisibility(View.VISIBLE);
+
+        // Создание API для совершения запроса к серверу.
+        SportTypeAPI spotTypeAPI = retrofitService.getRetrofit().create(SportTypeAPI.class);
+
+        spotTypeAPI.getAllSportTypes()
+                .enqueue(new Callback<List<SportType>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<SportType>> call,
+                                           @NonNull Response<List<SportType>> response) {
+                        if (response.isSuccessful()) {
+                            if(processSportTypesResponseBody(response.body())) {
+
+                            }
+                            else {
+                                disableProgressBarAndShowNotification("Ошибка получения тела ответа");
+                            }
+                        }
+                        else {
+                            disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<SportType>> call,
+                                          @NonNull Throwable t) {
+                        disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
+                    }
+                });
+    }
+
     private boolean processSpotTypesResponseBody(List<SpotType> spotTypes) {
         if (spotTypes != null && spotTypes.size() != 0) {
             Gson gson = new Gson();
@@ -107,6 +132,19 @@ public class MainActivity extends AppCompatActivity {
 
             PreferenceManager.getDefaultSharedPreferences(this)
                     .edit().putString("spot_types", json).apply();
+
+            return true;
+        }
+        return false;
+    }
+
+    private boolean processSportTypesResponseBody(List<SportType> sportTypes) {
+        if (sportTypes != null && sportTypes.size() != 0) {
+            Gson gson = new Gson();
+            String json = gson.toJson(sportTypes);
+
+            PreferenceManager.getDefaultSharedPreferences(this)
+                    .edit().putString("sport_types", json).apply();
 
             return true;
         }
