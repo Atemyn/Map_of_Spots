@@ -242,12 +242,14 @@ public class ProfileDataFragment extends Fragment {
                 = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault());
 
         if (user.getBirthday() != null) {
-            LocalDate birthday = LocalDate.parse(user.getBirthday());
+            LocalDate birthday =
+                    LocalDate.parse(user.getBirthday().split(" ")[0]);
             binding.tvBirthDate.setText(birthday.format(formatter));
         }
 
         if (user.getRegistrationDate() != null) {
-            LocalDate registrationDate = LocalDate.parse(user.getRegistrationDate());
+            LocalDate registrationDate =
+                    LocalDate.parse(user.getRegistrationDate().split(" ")[0]);
             binding.tvRegistrationDate.setText(registrationDate.format(formatter));
         }
     }
