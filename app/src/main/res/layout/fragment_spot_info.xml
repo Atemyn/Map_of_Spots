@@ -133,6 +133,7 @@
                     android:text="@string/space_type_name"
                     android:textSize="15sp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginEnd="16dp"
                     android:textColor="@color/black"
                     android:padding="5dp"/>
 
@@ -144,21 +145,22 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_creation_date_desc"
+                    android:id="@+id/tv_adding_date_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/spot_creation_date_desc"
+                    android:text="@string/spot_adding_date_desc"
                     android:textSize="15sp"
                     android:layout_marginStart="15dp"
                     android:padding="5dp" />
 
                 <TextView
-                    android:id="@+id/tv_creation_date"
+                    android:id="@+id/tv_adding_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/spot_creation_date"
+                    android:text="@string/spot_adding_date"
                     android:textSize="15sp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginEnd="16dp"
                     android:padding="5dp"/>
 
             </LinearLayout>
@@ -184,6 +186,7 @@
                     android:text="@string/spot_update_date"
                     android:textSize="15sp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginEnd="16dp"
                     android:padding="5dp"/>
 
             </LinearLayout>

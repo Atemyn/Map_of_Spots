@@ -4,15 +4,14 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.mapofspotsdrawer.model.ImageInfoDto;
 
-import java.util.Date;
 import java.util.List;
 
 public class SpotInfoViewModel extends ViewModel {
     private String name;
 
-    private Date addingDate;
+    private String addingDateText;
 
-    private Date updatingDate;
+    private String updatingDateText;
 
     private String description;
 
@@ -32,20 +31,20 @@ public class SpotInfoViewModel extends ViewModel {
         this.name = name;
     }
 
-    public Date getAddingDate() {
-        return addingDate;
+    public String getAddingDateText() {
+        return addingDateText;
     }
 
-    public void setAddingDate(Date addingDate) {
-        this.addingDate = addingDate;
+    public void setAddingDateText(String addingDateText) {
+        this.addingDateText = addingDateText;
     }
 
-    public Date getUpdatingDate() {
-        return updatingDate;
+    public String getUpdatingDateText() {
+        return updatingDateText;
     }
 
-    public void setUpdatingDate(Date updatingDate) {
-        this.updatingDate = updatingDate;
+    public void setUpdatingDateText(String updatingDateText) {
+        this.updatingDateText = updatingDateText;
     }
 
     public String getDescription() {

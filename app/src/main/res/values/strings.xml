@@ -75,12 +75,12 @@
     <string name="sport_types">Виды спорта:</string>
     <string name="sport_types_names">Виды спорта отсутствуют</string>
     <string name="space_type_name">Тип помещения отсутствует</string>
-    <string name="spot_creation_date_desc">Создано:</string>
-    <string name="spot_creation_date">Дата создания отсутствует</string>
+    <string name="spot_adding_date_desc">Добавлено:</string>
+    <string name="spot_adding_date">Дата добавления отсутствует</string>
     <string name="select_spot_position">Отметьте положение спота на карте</string>
     <string name="et_spot_name">Название спота</string>
     <string name="et_spot_description">Описание спота</string>
-    <string name="spot_update_date_desc">Последний раз обновлено:</string>
+    <string name="spot_update_date_desc">Обновлено:</string>
     <string name="spot_update_date">Дата обновления отсутствует</string>
     <string name="spot_type_item_text">Тип спота отсутствует</string>
 </resources>

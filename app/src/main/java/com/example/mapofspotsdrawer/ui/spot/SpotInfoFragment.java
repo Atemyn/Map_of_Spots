@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentSpotInfoBinding;
+import com.example.mapofspotsdrawer.model.ImageInfoDto;
 import com.example.mapofspotsdrawer.model.SpaceType;
 import com.example.mapofspotsdrawer.model.SportType;
 import com.example.mapofspotsdrawer.model.Spot;
@@ -29,8 +30,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -40,9 +44,7 @@ public class SpotInfoFragment extends Fragment {
 
     private SpotInfoViewModel spotInfoViewModel;
 
-    private int[] images =
-            {R.drawable.test_image_1, R.drawable.test_image_2,
-                    R.drawable.test_image_3, R.drawable.test_image_4};
+    private int[] images = {};
 
     public static SpotInfoFragment newInstance() {
         return new SpotInfoFragment();
@@ -61,6 +63,29 @@ public class SpotInfoFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSpotInfoBinding.inflate(inflater, container, false);
+
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(requireActivity());
+        Gson gson = new Gson();
+
+        // Получение содержимого таблиц-справочников.
+        List<SpotType> spotTypes =
+                getSpotTypesFromSharedPreferences(sharedPreferences, gson);
+        List<SportType> sportTypes =
+                getSportTypesFromSharedPreferences(sharedPreferences, gson);
+        List<SpaceType> spaceTypes =
+                getSpaceTypesFromSharedPreferences(sharedPreferences, gson);
+
+        Spot spot = getSpotFromArguments();
+
+        setNameTextView(spot);
+        setDescriptionTextView(spot);
+        setSpotTypesListView(spot, spotTypes);
+        setSportTypesListView(spot, sportTypes);
+        setSpaceTypeTextView(spot, spaceTypes);
+        setAddingDateTextView(spot);
+        setUpdateDateTextView(spot);
+        setImages(spot);
 
         ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(getContext(), images);
         binding.imageSlider.setAdapter(imageSliderAdapter);
@@ -85,26 +110,6 @@ public class SpotInfoFragment extends Fragment {
         });
 
         imageSliderAdapter.setCurrentIndex(binding.imageSlider.getCurrentItem());
-
-        SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(requireActivity());
-        Gson gson = new Gson();
-
-        // Получение содержимого таблиц-справочников.
-        List<SpotType> spotTypes =
-                getSpotTypesFromSharedPreferences(sharedPreferences, gson);
-        List<SportType> sportTypes =
-                getSportTypesFromSharedPreferences(sharedPreferences, gson);
-        List<SpaceType> spaceTypes =
-                getSpaceTypesFromSharedPreferences(sharedPreferences, gson);
-
-        Spot spot = getSpotFromArguments();
-
-        setNameTextView(spot);
-        setDescriptionTextView(spot);
-        setSpotTypesListView(spot, spotTypes);
-        setSportTypesListView(spot, sportTypes);
-        setSpaceTypeTextView(spot, spaceTypes);
 
         return binding.getRoot();
     }
@@ -232,4 +237,55 @@ public class SpotInfoFragment extends Fragment {
             }
         }
     }
+
+    private void setAddingDateTextView(Spot spot) {
+        String addingDateText = spotInfoViewModel.getAddingDateText();
+        if (addingDateText != null && !addingDateText.isEmpty()) {
+            binding.tvAddingDate.setText(addingDateText);
+        }
+        else if (spot != null && spot.getAddingDate() != null) {
+            DateTimeFormatter formatter
+                    = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault());
+            LocalDate addingDate =
+                    spot.getAddingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            spotInfoViewModel.setAddingDateText(addingDate.format(formatter));
+            binding.tvAddingDate.setText(addingDate.format(formatter));
+        }
+    }
+    private void setUpdateDateTextView(Spot spot) {
+        String updatingDateText = spotInfoViewModel.getUpdatingDateText();
+        if (updatingDateText != null && !updatingDateText.isEmpty()) {
+            binding.tvUpdateDate.setText(updatingDateText);
+        }
+        else if (spot != null && spot.getUpdatingDate() != null) {
+            DateTimeFormatter formatter
+                    = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault());
+            LocalDate updatingDate =
+                    spot.getAddingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            spotInfoViewModel.setAddingDateText(updatingDate.format(formatter));
+            binding.tvAddingDate.setText(updatingDate.format(formatter));
+        }
+        else if (binding.tvAddingDate.getText() != getString(R.string.spot_adding_date)) {
+            spotInfoViewModel.setUpdatingDateText(binding.tvAddingDate.getText().toString());
+            binding.tvUpdateDate.setText(binding.tvAddingDate.getText());
+        }
+    }
+
+    private void setImages(Spot spot) {
+        List<ImageInfoDto> imageInfoDtoList =
+                spotInfoViewModel.getImageInfoDtoList();
+        if (imageInfoDtoList != null && !imageInfoDtoList.isEmpty()) {
+            // TODO: установить фотографии из ViewModel.
+        }
+        else if (spot != null && spot.getImageInfoDtoList() != null
+                && !spot.getImageInfoDtoList().isEmpty()) {
+            // TODO: установить фотографии во ViewModel и в ImageSlider из Spot.
+        }
+        else {
+            images = new int[]{R.drawable.no_image};
+        }
+    }
+
 }
