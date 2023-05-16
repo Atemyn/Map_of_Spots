@@ -2,17 +2,20 @@ package com.example.mapofspotsdrawer.model;
 
 import androidx.annotation.NonNull;
 
-public class SpotType {
+public class SportType {
     private Integer id;
 
     private String name;
 
-    public SpotType() {
+    private String transportName;
+
+    public SportType() {
     }
 
-    public SpotType(Integer id, String name) {
+    public SportType(Integer id, String name, String transportName) {
         this.id = id;
         this.name = name;
+        this.transportName = transportName;
     }
 
     public Integer getId() {
@@ -31,12 +34,21 @@ public class SpotType {
         this.name = name;
     }
 
+    public String getTransportName() {
+        return transportName;
+    }
+
+    public void setTransportName(String transportName) {
+        this.transportName = transportName;
+    }
+
     @NonNull
     @Override
     public String toString() {
-        return "SpotType{" +
+        return "SportType{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", transportName='" + transportName + '\'' +
                 '}';
     }
 }
