@@ -60,11 +60,13 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        RetrofitService retrofitService = new RetrofitService(getString(R.string.server_url));
-        getSpotTypes(retrofitService);
+        // Получение всех справочников (типы спотов, типы спорта, типы помещений).
+        getSpotTypes();
     }
 
-    private void getSpotTypes(RetrofitService retrofitService) {
+    private void getSpotTypes() {
+        RetrofitService retrofitService = new RetrofitService(getString(R.string.server_url));
+
         binding.progressBar.setVisibility(View.VISIBLE);
 
         // Создание API для совершения запроса к серверу.
