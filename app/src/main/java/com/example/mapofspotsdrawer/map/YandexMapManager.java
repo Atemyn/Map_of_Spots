@@ -4,18 +4,22 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.widget.ImageButton;
+import android.os.Bundle;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.mapofspotsdrawer.R;
-import com.example.mapofspotsdrawer.model.Placemark;
+import com.example.mapofspotsdrawer.model.Spot;
+import com.example.mapofspotsdrawer.ui.spot.SpotInfoFragment;
 import com.yandex.mapkit.Animation;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.CameraPosition;
+import com.yandex.mapkit.map.MapObject;
+import com.yandex.mapkit.map.MapObjectTapListener;
 import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.mapview.MapView;
 import com.yandex.runtime.image.ImageProvider;
@@ -29,6 +33,8 @@ public class YandexMapManager implements IMapManager{
     private String apiKey = null;
 
     private PlacemarkMapObject singleMapObject;
+
+    private final SpotObjectTapListener listener = new SpotObjectTapListener();
 
     private YandexMapManager() {
     }
@@ -82,20 +88,23 @@ public class YandexMapManager implements IMapManager{
         return bitmap;
     }
 
-    @Override
-    public void addPlacemark(Placemark placemarkInfo, Context context) {
+    private void addPlacemark(Spot spot, FragmentActivity activity) {
         PlacemarkMapObject placemark =
                 mapView.getMap().getMapObjects().addPlacemark(
-                        placemarkInfo.getPosition(), ImageProvider.fromBitmap(
-                                getBitmapFromVectorDrawable(context,
+                        spot.getPosition(), ImageProvider.fromBitmap(
+                                getBitmapFromVectorDrawable(activity,
                                         R.drawable.ic_spot_placemark)));
-        placemark.setText(placemarkInfo.getLabelText());
+        placemark.setText(spot.getName());
+        placemark.setUserData(spot);
+        placemark.addTapListener(listener);
     }
 
     @Override
-    public void addPlacemarks(List<Placemark> placemarkInfos, Context context) {
-        for (Placemark placemark : placemarkInfos) {
-            addPlacemark(placemark, context);
+    public void addPlacemarks(List<Spot> spots, FragmentActivity activity) {
+        listener.setActivity(activity);
+
+        for (Spot spot : spots) {
+            addPlacemark(spot, activity);
         }
     }
 }

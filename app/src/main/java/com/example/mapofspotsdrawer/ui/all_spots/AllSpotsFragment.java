@@ -14,7 +14,6 @@ import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.SpotAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentAllSpotsBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
-import com.example.mapofspotsdrawer.model.Placemark;
 import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.yandex.mapkit.MapKitFactory;
@@ -45,7 +44,7 @@ public class AllSpotsFragment extends Fragment {
         binding = FragmentAllSpotsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        YandexMapManager.getInstance().setMapView(binding.mapview);
+        YandexMapManager.getInstance().setMapView(binding.mapviewAllSpots);
 
         List<Spot> spots = allSpotsViewModel.getSpots();
         if (spots != null && spots.size() != 0) {
@@ -61,18 +60,13 @@ public class AllSpotsFragment extends Fragment {
     private void showSpotsOnMap(List<Spot> spots) {
         YandexMapManager mapManager = YandexMapManager.getInstance();
 
-        for (Spot spot: spots) {
-            Placemark placemark = new Placemark(new Point(spot.getLatitude(),
-                    spot.getLongitude()), spot.getName());
-
-            mapManager.addPlacemark(placemark, getContext());
-        }
+        mapManager.addPlacemarks(spots, requireActivity());
     }
 
     private void getSpotTypes() {
         RetrofitService retrofitService = new RetrofitService(getString(R.string.server_url));
 
-        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.progressBarAllSpots.setVisibility(View.VISIBLE);
 
         // Создание API для совершения запроса к серверу.
         SpotAPI spotAPI = retrofitService.getRetrofit().create(SpotAPI.class);
@@ -85,7 +79,7 @@ public class AllSpotsFragment extends Fragment {
                         if (response.isSuccessful()) {
                             if (processSpotsResponseBody(response.body())) {
                                 requireActivity().runOnUiThread(() ->
-                                        binding.progressBar.setVisibility(View.GONE));
+                                        binding.progressBarAllSpots.setVisibility(View.GONE));
                                 showSpotsOnMap(response.body());
                             }
                             else {
@@ -115,14 +109,14 @@ public class AllSpotsFragment extends Fragment {
 
     private void disableProgressBarAndShowNotification(String message) {
         requireActivity().runOnUiThread(() ->
-                binding.progressBar.setVisibility(View.GONE));
+                binding.progressBarAllSpots.setVisibility(View.GONE));
         Toast.makeText(getActivity(),
                 message, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onStop() {
-        binding.mapview.onStop();
+        binding.mapviewAllSpots.onStop();
         MapKitFactory.getInstance().onStop();
         super.onStop();
     }
@@ -131,7 +125,7 @@ public class AllSpotsFragment extends Fragment {
     public void onStart() {
         super.onStart();
         MapKitFactory.getInstance().onStart();
-        binding.mapview.onStart();
+        binding.mapviewAllSpots.onStart();
         YandexMapManager mapManager = YandexMapManager.getInstance();
         // TODO Переделать, чтобы состояние сохранялось при повороте экрана.
         mapManager.moveMapTo(new Point(55.751574, 80.573856), 2.0f);

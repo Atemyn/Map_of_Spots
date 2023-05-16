@@ -2,10 +2,13 @@ package com.example.mapofspotsdrawer.model;
 
 import androidx.annotation.NonNull;
 
+import com.yandex.mapkit.geometry.Point;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Spot {
+public class Spot implements Serializable {
     private String name;
 
     private Double latitude;
@@ -46,6 +49,10 @@ public class Spot {
         this.spotTypeIds = spotTypeIds;
         this.sportTypeIds = sportTypeIds;
         this.spaceTypeId = spaceTypeId;
+    }
+
+    public Point getPosition() {
+        return new Point(latitude, longitude);
     }
 
     public String getName() {
