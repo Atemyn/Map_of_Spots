@@ -66,16 +66,20 @@
     <string name="card_registration_date_desc">Дата регистрации</string>
     <string name="card_registration_date">Дата регистрации отсутствует</string>
     <string name="btn_sign_out">Выйти из учетной записи</string>
-    <string name="spot_name">Название спота</string>
+    <string name="spot_name">Название спота отсутствует</string>
     <string name="spot_image_slide">Слайд с картинкой спота</string>
-    <string name="spot_description">Описание спота</string>
+    <string name="spot_description">Описание спота отсутствует</string>
     <string name="place_type">Тип помещения:</string>
-    <string name="spot_type">Тип спота:</string>
-    <string name="spot_type_name">Название типа спота</string>
-    <string name="place_type_name">Название типа помещения</string>
+    <string name="spot_types">Типы спота:</string>
+    <string name="spot_types_names">Типы спота отсутствуют</string>
+    <string name="sport_types">Виды спорта:</string>
+    <string name="sport_types_names">Виды спорта отсутствуют</string>
+    <string name="place_type_name">Тип помещения отсутствует</string>
     <string name="spot_creation_date_desc">Создано:</string>
-    <string name="spot_creation_date">Дата создания</string>
+    <string name="spot_creation_date">Дата создания отсутствует</string>
     <string name="select_spot_position">Отметьте положение спота на карте</string>
     <string name="et_spot_name">Название спота</string>
     <string name="et_spot_description">Описание спота</string>
+    <string name="spot_update_date_desc">Последний раз обновлено:</string>
+    <string name="spot_update_date">Дата обновления отсутствует</string>
 </resources>
