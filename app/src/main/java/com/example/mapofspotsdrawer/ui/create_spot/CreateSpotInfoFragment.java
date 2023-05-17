@@ -1,12 +1,18 @@
 package com.example.mapofspotsdrawer.ui.create_spot;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
 import android.view.LayoutInflater;
@@ -14,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentCreateSpotInfoBinding;
@@ -21,7 +28,10 @@ import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.example.mapofspotsdrawer.model.SpaceType;
 import com.example.mapofspotsdrawer.model.SportType;
 import com.example.mapofspotsdrawer.model.SpotType;
+import com.example.mapofspotsdrawer.ui.adapter.ImageSliderAdapter;
+import com.example.mapofspotsdrawer.ui.spot.SpotInfoViewModel;
 import com.example.mapofspotsdrawer.ui.utils.UIUtils;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yandex.mapkit.MapKitFactory;
@@ -36,10 +46,15 @@ public class CreateSpotInfoFragment extends Fragment {
 
     private FragmentCreateSpotInfoBinding binding;
 
+    private CreateSpotInfoViewModel viewModel;
+
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapKitFactory.initialize(this.requireContext());
+        viewModel = new ViewModelProvider(this).get(CreateSpotInfoViewModel.class);
     }
 
     @Override
@@ -67,8 +82,59 @@ public class CreateSpotInfoFragment extends Fragment {
         setSportTypesMultipleChoiceListView(sportTypes);
         setSpaceTypeListView(spaceTypes);
 
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    int resultCode = result.getResultCode();
+                    if (resultCode == Activity.RESULT_OK) {
+                        assert result.getData() != null;
+                        viewModel.addImageUri(result.getData().getData().toString());
+
+                        ImageSliderAdapter adapter =
+                                new ImageSliderAdapter(getContext(), viewModel.getImagesUrls());
+                        binding.imageSliderCreateSpot.setAdapter(adapter);
+                    } else if (resultCode == ImagePicker.RESULT_ERROR) {
+                        Toast.makeText(requireActivity(),
+                                ImagePicker.getError(result.getData()), Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(requireActivity(),
+                                "Добавление фотографии отменено", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        binding.btnAddSpotImages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImagePicker.Companion.with(requireActivity())
+                        .crop()
+                        .compress(1024)
+                        .maxResultSize(1080, 1080)
+                        .createIntent(intent -> {
+                            imagePickerLauncher.launch(intent);
+                            return null;
+                        });
+            }
+        });
+
         return root;
     }
+
+/*    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            assert data != null;
+            Uri imageUri = data.getData();
+            viewModel.addImageUri(imageUri.toString());
+
+            ImageSliderAdapter adapter = new ImageSliderAdapter(getContext(), viewModel.getImagesUrls());
+            binding.imageSliderCreateSpot.setAdapter(adapter);
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            Toast.makeText(requireActivity(), ImagePicker.getError(data), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(requireActivity(), "Получение фото отклонено", Toast.LENGTH_LONG).show();
+        }
+    }*/
 
     private List<SpotType> getSpotTypesFromSharedPreferences(
             SharedPreferences sharedPreferences, Gson gson) {

@@ -130,7 +130,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center_vertical"
-                    android:layout_margin="30dp">
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="5dp">
 
                     <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/image_slider_create_spot"
@@ -146,6 +148,15 @@
                         android:layout_marginBottom="15dp"/>
 
                 </FrameLayout>
+
+                <ImageButton
+                    android:id="@+id/btn_add_spot_images"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/ic_add_image"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="5dp"/>
 
             </LinearLayout>
 
