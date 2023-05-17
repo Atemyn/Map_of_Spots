@@ -2,6 +2,7 @@ package com.example.mapofspotsdrawer.model;
 
 import androidx.annotation.NonNull;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class ImageInfoDto {

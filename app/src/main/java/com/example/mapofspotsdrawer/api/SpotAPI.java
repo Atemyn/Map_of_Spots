@@ -10,6 +10,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -20,6 +21,7 @@ public interface SpotAPI {
 
     @Multipart
     @POST("/api/spots/send-to-moderation")
-    Call<ResponseBody> sendSpotToModeration(@Part("files") List<MultipartBody.Part> files,
+    Call<ResponseBody> sendSpotToModeration(@Header("Authorization") String jwtToken,
+                                            @Part List<MultipartBody.Part> files,
                                             @Part("spotDto") RequestBody spotDto);
 }

@@ -75,6 +75,10 @@ public class YandexMapManager implements IMapManager{
         }
     }
 
+    public PlacemarkMapObject getSingleMapObject() {
+        return singleMapObject;
+    }
+
     private Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
 

@@ -15,23 +15,29 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.SparseBooleanArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.mapofspotsdrawer.R;
+import com.example.mapofspotsdrawer.api.AuthAPI;
+import com.example.mapofspotsdrawer.api.SpotAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentCreateSpotInfoBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.example.mapofspotsdrawer.model.SpaceType;
 import com.example.mapofspotsdrawer.model.SportType;
 import com.example.mapofspotsdrawer.model.SpotType;
+import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.ImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.utils.UIUtils;
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yandex.mapkit.MapKitFactory;
@@ -40,12 +46,27 @@ import com.yandex.mapkit.map.InputListener;
 import com.yandex.mapkit.map.Map;
 import com.yandex.mapkit.mapview.MapView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CreateSpotInfoFragment extends Fragment {
 
@@ -59,11 +80,20 @@ public class CreateSpotInfoFragment extends Fragment {
 
     private MapView mapView;
 
+    private List<SpotType> spotTypes;
+
+    private List<SportType> sportTypes;
+
+    private List<SpaceType> spaceTypes;
+
+    private RetrofitService retrofitService;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapKitFactory.initialize(this.requireContext());
         viewModel = new ViewModelProvider(this).get(CreateSpotInfoViewModel.class);
+        retrofitService = new RetrofitService(getString(R.string.server_url));
     }
 
     @Override
@@ -82,12 +112,9 @@ public class CreateSpotInfoFragment extends Fragment {
         Gson gson = new Gson();
 
         // Получение содержимого таблиц-справочников.
-        List<SpotType> spotTypes =
-                getSpotTypesFromSharedPreferences(sharedPreferences, gson);
-        List<SportType> sportTypes =
-                getSportTypesFromSharedPreferences(sharedPreferences, gson);
-        List<SpaceType> spaceTypes =
-                getSpaceTypesFromSharedPreferences(sharedPreferences, gson);
+        spotTypes = getSpotTypesFromSharedPreferences(sharedPreferences, gson);
+        sportTypes = getSportTypesFromSharedPreferences(sharedPreferences, gson);
+        spaceTypes = getSpaceTypesFromSharedPreferences(sharedPreferences, gson);
 
         setSpotTypesMultipleChoiceListView(spotTypes);
         setSportTypesMultipleChoiceListView(sportTypes);
@@ -275,19 +302,173 @@ public class CreateSpotInfoFragment extends Fragment {
     }
 
     private void addSpot() {
+        try {
+            // Получение токена авторизации.
+            String bearer = "Bearer " + PreferenceManager.getDefaultSharedPreferences(requireActivity())
+                    .getString("jwtToken", null);
 
+            JSONObject spotDtoJsonObject = createSpotDtoJSONObject();
+
+            // Cоздание RequestBody для JSON объекта.
+            RequestBody spotDtoRequestBody =
+                    RequestBody.create(MediaType.parse("application/json"),
+                            spotDtoJsonObject.toString());
+
+            // Формирование списка картинок.
+            List<File> listOfImages = new ArrayList<>();
+            for (String imageStringUrl: viewModel.getImagesUrls()) {
+                URL imageUrl = new URL(imageStringUrl);
+                File imageFile = new File(imageUrl.getFile());
+                listOfImages.add(imageFile);
+            }
+
+            // Формирование части запроса с ключом "files", представляющей собой список объектов класса File.
+            List<MultipartBody.Part> files = new ArrayList<>();
+            for (File file : listOfImages) {
+                RequestBody fileRequestBody =
+                        RequestBody.create(MediaType.parse("image/*"), file);
+                MultipartBody.Part filePart =
+                        MultipartBody.Part.createFormData("files", file.getName(), fileRequestBody);
+                files.add(filePart);
+            }
+
+            SpotAPI spotAPI = retrofitService.getRetrofit().create(SpotAPI.class);
+            spotAPI.sendSpotToModeration(bearer, files, spotDtoRequestBody)
+                    .enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(@NonNull Call<ResponseBody> call,
+                                       @NonNull Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        System.out.println("Ура");
+                    }
+                    else {
+                        disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ResponseBody> call,
+                                      @NonNull Throwable t) {
+                    disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
+                }
+            });
+        }
+        catch (JSONException e) {
+            Toast.makeText(requireActivity(),
+                    "Ошибка формирования тела запроса", Toast.LENGTH_LONG).show();
+        } catch (MalformedURLException e) {
+            Toast.makeText(requireActivity(),
+                    "Ошибка получения фотографий", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void disableProgressBarAndShowNotification(String message) {
+/*        requireActivity().runOnUiThread(() ->
+                binding.progressBar.setVisibility(View.GONE));*/
+        Toast.makeText(getActivity(),
+                message, Toast.LENGTH_LONG).show();
     }
 
     private JSONObject createSpotDtoJSONObject() throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-       /* jsonObject.put("name", binding.etName.getText().toString());
-        jsonObject.put("email", binding.etEmail.getText().toString());
-        jsonObject.put("phoneNumber", binding.etPhoneNumber.getText().toString());
-        jsonObject.put("birthday", binding.etBirthDate.getText().toString().replaceAll("\\.", "-"));
-        jsonObject.put("password", binding.etPassword.getText().toString());*/
+        Point point = YandexMapManager.getInstance().getSingleMapObject().getGeometry();
+        JSONObject spotDtoJsonObject = new JSONObject();
+        spotDtoJsonObject.put("name", binding.etSpotName.getText().toString());
+        spotDtoJsonObject.put("latitude", point.getLatitude());
+        spotDtoJsonObject.put("longitude", point.getLongitude());
+        spotDtoJsonObject.put("description", binding.etSpotDescription.getText().toString());
+        spotDtoJsonObject.put("spotTypeIds", new JSONArray(getSpotTypesListViewCheckedItemsIds()));
+        spotDtoJsonObject.put("sportTypeIds",new JSONArray(getSportTypesListViewCheckedItemsIds()));
+        spotDtoJsonObject.put("spaceTypeId", getSpaceTypesListViewCheckedItemsIds());
 
-        return jsonObject;
+        return spotDtoJsonObject;
     }
+
+    private int[] getSpotTypesListViewCheckedItemsIds() {
+        ListAdapter adapter = binding.listviewSpotTypes.getAdapter();
+
+        SparseBooleanArray checkedItems = binding.listviewSpotTypes.getCheckedItemPositions();
+
+        List<Integer> checkedItemsIds = new ArrayList<>();
+
+        for (int i = 0; i < checkedItems.size(); i++) {
+            if (checkedItems.valueAt(i)) {
+                String spotTypeName = (String) adapter.getItem(checkedItems.keyAt(i));
+                checkedItemsIds.add(getSpotTypeIdByName(spotTypeName));
+            }
+        }
+
+        int[] checkedItemsIdsArray = new int[checkedItemsIds.size()];
+        for (int i = 0; i < checkedItemsIds.size(); i++) {
+            checkedItemsIdsArray[i] = checkedItemsIds.get(i);
+        }
+
+        return checkedItemsIdsArray;
+    }
+
+    private int[] getSportTypesListViewCheckedItemsIds() {
+        ListAdapter adapter = binding.listviewSportTypes.getAdapter();
+
+        SparseBooleanArray checkedItems = binding.listviewSportTypes.getCheckedItemPositions();
+
+        List<Integer> checkedItemsIds = new ArrayList<>();
+
+        for (int i = 0; i < checkedItems.size(); i++) {
+            if (checkedItems.valueAt(i)) {
+                String sportTypeName = (String) adapter.getItem(checkedItems.keyAt(i));
+                checkedItemsIds.add(getSportTypeIdByName(sportTypeName));
+            }
+        }
+
+        int[] checkedItemsIdsArray = new int[checkedItemsIds.size()];
+        for (int i = 0; i < checkedItemsIds.size(); i++) {
+            checkedItemsIdsArray[i] = checkedItemsIds.get(i);
+        }
+
+        return checkedItemsIdsArray;
+    }
+
+    private int getSpaceTypesListViewCheckedItemsIds() {
+        ListAdapter adapter = binding.listviewSpaceType.getAdapter();
+
+        SparseBooleanArray checkedItems = binding.listviewSpaceType.getCheckedItemPositions();
+
+        for (int i = 0; i < checkedItems.size(); i++) {
+            if (checkedItems.valueAt(i)) {
+                String spaceTypeName = (String) adapter.getItem(checkedItems.keyAt(i));
+                return getSpaceTypeIdByName(spaceTypeName);
+            }
+        }
+
+        return -1;
+    }
+
+    private int getSpotTypeIdByName(String name) {
+        for (SpotType spotType : spotTypes) {
+            if (Objects.equals(spotType.getName(), name)) {
+                return spotType.getId();
+            }
+        }
+        return -1;
+    }
+
+    private int getSportTypeIdByName(String name) {
+        for (SportType sportType : sportTypes) {
+            if (Objects.equals(sportType.getName(), name)) {
+                return sportType.getId();
+            }
+        }
+        return -1;
+    }
+
+    private int getSpaceTypeIdByName(String name) {
+        for (SpaceType spaceType : spaceTypes) {
+            if (Objects.equals(spaceType.getName(), name)) {
+                return spaceType.getId();
+            }
+        }
+        return -1;
+    }
+
 
     @Override
     public void onStop() {
