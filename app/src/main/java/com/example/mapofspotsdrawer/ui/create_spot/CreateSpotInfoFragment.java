@@ -10,9 +10,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
+import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentCreateSpotInfoBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
+import com.example.mapofspotsdrawer.ui.utils.UIUtils;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.InputListener;
@@ -36,6 +40,13 @@ public class CreateSpotInfoFragment extends Fragment {
         View root = binding.getRoot();
 
         YandexMapManager.getInstance().setMapView(binding.mapviewCreateSpot);
+
+        String[] items = {"Item 1", "Item 2", "Item 3"};
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(getContext(), R.layout.list_item_multiple_choice, items);
+        binding.listviewSpotTypes.setAdapter(adapter);
+        UIUtils.setListViewHeightBasedOnItems(binding.listviewSpotTypes);
+        binding.listviewSpotTypes.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
 
         return root;
@@ -75,11 +86,4 @@ public class CreateSpotInfoFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-    private boolean isInMapView(float x, float y) {
-        Rect rect = new Rect();
-        binding.mapviewCreateSpot.getGlobalVisibleRect(rect);
-        return rect.contains((int) x, (int) y);
-    }
-
 }
