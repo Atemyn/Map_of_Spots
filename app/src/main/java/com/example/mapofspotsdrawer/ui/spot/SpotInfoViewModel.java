@@ -15,7 +15,7 @@ public class SpotInfoViewModel extends ViewModel {
 
     private String description;
 
-    private List<ImageInfoDto> imageInfoDtoList;
+    private List<String> imagesUrls;
 
     private List<String> spotTypeNames;
 
@@ -55,12 +55,12 @@ public class SpotInfoViewModel extends ViewModel {
         this.description = description;
     }
 
-    public List<ImageInfoDto> getImageInfoDtoList() {
-        return imageInfoDtoList;
+    public List<String> getImagesUrls() {
+        return imagesUrls;
     }
 
-    public void setImageInfoDtoList(List<ImageInfoDto> imageInfoDtoList) {
-        this.imageInfoDtoList = imageInfoDtoList;
+    public void setImagesUrls(List<String> imagesUrls) {
+        this.imagesUrls = imagesUrls;
     }
 
     public List<String> getSpotTypeNames() {

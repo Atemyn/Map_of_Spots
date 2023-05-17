@@ -33,6 +33,7 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -44,7 +45,7 @@ public class SpotInfoFragment extends Fragment {
 
     private SpotInfoViewModel spotInfoViewModel;
 
-    private int[] images = {};
+    private List<String> imagesUrls = new ArrayList<>();
 
     public static SpotInfoFragment newInstance() {
         return new SpotInfoFragment();
@@ -87,7 +88,7 @@ public class SpotInfoFragment extends Fragment {
         setUpdateDateTextView(spot);
         setImages(spot);
 
-        ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(getContext(), images);
+        ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(getContext(), imagesUrls);
         binding.imageSlider.setAdapter(imageSliderAdapter);
 
         binding.indicator.setViewPager(binding.imageSlider);
@@ -274,17 +275,21 @@ public class SpotInfoFragment extends Fragment {
     }
 
     private void setImages(Spot spot) {
-        List<ImageInfoDto> imageInfoDtoList =
-                spotInfoViewModel.getImageInfoDtoList();
-        if (imageInfoDtoList != null && !imageInfoDtoList.isEmpty()) {
-            // TODO: установить фотографии из ViewModel.
+        List<String> viewModelImagesUrls =
+                spotInfoViewModel.getImagesUrls();
+        if (viewModelImagesUrls != null && !viewModelImagesUrls.isEmpty()) {
+            imagesUrls = viewModelImagesUrls;
         }
         else if (spot != null && spot.getImageInfoDtoList() != null
                 && !spot.getImageInfoDtoList().isEmpty()) {
-            // TODO: установить фотографии во ViewModel и в ImageSlider из Spot.
+            List<ImageInfoDto> imagesInfosFromServer = spot.getImageInfoDtoList();
+            for (ImageInfoDto info : imagesInfosFromServer) {
+                imagesUrls.add(info.getUrl());
+            }
+            spotInfoViewModel.setImagesUrls(imagesUrls);
         }
         else {
-            images = new int[]{R.drawable.no_image};
+            imagesUrls.add(getString(R.string.no_image_url));
         }
     }
 

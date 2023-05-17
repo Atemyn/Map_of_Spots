@@ -9,19 +9,22 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.mapofspotsdrawer.R;
+
+import java.util.List;
 
 public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.SliderViewHolder> {
 
     private Context context;
 
-    private int[] images;
+    private List<String> imagesUrls;
 
     private int currentIndex;
 
-    public ImageSliderAdapter(Context context, int[] images) {
+    public ImageSliderAdapter(Context context, List<String> imagesUrls) {
         this.context = context;
-        this.images = images;
+        this.imagesUrls = imagesUrls;
     }
 
     @NonNull
@@ -34,12 +37,14 @@ public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull SliderViewHolder holder, int position) {
-        holder.imageView.setImageResource(images[position]);
+        Glide.with(holder.itemView.getContext())
+                .load(imagesUrls.get(position))
+                .into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return images.length;
+        return imagesUrls.size();
     }
 
     public void setCurrentIndex(int currentIndex) {
