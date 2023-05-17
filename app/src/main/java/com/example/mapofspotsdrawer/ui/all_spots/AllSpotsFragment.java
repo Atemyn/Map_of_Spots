@@ -29,6 +29,8 @@ public class AllSpotsFragment extends Fragment {
 
     private FragmentAllSpotsBinding binding;
 
+    private boolean isViewCreated = false;
+
     private AllSpotsViewModel allSpotsViewModel;
 
     @Override
@@ -47,11 +49,13 @@ public class AllSpotsFragment extends Fragment {
         YandexMapManager.getInstance().setMapView(binding.mapviewAllSpots);
 
         List<Spot> spots = allSpotsViewModel.getSpots();
-        if (spots != null && spots.size() != 0) {
+        // isViewCreated - создан ли фрагмент в результате поворота экрана.
+        if (isViewCreated && spots != null && spots.size() != 0) {
             showSpotsOnMap(spots);
         }
         else {
-            getSpotTypes();
+            isViewCreated = true;
+            getSpots();
         }
 
         return root;
@@ -63,7 +67,7 @@ public class AllSpotsFragment extends Fragment {
         mapManager.addPlacemarks(spots, requireActivity());
     }
 
-    private void getSpotTypes() {
+    private void getSpots() {
         RetrofitService retrofitService = new RetrofitService(getString(R.string.server_url));
 
         binding.progressBarAllSpots.setVisibility(View.VISIBLE);
@@ -135,5 +139,6 @@ public class AllSpotsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        isViewCreated = false;
     }
 }

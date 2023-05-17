@@ -303,6 +303,8 @@ public class CreateSpotInfoFragment extends Fragment {
             String bearer = "Bearer " + PreferenceManager.getDefaultSharedPreferences(requireActivity())
                     .getString("jwtToken", null);
 
+            binding.progressBar.setVisibility(View.VISIBLE);
+
             JSONObject spotDtoJsonObject = createSpotDtoJSONObject();
 
             // Cоздание RequestBody для JSON объекта.
@@ -360,8 +362,8 @@ public class CreateSpotInfoFragment extends Fragment {
     }
 
     private void disableProgressBarAndShowNotification(String message) {
-/*        requireActivity().runOnUiThread(() ->
-                binding.progressBar.setVisibility(View.GONE));*/
+        requireActivity().runOnUiThread(() ->
+                binding.progressBar.setVisibility(View.GONE));
         Toast.makeText(getActivity(),
                 message, Toast.LENGTH_LONG).show();
     }
