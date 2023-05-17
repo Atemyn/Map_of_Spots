@@ -26,7 +26,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.mapofspotsdrawer.R;
-import com.example.mapofspotsdrawer.api.AuthAPI;
 import com.example.mapofspotsdrawer.api.SpotAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentCreateSpotInfoBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
@@ -37,7 +36,6 @@ import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.ImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.utils.UIUtils;
 import com.github.dhaval2404.imagepicker.ImagePicker;
-import com.google.android.gms.common.util.ArrayUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yandex.mapkit.MapKitFactory;
@@ -55,8 +53,6 @@ import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -339,7 +335,8 @@ public class CreateSpotInfoFragment extends Fragment {
                 public void onResponse(@NonNull Call<ResponseBody> call,
                                        @NonNull Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
-                        System.out.println("Ура");
+                        disableProgressBarAndShowNotification("Спот успешно добавлен");
+                        requireActivity().getSupportFragmentManager().popBackStackImmediate();
                     }
                     else {
                         disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
