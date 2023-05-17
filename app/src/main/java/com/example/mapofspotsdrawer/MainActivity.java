@@ -2,7 +2,6 @@ package com.example.mapofspotsdrawer;
 
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.mapofspotsdrawer.api.SpaceTypeAPI;
@@ -67,8 +66,6 @@ public class MainActivity extends AppCompatActivity {
     private void getSpotTypes() {
         RetrofitService retrofitService = new RetrofitService(getString(R.string.server_url));
 
-        binding.progressBar.setVisibility(View.VISIBLE);
-
         // Создание API для совершения запроса к серверу.
         SpotTypeAPI spotTypeAPI = retrofitService.getRetrofit().create(SpotTypeAPI.class);
 
@@ -82,18 +79,18 @@ public class MainActivity extends AppCompatActivity {
                                 getSportTypes(retrofitService);
                             }
                             else {
-                                disableProgressBarAndShowNotification("Ошибка получения тела ответа");
+                                showNotification("Ошибка получения тела ответа");
                             }
                         }
                         else {
-                            disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                            showNotification("Ошибка обработки запроса на сервере");
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<List<SpotType>> call,
                                           @NonNull Throwable t) {
-                        disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
+                        showNotification("Ошибка отправки запроса на сервер");
                     }
                 });
     }
@@ -112,18 +109,18 @@ public class MainActivity extends AppCompatActivity {
                                 getSpaceTypes(retrofitService);
                             }
                             else {
-                                disableProgressBarAndShowNotification("Ошибка получения тела ответа");
+                                showNotification("Ошибка получения тела ответа");
                             }
                         }
                         else {
-                            disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                            showNotification("Ошибка обработки запроса на сервере");
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<List<SportType>> call,
                                           @NonNull Throwable t) {
-                        disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
+                        showNotification("Ошибка отправки запроса на сервер");
                     }
                 });
     }
@@ -138,22 +135,19 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<List<SpaceType>> call,
                                            @NonNull Response<List<SpaceType>> response) {
                         if (response.isSuccessful()) {
-                            if(processSpaceTypesResponseBody(response.body())) {
-                                binding.progressBar.setVisibility(View.GONE);
-                            }
-                            else {
-                                disableProgressBarAndShowNotification("Ошибка получения тела ответа");
+                            if(!processSpaceTypesResponseBody(response.body())) {
+                                showNotification("Ошибка получения тела ответа");
                             }
                         }
                         else {
-                            disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                            showNotification("Ошибка обработки запроса на сервере");
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<List<SpaceType>> call,
                                           @NonNull Throwable t) {
-                        disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
+                        showNotification("Ошибка отправки запроса на сервер");
                     }
                 });
     }
@@ -198,9 +192,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void disableProgressBarAndShowNotification(String message) {
-        this.runOnUiThread(() ->
-                binding.progressBar.setVisibility(View.GONE));
+    private void showNotification(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
