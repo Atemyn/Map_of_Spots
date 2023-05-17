@@ -86,4 +86,5 @@
     <string name="no_image_url">https://static.tildacdn.com/stor3066-6134-4434-a132-313064366231/77947111.jpg</string>
     <string name="add_spot_image_content_desc">Добавить картинку для спота</string>
     <string name="open_close_fullscreen_content_desc">Открытие/Скрытие карты на полный экран</string>
+    <string name="spot_images">Фотографии спота:</string>
 </resources>

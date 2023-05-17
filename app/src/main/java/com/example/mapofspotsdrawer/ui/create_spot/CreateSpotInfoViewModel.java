@@ -14,6 +14,11 @@ public class CreateSpotInfoViewModel extends ViewModel {
         imagesUrls.add(uri);
     }
 
+    public void removeImageUriAt(int index) {
+        imagesUrls.remove(index);
+    }
+
+
     public List<String> getImagesUrls() {
         return imagesUrls;
     }
