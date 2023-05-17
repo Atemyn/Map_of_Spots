@@ -87,4 +87,5 @@
     <string name="add_spot_image_content_desc">Добавить картинку для спота</string>
     <string name="open_close_fullscreen_content_desc">Открытие/Скрытие карты на полный экран</string>
     <string name="spot_images">Фотографии спота:</string>
+    <string name="add_spot">Добавить спот</string>
 </resources>

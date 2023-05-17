@@ -40,6 +40,9 @@ import com.yandex.mapkit.map.InputListener;
 import com.yandex.mapkit.map.Map;
 import com.yandex.mapkit.mapview.MapView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -180,6 +183,8 @@ public class CreateSpotInfoFragment extends Fragment {
             }
         });
 
+        binding.btnAddSpot.setOnClickListener(view -> addSpot());
+
         return root;
     }
 
@@ -267,6 +272,21 @@ public class CreateSpotInfoFragment extends Fragment {
         binding.listviewSpaceType.setAdapter(adapter);
         UIUtils.setListViewHeightBasedOnItems(binding.listviewSpaceType);
         binding.listviewSpaceType.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+    }
+
+    private void addSpot() {
+
+    }
+
+    private JSONObject createSpotDtoJSONObject() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+       /* jsonObject.put("name", binding.etName.getText().toString());
+        jsonObject.put("email", binding.etEmail.getText().toString());
+        jsonObject.put("phoneNumber", binding.etPhoneNumber.getText().toString());
+        jsonObject.put("birthday", binding.etBirthDate.getText().toString().replaceAll("\\.", "-"));
+        jsonObject.put("password", binding.etPassword.getText().toString());*/
+
+        return jsonObject;
     }
 
     @Override
