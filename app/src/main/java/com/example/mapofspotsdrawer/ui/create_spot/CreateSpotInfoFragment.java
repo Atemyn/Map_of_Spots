@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -15,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,7 @@ import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.InputListener;
 import com.yandex.mapkit.map.Map;
+import com.yandex.mapkit.mapview.MapView;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -49,6 +52,8 @@ public class CreateSpotInfoFragment extends Fragment {
     private CreateSpotInfoViewModel viewModel;
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+
+    private MapView mapView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +69,9 @@ public class CreateSpotInfoFragment extends Fragment {
         binding = FragmentCreateSpotInfoBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        YandexMapManager.getInstance().setMapView(binding.mapviewCreateSpot);
+        mapView = binding.mapviewCreateSpot;
+
+        YandexMapManager.getInstance().setMapView(mapView);
 
         SharedPreferences sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(requireActivity());
@@ -81,6 +88,28 @@ public class CreateSpotInfoFragment extends Fragment {
         setSpotTypesMultipleChoiceListView(spotTypes);
         setSportTypesMultipleChoiceListView(sportTypes);
         setSpaceTypeListView(spaceTypes);
+
+        binding.btnOpenFullscreen.setTag(R.drawable.ic_open_fullscreen);
+        binding.btnOpenFullscreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if ((int) binding.btnOpenFullscreen.getTag()
+                        == R.drawable.ic_open_fullscreen) {
+                    binding.btnOpenFullscreen.setImageResource(R.drawable.ic_close_fullscreen);
+                    binding.btnOpenFullscreen.setTag(R.drawable.ic_close_fullscreen);
+                    ViewGroup.LayoutParams layoutParams = mapView.getLayoutParams();
+                    layoutParams.height = transformDpUnitsInPx(250);
+                    mapView.setLayoutParams(layoutParams);
+                }
+                else {
+                    binding.btnOpenFullscreen.setImageResource(R.drawable.ic_open_fullscreen);
+                    binding.btnOpenFullscreen.setTag(R.drawable.ic_open_fullscreen);
+                    ViewGroup.LayoutParams layoutParams = mapView.getLayoutParams();
+                    layoutParams.height = 0;
+                    mapView.setLayoutParams(layoutParams);
+                }
+            }
+        });
 
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -119,22 +148,11 @@ public class CreateSpotInfoFragment extends Fragment {
         return root;
     }
 
-/*    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            assert data != null;
-            Uri imageUri = data.getData();
-            viewModel.addImageUri(imageUri.toString());
-
-            ImageSliderAdapter adapter = new ImageSliderAdapter(getContext(), viewModel.getImagesUrls());
-            binding.imageSliderCreateSpot.setAdapter(adapter);
-        } else if (resultCode == ImagePicker.RESULT_ERROR) {
-            Toast.makeText(requireActivity(), ImagePicker.getError(data), Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(requireActivity(), "Получение фото отклонено", Toast.LENGTH_LONG).show();
-        }
-    }*/
+    private int transformDpUnitsInPx(int unitsInPx) {
+        float density = getResources().getDisplayMetrics().density;
+        return  (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, unitsInPx, getResources().getDisplayMetrics());
+    }
 
     private List<SpotType> getSpotTypesFromSharedPreferences(
             SharedPreferences sharedPreferences, Gson gson) {
@@ -198,7 +216,7 @@ public class CreateSpotInfoFragment extends Fragment {
 
     @Override
     public void onStop() {
-        binding.mapviewCreateSpot.onStop();
+        mapView.onStop();
         MapKitFactory.getInstance().onStop();
         super.onStop();
     }
@@ -207,10 +225,10 @@ public class CreateSpotInfoFragment extends Fragment {
     public void onStart() {
         super.onStart();
         MapKitFactory.getInstance().onStart();
-        binding.mapviewCreateSpot.onStart();
+        mapView.onStart();
         YandexMapManager mapManager = YandexMapManager.getInstance();
 
-        binding.mapviewCreateSpot.getMap().addInputListener(new InputListener() {
+        mapView.getMap().addInputListener(new InputListener() {
             @Override
             public void onMapTap(@NonNull Map map, @NonNull Point point) {
                 mapManager.setMapObject(point, requireActivity());

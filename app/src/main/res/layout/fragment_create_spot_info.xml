@@ -12,17 +12,44 @@
         android:orientation="vertical"
         android:nestedScrollingEnabled="true" >
 
-        <TextView
-            android:layout_height="match_parent"
+        <LinearLayout
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/select_spot_position" />
+            android:orientation="horizontal" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="@string/select_spot_position" />
+
+                <ImageButton
+                    android:id="@+id/btn_open_fullscreen"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/ic_open_fullscreen"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="35dp"
+                    android:layout_marginBottom="5dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:contentDescription="@string/open_close_fullscreen_content_desc" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
 
         <com.yandex.mapkit.mapview.MapView
             android:id="@+id/mapview_create_spot"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="0dp"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="10dp"
@@ -156,7 +183,8 @@
                     android:src="@drawable/ic_add_image"
                     android:layout_marginStart="30dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="5dp"/>
+                    android:layout_marginBottom="5dp"
+                    android:contentDescription="@string/add_spot_image_content_desc" />
 
             </LinearLayout>
 
