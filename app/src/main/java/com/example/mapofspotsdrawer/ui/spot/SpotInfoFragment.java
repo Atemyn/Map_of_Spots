@@ -24,7 +24,7 @@ import com.example.mapofspotsdrawer.model.SpaceType;
 import com.example.mapofspotsdrawer.model.SportType;
 import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.model.SpotType;
-import com.example.mapofspotsdrawer.ui.adapter.ImageSliderAdapter;
+import com.example.mapofspotsdrawer.ui.adapter.ResponseBodyImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.utils.UIUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -88,7 +88,7 @@ public class SpotInfoFragment extends Fragment {
         setUpdateDateTextView(spot);
         setImages(spot);
 
-        ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(getContext(), imagesUrls);
+        ResponseBodyImageSliderAdapter imageSliderAdapter = new ResponseBodyImageSliderAdapter(requireActivity(), imagesUrls);
         binding.imageSlider.setAdapter(imageSliderAdapter);
 
         binding.indicator.setViewPager(binding.imageSlider);
