@@ -41,15 +41,28 @@ public class CreateSpotInfoFragment extends Fragment {
 
         YandexMapManager.getInstance().setMapView(binding.mapviewCreateSpot);
 
-        String[] items = {"Item 1", "Item 2", "Item 3"};
+        setSpotTypesMultipleChoiceListView();
+        setSportTypesMultipleChoiceListView();
+
+        return root;
+    }
+
+    private void setSpotTypesMultipleChoiceListView() {
+        String[] items = {"SpotType 1", "SpotType 2", "SpotType 3"};
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(getContext(), R.layout.list_item_multiple_choice, items);
         binding.listviewSpotTypes.setAdapter(adapter);
         UIUtils.setListViewHeightBasedOnItems(binding.listviewSpotTypes);
         binding.listviewSpotTypes.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+    }
 
-
-        return root;
+    private void setSportTypesMultipleChoiceListView() {
+        String[] items = {"Sport 1", "Sport 2", "Sport 3", "Sport 4", "Sport 5"};
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(getContext(), R.layout.list_item_multiple_choice, items);
+        binding.listviewSportTypes.setAdapter(adapter);
+        UIUtils.setListViewHeightBasedOnItems(binding.listviewSportTypes);
+        binding.listviewSportTypes.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
     }
 
     @Override
