@@ -33,7 +33,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -156,11 +159,18 @@ public class RegisterFragment extends Fragment {
     }
 
     private JSONObject createJSONObject() throws JSONException {
+        DateTimeFormatter inFormatter
+                = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault());
+        DateTimeFormatter outFormatter
+                = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault());
+        LocalDate birthday =
+                LocalDate.parse(binding.etBirthDate.getText().toString(), inFormatter);
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("name", binding.etName.getText().toString());
         jsonObject.put("email", binding.etEmail.getText().toString());
         jsonObject.put("phoneNumber", binding.etPhoneNumber.getText().toString());
-        jsonObject.put("birthday", binding.etBirthDate.getText().toString().replaceAll("\\.", "-"));
+        jsonObject.put("birthday", outFormatter.format(birthday));
         jsonObject.put("password", binding.etPassword.getText().toString());
 
         return jsonObject;

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Фоновый слой с прозрачным цветом -->
+    <item>
+        <color android:color="@android:color/transparent" />
+    </item>
+    <!-- Иконка -->
+    <item android:drawable="@drawable/icon_spot_map" />
+</layer-list>

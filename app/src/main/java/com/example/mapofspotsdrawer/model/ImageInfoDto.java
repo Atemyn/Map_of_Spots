@@ -2,10 +2,11 @@ package com.example.mapofspotsdrawer.model;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 
-public class ImageInfoDto {
+public class ImageInfoDto implements Serializable {
     private String url;
 
     private int size;
