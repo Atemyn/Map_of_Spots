@@ -39,6 +39,10 @@ public class YandexMapManager implements IMapManager{
     private YandexMapManager() {
     }
 
+    public void setSingleMapObject(PlacemarkMapObject singleMapObject) {
+        this.singleMapObject = singleMapObject;
+    }
+
     public void setMapView(MapView mapView) {
         this.mapView = mapView;
         mapView.getMap().setRotateGesturesEnabled(false);

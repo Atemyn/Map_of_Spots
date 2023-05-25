@@ -14,6 +14,7 @@ import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentCreateSpotBinding;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
 import com.example.mapofspotsdrawer.ui.profile.ProfileFragment;
+import com.yandex.mapkit.map.PlacemarkMapObject;
 
 public class CreateSpotFragment extends Fragment {
     private FragmentCreateSpotBinding binding;

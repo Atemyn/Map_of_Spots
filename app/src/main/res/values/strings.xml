@@ -50,7 +50,7 @@
     <string name="your_name">Логин</string>
 
     <string name="server_url1">http://185.249.227.104:8080</string>
-    <string name="server_url">http://192.168.1.2:8080</string>
+    <string name="server_url">http://192.168.1.4:8080</string>
     <string name="user_image">Фото пользователя</string>
     <string name="iv_name_desc">Иконка имени</string>
     <string name="iv_email_desc">Иконка для email</string>
