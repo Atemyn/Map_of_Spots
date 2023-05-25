@@ -339,7 +339,7 @@ public class CreateSpotInfoFragment extends Fragment {
                                        @NonNull Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         disableProgressBarAndShowNotification("Спот успешно добавлен");
-                        requireActivity().getSupportFragmentManager().popBackStackImmediate();
+                        requireActivity().onBackPressed();
                     }
                     else {
                         disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
