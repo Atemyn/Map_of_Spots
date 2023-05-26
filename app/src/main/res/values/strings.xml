@@ -89,4 +89,8 @@
     <string name="open_close_fullscreen_content_desc">Открытие/Скрытие карты на полный экран</string>
     <string name="spot_images">Фотографии спота:</string>
     <string name="add_spot">Добавить спот</string>
+    <string name="ib_like_desc">Иконка лайка</string>
+    <string name="default_likes_value">0</string>
+    <string name="default_favorites_value">0</string>
+    <string name="ib_favorite_desc">Иконка избранного</string>
 </resources>
