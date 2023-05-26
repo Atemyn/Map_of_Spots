@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -64,7 +65,7 @@ public class AllSpotsFragment extends Fragment {
     private void showSpotsOnMap(List<Spot> spots) {
         YandexMapManager mapManager = YandexMapManager.getInstance();
 
-        mapManager.addPlacemarks(spots, requireActivity());
+        mapManager.addPlacemarks(spots, (AppCompatActivity) requireActivity());
     }
 
     private void getSpots() {

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -96,7 +97,7 @@ public class YandexMapManager implements IMapManager{
         return bitmap;
     }
 
-    private void addPlacemark(Spot spot, FragmentActivity activity) {
+    private void addPlacemark(Spot spot, AppCompatActivity activity) {
         PlacemarkMapObject placemark =
                 mapView.getMap().getMapObjects().addPlacemark(
                         spot.getPosition(), ImageProvider.fromBitmap(
@@ -108,7 +109,7 @@ public class YandexMapManager implements IMapManager{
     }
 
     @Override
-    public void addPlacemarks(List<Spot> spots, FragmentActivity activity) {
+    public void addPlacemarks(List<Spot> spots, AppCompatActivity activity) {
         listener.setActivity(activity);
 
         for (Spot spot : spots) {

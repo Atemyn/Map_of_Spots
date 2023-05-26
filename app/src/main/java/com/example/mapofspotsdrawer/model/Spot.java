@@ -25,6 +25,10 @@ public class Spot implements Serializable {
 
     private List<ImageInfoDto> imageInfoDtoList;
 
+    private Integer likeNumber;
+
+    private Integer favoriteNumber;
+
     private List<Integer> spotTypeIds;
 
     private List<Integer> sportTypeIds;
@@ -37,6 +41,7 @@ public class Spot implements Serializable {
     public Spot(String name, Double latitude, Double longitude,
                 Boolean accepted, Date addingDate, Date updatingDate,
                 String description, List<ImageInfoDto> imageInfoDtoList,
+                Integer likeNumber, Integer favoriteNumber,
                 List<Integer> spotTypeIds, List<Integer> sportTypeIds, Integer spaceTypeId) {
         this.name = name;
         this.latitude = latitude;
@@ -46,6 +51,8 @@ public class Spot implements Serializable {
         this.updatingDate = updatingDate;
         this.description = description;
         this.imageInfoDtoList = imageInfoDtoList;
+        this.likeNumber = likeNumber;
+        this.favoriteNumber = favoriteNumber;
         this.spotTypeIds = spotTypeIds;
         this.sportTypeIds = sportTypeIds;
         this.spaceTypeId = spaceTypeId;
@@ -119,6 +126,22 @@ public class Spot implements Serializable {
         this.imageInfoDtoList = imageInfoDtoList;
     }
 
+    public Integer getLikeNumber() {
+        return likeNumber;
+    }
+
+    public void setLikeNumber(Integer likeNumber) {
+        this.likeNumber = likeNumber;
+    }
+
+    public Integer getFavoriteNumber() {
+        return favoriteNumber;
+    }
+
+    public void setFavoriteNumber(Integer favoriteNumber) {
+        this.favoriteNumber = favoriteNumber;
+    }
+
     public List<Integer> getSpotTypeIds() {
         return spotTypeIds;
     }
@@ -155,6 +178,8 @@ public class Spot implements Serializable {
                 ", updatingDate=" + updatingDate +
                 ", description='" + description + '\'' +
                 ", imageInfoDtoList=" + imageInfoDtoList +
+                ", likeNumber=" + likeNumber +
+                ", favoriteNumber=" + favoriteNumber +
                 ", spotTypeIds=" + spotTypeIds +
                 ", sportTypeIds=" + sportTypeIds +
                 ", spaceTypeId=" + spaceTypeId +
