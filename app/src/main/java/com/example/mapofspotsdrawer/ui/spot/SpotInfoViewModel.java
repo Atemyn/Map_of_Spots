@@ -17,6 +17,10 @@ public class SpotInfoViewModel extends ViewModel {
 
     private List<String> imagesUrls;
 
+    private String likeNumber;
+
+    private String favoriteNumber;
+
     private List<String> spotTypeNames;
 
     private List<String> sportTypeNames;
@@ -61,6 +65,22 @@ public class SpotInfoViewModel extends ViewModel {
 
     public void setImagesUrls(List<String> imagesUrls) {
         this.imagesUrls = imagesUrls;
+    }
+
+    public String getLikeNumber() {
+        return likeNumber;
+    }
+
+    public void setLikeNumber(String likeNumber) {
+        this.likeNumber = likeNumber;
+    }
+
+    public String getFavoriteNumber() {
+        return favoriteNumber;
+    }
+
+    public void setFavoriteNumber(String favoriteNumber) {
+        this.favoriteNumber = favoriteNumber;
     }
 
     public List<String> getSpotTypeNames() {

@@ -2,6 +2,7 @@ package com.example.mapofspotsdrawer.ui.spot;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -47,6 +48,10 @@ public class SpotInfoFragment extends Fragment {
 
     private List<String> imagesUrls = new ArrayList<>();
 
+    private boolean isLiked = false;
+
+    private boolean isAddedToFavorite = false;
+
     public static SpotInfoFragment newInstance() {
         return new SpotInfoFragment();
     }
@@ -81,6 +86,8 @@ public class SpotInfoFragment extends Fragment {
 
         setNameTextView(spot);
         setDescriptionTextView(spot);
+        setLikeNumberTextView(spot);
+        setFavoriteNumberTextView(spot);
         setSpotTypesListView(spot, spotTypes);
         setSportTypesListView(spot, sportTypes);
         setSpaceTypeTextView(spot, spaceTypes);
@@ -88,7 +95,30 @@ public class SpotInfoFragment extends Fragment {
         setUpdateDateTextView(spot);
         setImages(spot);
 
-        ResponseBodyImageSliderAdapter imageSliderAdapter = new ResponseBodyImageSliderAdapter(requireActivity(), imagesUrls);
+        binding.ibLike.setOnClickListener(view -> {
+            if (isLiked) {
+                binding.ibLike.setImageResource(R.drawable.heart_empty);
+                isLiked = false;
+            }
+            else {
+                binding.ibLike.setImageResource(R.drawable.heart_filled);
+                isLiked = true;
+            }
+        });
+
+        binding.ibFavorite.setOnClickListener(view -> {
+            if (isAddedToFavorite) {
+                binding.ibFavorite.setImageResource(R.drawable.star_empty);
+                isAddedToFavorite = false;
+            }
+            else {
+                binding.ibFavorite.setImageResource(R.drawable.star_filled);
+                isAddedToFavorite = true;
+            }
+        });
+
+        ResponseBodyImageSliderAdapter imageSliderAdapter =
+                new ResponseBodyImageSliderAdapter(requireActivity(), imagesUrls);
         binding.imageSlider.setAdapter(imageSliderAdapter);
 
         binding.indicator.setViewPager(binding.imageSlider);
@@ -166,6 +196,32 @@ public class SpotInfoFragment extends Fragment {
                 spot.getDescription() != null && !spot.getDescription().isEmpty()) {
             spotInfoViewModel.setDescription(spot.getDescription());
             binding.tvDescription.setText(spot.getDescription());
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setLikeNumberTextView(Spot spot) {
+        String likeNumberString = spotInfoViewModel.getLikeNumber();
+        if (likeNumberString != null && !likeNumberString.isEmpty()) {
+            binding.tvLikes.setText(likeNumberString);
+        }
+        else if (spot != null && spot.getLikeNumber() != null) {
+            Integer likeNumber = spot.getLikeNumber();
+            spotInfoViewModel.setLikeNumber(likeNumber.toString());
+            binding.tvLikes.setText(likeNumber.toString());
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setFavoriteNumberTextView(Spot spot) {
+        String favoriteNumberString = spotInfoViewModel.getFavoriteNumber();
+        if (favoriteNumberString != null && !favoriteNumberString.isEmpty()) {
+            binding.tvFavorites.setText(favoriteNumberString);
+        }
+        else if (spot != null && spot.getLikeNumber() != null) {
+            Integer favoriteNumber = spot.getFavoriteNumber();
+            spotInfoViewModel.setFavoriteNumber(favoriteNumber.toString());
+            binding.tvFavorites.setText(favoriteNumber.toString());
         }
     }
 
