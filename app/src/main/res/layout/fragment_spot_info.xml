@@ -5,299 +5,314 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.spot.SpotInfoFragment">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ScrollView
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" >
-
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/tv_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/spot_name"
-                android:textSize="25sp"
-                android:textColor="@color/black"
-                android:padding="12dp"
-                android:layout_marginStart="15dp"
-                android:textStyle="bold" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_vertical"
-                android:padding="16dp">
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/image_slider"
-                    android:layout_height="275dp"
-                    android:layout_width="match_parent" />
-
-                <me.relex.circleindicator.CircleIndicator3
-                    android:id="@+id/indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:ci_drawable="@drawable/circle_indicator"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:layout_marginBottom="15dp"/>
-
-            </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ScrollView
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:baselineAligned="false">
+            android:layout_width="match_parent" >
 
             <LinearLayout
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_width="match_parent"
+                android:orientation="vertical" >
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cv_likes"
+                <TextView
+                    android:id="@+id/tv_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="4dp"
-                    app:cardPreventCornerOverlap="false"
-                    app:cardUseCompatPadding="true"
-                    app:contentPadding="5dp">
+                    android:text="@string/spot_name"
+                    android:textSize="25sp"
+                    android:textColor="@color/black"
+                    android:padding="12dp"
+                    android:layout_marginStart="15dp"
+                    android:textStyle="bold" />
 
-                    <LinearLayout
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/image_slider"
+                        android:layout_height="275dp"
+                        android:layout_width="match_parent" />
+
+                    <me.relex.circleindicator.CircleIndicator3
+                        android:id="@+id/indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:ci_drawable="@drawable/circle_indicator"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:layout_marginBottom="15dp"/>
+
+                </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cv_likes"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="4dp"
+                        app:cardPreventCornerOverlap="false"
+                        app:cardUseCompatPadding="true"
+                        app:contentPadding="5dp">
 
-                        <ImageButton
-                            android:id="@+id/ib_like"
-                            android:layout_width="80dp"
-                            android:layout_height="50dp"
-                            android:layout_marginEnd="20dp"
-                            android:contentDescription="@string/ib_like_desc"
-                            android:src="@drawable/heart_empty"
-                            android:scaleType="fitCenter"
-                            app:cardCornerRadius="100dp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/tv_likes"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/default_likes_value"
-                            android:layout_gravity="center_vertical"
-                            android:textSize="18sp"
-                            android:textColor="@color/black"
-                            android:textStyle="bold" />
+                            <ImageButton
+                                android:id="@+id/ib_like"
+                                android:layout_width="80dp"
+                                android:layout_height="50dp"
+                                android:layout_marginEnd="20dp"
+                                android:contentDescription="@string/ib_like_desc"
+                                android:background="@color/white"
+                                android:src="@drawable/heart_empty"
+                                android:scaleType="fitCenter"
+                                app:cardCornerRadius="100dp" />
 
-                    </LinearLayout>
+                            <TextView
+                                android:id="@+id/tv_likes"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/default_likes_value"
+                                android:layout_gravity="center_vertical"
+                                android:textSize="18sp"
+                                android:textColor="@color/black"
+                                android:textStyle="bold" />
 
-                </androidx.cardview.widget.CardView>
+                        </LinearLayout>
 
-            </LinearLayout>
+                    </androidx.cardview.widget.CardView>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
+                </LinearLayout>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cv_favorites"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="4dp"
-                    app:cardPreventCornerOverlap="false"
-                    app:cardUseCompatPadding="true"
-                    app:contentPadding="5dp">
+                    android:layout_weight="1">
 
-                    <LinearLayout
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cv_favorites"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="4dp"
+                        app:cardPreventCornerOverlap="false"
+                        app:cardUseCompatPadding="true"
+                        app:contentPadding="5dp">
 
-                        <ImageButton
-                            android:id="@+id/ib_favorite"
-                            android:layout_width="80dp"
-                            android:layout_height="50dp"
-                            android:layout_marginEnd="20dp"
-                            android:contentDescription="@string/ib_favorite_desc"
-                            android:padding="10dp"
-                            android:src="@drawable/star_empty"
-                            android:scaleType="fitCenter"
-                            app:cardCornerRadius="100dp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/tv_favorites"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/default_favorites_value"
-                            android:layout_gravity="center_vertical"
-                            android:textSize="18sp"
-                            android:textColor="@color/black"
-                            android:textStyle="bold" />
+                            <ImageButton
+                                android:id="@+id/ib_favorite"
+                                android:layout_width="80dp"
+                                android:layout_height="50dp"
+                                android:layout_marginEnd="20dp"
+                                android:contentDescription="@string/ib_favorite_desc"
+                                android:background="@color/white"
+                                android:padding="5dp"
+                                android:src="@drawable/star_empty"
+                                android:scaleType="fitCenter"
+                                app:cardCornerRadius="100dp" />
 
-                    </LinearLayout>
+                            <TextView
+                                android:id="@+id/tv_favorites"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/default_favorites_value"
+                                android:layout_gravity="center_vertical"
+                                android:textSize="18sp"
+                                android:textColor="@color/black"
+                                android:textStyle="bold" />
 
-                </androidx.cardview.widget.CardView>
+                        </LinearLayout>
 
-            </LinearLayout>
+                    </androidx.cardview.widget.CardView>
 
-        </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/spot_description"
-                android:textSize="15sp"
-                android:layout_marginStart="15dp"
-                android:textColor="@color/black"
-                android:padding="5dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_spot_types_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/spot_types"
-                    android:textSize="15sp"
-                    android:layout_marginStart="15dp"
-                    android:textColor="@color/black"
-                    android:padding="5dp"
-                    android:textStyle="bold" />
-
-                <ListView
-                    android:id="@+id/lv_spot_types"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:scrollbars="none"
-                    tools:ignore="NestedScrolling"/>
+                </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
                 <TextView
-                    android:id="@+id/tv_sport_types_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sport_types"
-                    android:textSize="15sp"
-                    android:layout_marginStart="15dp"
-                    android:textColor="@color/black"
-                    android:padding="5dp"
-                    android:textStyle="bold" />
-
-                <ListView
-                    android:id="@+id/lv_sport_types"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:scrollbars="none"
-                    tools:ignore="NestedScrolling"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_space_type_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/space_type"
-                    android:textSize="15sp"
-                    android:layout_marginStart="15dp"
-                    android:textColor="@color/black"
-                    android:padding="5dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_space_type"
+                    android:id="@+id/tv_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/space_type_name"
+                    android:text="@string/spot_description"
                     android:textSize="15sp"
                     android:layout_marginStart="15dp"
-                    android:layout_marginEnd="16dp"
                     android:textColor="@color/black"
                     android:padding="5dp"/>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_adding_date_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/spot_adding_date_desc"
-                    android:textSize="15sp"
-                    android:layout_marginStart="15dp"
-                    android:padding="5dp" />
-
-                <TextView
-                    android:id="@+id/tv_adding_date"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/spot_adding_date"
-                    android:textSize="15sp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="16dp"
-                    android:padding="5dp"/>
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_spot_types_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/spot_types"
+                        android:textSize="15sp"
+                        android:layout_marginStart="15dp"
+                        android:textColor="@color/black"
+                        android:padding="5dp"
+                        android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                    <ListView
+                        android:id="@+id/lv_spot_types"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:scrollbars="none"
+                        tools:ignore="NestedScrolling"/>
 
-                <TextView
-                    android:id="@+id/tv_update_date_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/spot_update_date_desc"
-                    android:textSize="15sp"
-                    android:layout_marginStart="15dp"
-                    android:padding="5dp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tv_update_date"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/spot_update_date"
-                    android:textSize="15sp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="16dp"
-                    android:padding="5dp"/>
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_sport_types_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sport_types"
+                        android:textSize="15sp"
+                        android:layout_marginStart="15dp"
+                        android:textColor="@color/black"
+                        android:padding="5dp"
+                        android:textStyle="bold" />
+
+                    <ListView
+                        android:id="@+id/lv_sport_types"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:scrollbars="none"
+                        tools:ignore="NestedScrolling"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_space_type_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/space_type"
+                        android:textSize="15sp"
+                        android:layout_marginStart="15dp"
+                        android:textColor="@color/black"
+                        android:padding="5dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_space_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/space_type_name"
+                        android:textSize="15sp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="16dp"
+                        android:textColor="@color/black"
+                        android:padding="5dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_adding_date_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/spot_adding_date_desc"
+                        android:textSize="15sp"
+                        android:layout_marginStart="15dp"
+                        android:padding="5dp" />
+
+                    <TextView
+                        android:id="@+id/tv_adding_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/spot_adding_date"
+                        android:textSize="15sp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="16dp"
+                        android:padding="5dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_update_date_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/spot_update_date_desc"
+                        android:textSize="15sp"
+                        android:layout_marginStart="15dp"
+                        android:padding="5dp" />
+
+                    <TextView
+                        android:id="@+id/tv_update_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/spot_update_date"
+                        android:textSize="15sp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="16dp"
+                        android:padding="5dp"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </ScrollView>
 
-    </ScrollView>
+    </FrameLayout>
+
+    <!-- Прогресс-бар -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 </FrameLayout>

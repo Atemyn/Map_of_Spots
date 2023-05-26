@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 
 public class Spot implements Serializable {
+    private Long id;
+
     private String name;
 
     private Double latitude;
@@ -38,11 +40,12 @@ public class Spot implements Serializable {
     public Spot() {
     }
 
-    public Spot(String name, Double latitude, Double longitude,
+    public Spot(Long id, String name, Double latitude, Double longitude,
                 Boolean accepted, Date addingDate, Date updatingDate,
                 String description, List<ImageInfoDto> imageInfoDtoList,
                 Integer likeNumber, Integer favoriteNumber,
                 List<Integer> spotTypeIds, List<Integer> sportTypeIds, Integer spaceTypeId) {
+        this.id = id;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -60,6 +63,14 @@ public class Spot implements Serializable {
 
     public Point getPosition() {
         return new Point(latitude, longitude);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

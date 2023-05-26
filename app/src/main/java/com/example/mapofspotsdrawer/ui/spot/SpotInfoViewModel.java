@@ -3,6 +3,7 @@ package com.example.mapofspotsdrawer.ui.spot;
 import androidx.lifecycle.ViewModel;
 
 import com.example.mapofspotsdrawer.model.ImageInfoDto;
+import com.example.mapofspotsdrawer.model.SpotUserDto;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class SpotInfoViewModel extends ViewModel {
     private String likeNumber;
 
     private String favoriteNumber;
+
+    private SpotUserDto spotUserDto;
 
     private List<String> spotTypeNames;
 
@@ -81,6 +84,14 @@ public class SpotInfoViewModel extends ViewModel {
 
     public void setFavoriteNumber(String favoriteNumber) {
         this.favoriteNumber = favoriteNumber;
+    }
+
+    public SpotUserDto getSpotUserDto() {
+        return spotUserDto;
+    }
+
+    public void setSpotUserDto(SpotUserDto spotUserDto) {
+        this.spotUserDto = spotUserDto;
     }
 
     public List<String> getSpotTypeNames() {

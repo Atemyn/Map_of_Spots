@@ -17,14 +17,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.example.mapofspotsdrawer.R;
+import com.example.mapofspotsdrawer.api.LikesFavoritesAPI;
+import com.example.mapofspotsdrawer.api.UserAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentSpotInfoBinding;
 import com.example.mapofspotsdrawer.model.ImageInfoDto;
 import com.example.mapofspotsdrawer.model.SpaceType;
 import com.example.mapofspotsdrawer.model.SportType;
 import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.model.SpotType;
+import com.example.mapofspotsdrawer.model.SpotUserDto;
+import com.example.mapofspotsdrawer.model.User;
+import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.ResponseBodyImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.utils.UIUtils;
 import com.google.gson.Gson;
@@ -40,6 +46,11 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public class SpotInfoFragment extends Fragment {
 
     private FragmentSpotInfoBinding binding;
@@ -47,10 +58,6 @@ public class SpotInfoFragment extends Fragment {
     private SpotInfoViewModel spotInfoViewModel;
 
     private List<String> imagesUrls = new ArrayList<>();
-
-    private boolean isLiked = false;
-
-    private boolean isAddedToFavorite = false;
 
     public static SpotInfoFragment newInstance() {
         return new SpotInfoFragment();
@@ -95,26 +102,49 @@ public class SpotInfoFragment extends Fragment {
         setUpdateDateTextView(spot);
         setImages(spot);
 
+        String token = PreferenceManager.getDefaultSharedPreferences(requireActivity())
+                .getString("jwtToken", null);
+        if (token != null && !token.isEmpty()) {
+            setLikedAndAddedToFavoriteImageButtons(spot, token);
+        }
+        else {
+            binding.cvLikes.setVisibility(View.GONE);
+            binding.cvFavorites.setVisibility(View.GONE);
+        }
+
         binding.ibLike.setOnClickListener(view -> {
-            if (isLiked) {
-                binding.ibLike.setImageResource(R.drawable.heart_empty);
-                isLiked = false;
-            }
-            else {
-                binding.ibLike.setImageResource(R.drawable.heart_filled);
-                isLiked = true;
+            SpotUserDto spotUserDto = spotInfoViewModel.getSpotUserDto();
+            if (spotUserDto != null) {
+                if (spotUserDto.getLiked()) {
+                    binding.ibLike.setImageResource(R.drawable.heart_empty);
+                    spotUserDto.setLiked(false);
+                    spotInfoViewModel.setLikeNumber(
+                            Integer.toString(Integer.parseInt(spotInfoViewModel.getLikeNumber()) - 1));
+                } else {
+                    binding.ibLike.setImageResource(R.drawable.heart_filled);
+                    spotUserDto.setLiked(true);
+                    spotInfoViewModel.setLikeNumber(
+                            Integer.toString(Integer.parseInt(spotInfoViewModel.getLikeNumber()) + 1));
+                }
+                binding.tvLikes.setText(spotInfoViewModel.getLikeNumber());
             }
         });
 
         binding.ibFavorite.setOnClickListener(view -> {
-            if (isAddedToFavorite) {
+            SpotUserDto spotUserDto = spotInfoViewModel.getSpotUserDto();
+            if (spotUserDto.getFavorite()) {
                 binding.ibFavorite.setImageResource(R.drawable.star_empty);
-                isAddedToFavorite = false;
+                spotUserDto.setFavorite(false);
+                spotInfoViewModel.setFavoriteNumber(
+                        Integer.toString(Integer.parseInt(spotInfoViewModel.getFavoriteNumber()) - 1));
             }
             else {
                 binding.ibFavorite.setImageResource(R.drawable.star_filled);
-                isAddedToFavorite = true;
+                spotUserDto.setFavorite(true);
+                spotInfoViewModel.setFavoriteNumber(
+                        Integer.toString(Integer.parseInt(spotInfoViewModel.getFavoriteNumber()) + 1));
             }
+            binding.tvFavorites.setText(spotInfoViewModel.getFavoriteNumber());
         });
 
         ResponseBodyImageSliderAdapter imageSliderAdapter =
@@ -197,6 +227,83 @@ public class SpotInfoFragment extends Fragment {
             spotInfoViewModel.setDescription(spot.getDescription());
             binding.tvDescription.setText(spot.getDescription());
         }
+    }
+
+    private void setLikedAndAddedToFavoriteImageButtons(Spot spot, String token) {
+        SpotUserDto spotUserDto = spotInfoViewModel.getSpotUserDto();
+        if (spotUserDto != null && spotUserDto.getLiked() != null
+                && spotUserDto.getFavorite() != null) {
+            setLikedAndAddedToFavoriteIcons(spotUserDto.getLiked(), spotUserDto.getFavorite());
+        }
+        else {
+            RetrofitService retrofitService
+                    = new RetrofitService(getString(R.string.server_url));
+
+            getLikedAndAddedToFavoriteFromServer(retrofitService, token, spot.getId());
+        }
+    }
+
+    private void setLikedAndAddedToFavoriteIcons(boolean isLiked, boolean isAddedToFavorite) {
+        if (isLiked) {
+            binding.ibLike.setImageResource(R.drawable.heart_filled);
+        }
+        else {
+            binding.ibLike.setImageResource(R.drawable.heart_empty);
+        }
+
+        if (isAddedToFavorite) {
+            binding.ibFavorite.setImageResource(R.drawable.star_filled);
+        }
+        else {
+            binding.ibFavorite.setImageResource(R.drawable.star_empty);
+        }
+    }
+
+    private void getLikedAndAddedToFavoriteFromServer(RetrofitService retrofitService,
+                                                      String token, Long spotId) {
+
+        String bearer = "Bearer " + token;
+
+        binding.progressBar.setVisibility(View.VISIBLE);
+
+        // Создание API для совершения запроса к серверу.
+        LikesFavoritesAPI likesFavoritesAPI = retrofitService.getRetrofit().create(LikesFavoritesAPI.class);
+
+        likesFavoritesAPI.getLikesAndFavoritesForSpot(spotId, bearer)
+                .enqueue(new Callback<SpotUserDto>() {
+                    @Override
+                    public void onResponse(@NonNull Call<SpotUserDto> call,
+                                           @NonNull Response<SpotUserDto> response) {
+                        if (response.isSuccessful()) {
+                            SpotUserDto spotUserDto = response.body();
+                            if (spotUserDto == null) {
+                                disableProgressBarAndShowNotification("Ошибка получения тела ответа");
+                                return;
+                            }
+
+                            spotInfoViewModel.setSpotUserDto(spotUserDto);
+                            setLikedAndAddedToFavoriteIcons(spotUserDto.getLiked(), spotUserDto.getFavorite());
+                            requireActivity().runOnUiThread(()
+                                    -> binding.progressBar.setVisibility(View.GONE));
+                        }
+                        else {
+                            disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<SpotUserDto> call,
+                                          @NonNull Throwable t) {
+                        disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
+                    }
+                });
+    }
+
+    private void disableProgressBarAndShowNotification(String message) {
+        requireActivity().runOnUiThread(() ->
+                binding.progressBar.setVisibility(View.GONE));
+        Toast.makeText(getActivity(),
+                message, Toast.LENGTH_LONG).show();
     }
 
     @SuppressLint("SetTextI18n")

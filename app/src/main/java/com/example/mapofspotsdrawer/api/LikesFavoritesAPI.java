@@ -9,6 +9,6 @@ import retrofit2.http.Path;
 
 public interface LikesFavoritesAPI {
     @GET("/api/spots-users/get-info/{spotId}")
-    Call<SpotUserDto> getLikesAndFavoritesForSpot(@Path("spotId") int spotId,
+    Call<SpotUserDto> getLikesAndFavoritesForSpot(@Path("spotId") Long spotId,
                                                   @Header("Authorization") String jwtToken);
 }

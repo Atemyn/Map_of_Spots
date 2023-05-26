@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.model.Spot;
+import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.spot.SpotInfoFragment;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.MapObject;
