@@ -23,6 +23,8 @@ import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -233,7 +235,7 @@ public class ProfileDataFragment extends Fragment {
             binding.tvEmail.setText(email);
         }
 
-        String phone = user.getPhone();
+        String phone = user.getPhoneNumber();
         if (phone != null && !phone.isEmpty()) {
             binding.tvPhoneNumber.setText(phone);
         }
@@ -241,15 +243,16 @@ public class ProfileDataFragment extends Fragment {
         DateTimeFormatter formatter
                 = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault());
 
+
         if (user.getBirthday() != null) {
             LocalDate birthday =
-                    LocalDate.parse(user.getBirthday().split(" ")[0]);
+                    user.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             binding.tvBirthDate.setText(birthday.format(formatter));
         }
 
-        if (user.getRegistrationDate() != null) {
+        if (user.getRegDate() != null) {
             LocalDate registrationDate =
-                    LocalDate.parse(user.getRegistrationDate().split(" ")[0]);
+                    user.getRegDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             binding.tvRegistrationDate.setText(registrationDate.format(formatter));
         }
     }

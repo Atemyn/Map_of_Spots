@@ -46,6 +46,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,6 +57,8 @@ public class SpotInfoFragment extends Fragment {
     private FragmentSpotInfoBinding binding;
 
     private SpotInfoViewModel spotInfoViewModel;
+
+    private RetrofitService retrofitService;
 
     private List<String> imagesUrls = new ArrayList<>();
 
@@ -69,6 +72,8 @@ public class SpotInfoFragment extends Fragment {
 
         spotInfoViewModel
                 = new ViewModelProvider(this).get(SpotInfoViewModel.class);
+
+        retrofitService = new RetrofitService(getString(R.string.server_url));
     }
 
     @Override
@@ -115,36 +120,15 @@ public class SpotInfoFragment extends Fragment {
         binding.ibLike.setOnClickListener(view -> {
             SpotUserDto spotUserDto = spotInfoViewModel.getSpotUserDto();
             if (spotUserDto != null) {
-                if (spotUserDto.getLiked()) {
-                    binding.ibLike.setImageResource(R.drawable.heart_empty);
-                    spotUserDto.setLiked(false);
-                    spotInfoViewModel.setLikeNumber(
-                            Integer.toString(Integer.parseInt(spotInfoViewModel.getLikeNumber()) - 1));
-                } else {
-                    binding.ibLike.setImageResource(R.drawable.heart_filled);
-                    spotUserDto.setLiked(true);
-                    spotInfoViewModel.setLikeNumber(
-                            Integer.toString(Integer.parseInt(spotInfoViewModel.getLikeNumber()) + 1));
-                }
-                binding.tvLikes.setText(spotInfoViewModel.getLikeNumber());
+                changeLikeStateOnServer(spotUserDto);
             }
         });
 
         binding.ibFavorite.setOnClickListener(view -> {
             SpotUserDto spotUserDto = spotInfoViewModel.getSpotUserDto();
-            if (spotUserDto.getFavorite()) {
-                binding.ibFavorite.setImageResource(R.drawable.star_empty);
-                spotUserDto.setFavorite(false);
-                spotInfoViewModel.setFavoriteNumber(
-                        Integer.toString(Integer.parseInt(spotInfoViewModel.getFavoriteNumber()) - 1));
+            if (spotUserDto != null) {
+                changeFavoriteStateOnServer(spotUserDto);
             }
-            else {
-                binding.ibFavorite.setImageResource(R.drawable.star_filled);
-                spotUserDto.setFavorite(true);
-                spotInfoViewModel.setFavoriteNumber(
-                        Integer.toString(Integer.parseInt(spotInfoViewModel.getFavoriteNumber()) + 1));
-            }
-            binding.tvFavorites.setText(spotInfoViewModel.getFavoriteNumber());
         });
 
         ResponseBodyImageSliderAdapter imageSliderAdapter =
@@ -173,6 +157,116 @@ public class SpotInfoFragment extends Fragment {
         imageSliderAdapter.setCurrentIndex(binding.imageSlider.getCurrentItem());
 
         return binding.getRoot();
+    }
+
+    private void changeLikeStateOnServer(SpotUserDto spotUserDto) {
+        String token = PreferenceManager.getDefaultSharedPreferences(requireActivity())
+                .getString("jwtToken", null);
+        if (token == null || token.isEmpty())
+            return;
+
+        String bearer = "Bearer " + token;
+
+        binding.progressBar.setVisibility(View.VISIBLE);
+
+        // Создание API для совершения запроса к серверу.
+        LikesFavoritesAPI likesFavoritesAPI =
+                retrofitService.getRetrofit().create(LikesFavoritesAPI.class);
+
+        likesFavoritesAPI.changeLikeStateForSpot(spotUserDto.getSpotId(), bearer)
+                .enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call,
+                                   @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() == null) {
+                        disableProgressBarAndShowNotification("Ошибка получения тела ответа");
+                        return;
+                    }
+
+                    SpotUserDto spotUserDto = spotInfoViewModel.getSpotUserDto();
+                    if (spotUserDto.getLiked()) {
+                        binding.ibLike.setImageResource(R.drawable.heart_empty);
+                        spotUserDto.setLiked(false);
+                        spotInfoViewModel.setLikeNumber(
+                                Integer.toString(Integer.parseInt(spotInfoViewModel.getLikeNumber()) - 1));
+                    } else {
+                        binding.ibLike.setImageResource(R.drawable.heart_filled);
+                        spotUserDto.setLiked(true);
+                        spotInfoViewModel.setLikeNumber(
+                                Integer.toString(Integer.parseInt(spotInfoViewModel.getLikeNumber()) + 1));
+                    }
+                    binding.tvLikes.setText(spotInfoViewModel.getLikeNumber());
+
+                    requireActivity().runOnUiThread(()
+                            -> binding.progressBar.setVisibility(View.GONE));
+                }
+                else {
+                    disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call,
+                                  @NonNull Throwable t) {
+                disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
+            }
+        });
+    }
+
+    private void changeFavoriteStateOnServer(SpotUserDto spotUserDto) {
+        String token = PreferenceManager.getDefaultSharedPreferences(requireActivity())
+                .getString("jwtToken", null);
+        if (token == null || token.isEmpty())
+            return;
+
+        String bearer = "Bearer " + token;
+
+        binding.progressBar.setVisibility(View.VISIBLE);
+
+        // Создание API для совершения запроса к серверу.
+        LikesFavoritesAPI likesFavoritesAPI =
+                retrofitService.getRetrofit().create(LikesFavoritesAPI.class);
+
+        likesFavoritesAPI.changeFavoriteStateForSpot(spotUserDto.getSpotId(), bearer)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ResponseBody> call,
+                                           @NonNull Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            if (response.body() == null) {
+                                disableProgressBarAndShowNotification("Ошибка получения тела ответа");
+                                return;
+                            }
+
+                            if (spotUserDto.getFavorite()) {
+                                binding.ibFavorite.setImageResource(R.drawable.star_empty);
+                                spotUserDto.setFavorite(false);
+                                spotInfoViewModel.setFavoriteNumber(
+                                        Integer.toString(Integer.parseInt(spotInfoViewModel.getFavoriteNumber()) - 1));
+                            }
+                            else {
+                                binding.ibFavorite.setImageResource(R.drawable.star_filled);
+                                spotUserDto.setFavorite(true);
+                                spotInfoViewModel.setFavoriteNumber(
+                                        Integer.toString(Integer.parseInt(spotInfoViewModel.getFavoriteNumber()) + 1));
+                            }
+                            binding.tvFavorites.setText(spotInfoViewModel.getFavoriteNumber());
+
+                            requireActivity().runOnUiThread(()
+                                    -> binding.progressBar.setVisibility(View.GONE));
+                        }
+                        else {
+                            disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ResponseBody> call,
+                                          @NonNull Throwable t) {
+                        disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
+                    }
+                });
     }
 
     private List<SpotType> getSpotTypesFromSharedPreferences(
@@ -236,10 +330,7 @@ public class SpotInfoFragment extends Fragment {
             setLikedAndAddedToFavoriteIcons(spotUserDto.getLiked(), spotUserDto.getFavorite());
         }
         else {
-            RetrofitService retrofitService
-                    = new RetrofitService(getString(R.string.server_url));
-
-            getLikedAndAddedToFavoriteFromServer(retrofitService, token, spot.getId());
+            getLikedAndAddedToFavoriteFromServer(token, spot.getId());
         }
     }
 
@@ -259,8 +350,7 @@ public class SpotInfoFragment extends Fragment {
         }
     }
 
-    private void getLikedAndAddedToFavoriteFromServer(RetrofitService retrofitService,
-                                                      String token, Long spotId) {
+    private void getLikedAndAddedToFavoriteFromServer(String token, Long spotId) {
 
         String bearer = "Bearer " + token;
 
