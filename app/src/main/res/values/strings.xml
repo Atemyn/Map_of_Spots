@@ -93,4 +93,7 @@
     <string name="default_likes_value">0</string>
     <string name="default_favorites_value">0</string>
     <string name="ib_favorite_desc">Иконка избранного</string>
+    <string name="commentator_name">Commentator Name</string>
+    <string name="actual_comment">Actual Comment</string>
+    <string name="comment_date">Comment date</string>
 </resources>
