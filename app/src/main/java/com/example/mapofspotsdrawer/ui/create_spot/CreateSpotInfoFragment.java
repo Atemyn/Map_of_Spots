@@ -42,7 +42,6 @@ import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.InputListener;
 import com.yandex.mapkit.map.Map;
-import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.mapview.MapView;
 
 import org.json.JSONArray;

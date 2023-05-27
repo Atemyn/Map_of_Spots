@@ -1,12 +1,18 @@
 package com.example.mapofspotsdrawer.ui.profile;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,16 +24,27 @@ import android.widget.Toast;
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.UserAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentProfileDataBinding;
+import com.example.mapofspotsdrawer.model.ImageInfoDto;
 import com.example.mapofspotsdrawer.model.User;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
+import com.example.mapofspotsdrawer.ui.adapter.ResponseBodyImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,6 +54,12 @@ public class ProfileDataFragment extends Fragment {
     private FragmentProfileDataBinding binding;
 
     private ProfileDataViewModel profileDataViewModel;
+
+    private List<String> imagesUrls = new ArrayList<>();
+
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+
+    private boolean noImage = true;
 
     private RetrofitService retrofitService;
 
@@ -87,7 +110,105 @@ public class ProfileDataFragment extends Fragment {
             getUserInfo();
         }
 
+        ResponseBodyImageSliderAdapter adapter =
+                new ResponseBodyImageSliderAdapter(requireActivity(),
+                        profileDataViewModel.getImagesUrls());
+        binding.imageSliderProfileData.setAdapter(adapter);
+
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    int resultCode = result.getResultCode();
+                    if (resultCode == Activity.RESULT_OK) {
+                        assert result.getData() != null;
+                        addUserImage(result.getData().getData().toString());
+                    } else if (resultCode == ImagePicker.RESULT_ERROR) {
+                        Toast.makeText(requireActivity(),
+                                ImagePicker.getError(result.getData()), Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(requireActivity(),
+                                "Добавление фотографии отменено", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        binding.btnAddUserImage.setOnClickListener(
+                view -> ImagePicker.Companion.with(requireActivity())
+                        .crop()
+                        .compress(1024)
+                        .maxResultSize(1080, 1080)
+                        .createIntent(intent -> {
+                            imagePickerLauncher.launch(intent);
+                            return null;
+                        }));
+
+        binding.btnDeleteUserImage.setOnClickListener(view -> {
+            if (!noImage) {
+                if (profileDataViewModel.getImagesUrls().size() <= 1) {
+                    profileDataViewModel.setImagesUrls(new ArrayList<>());
+                    profileDataViewModel.addImageUri(getString(R.string.no_image_url));
+                    noImage = true;
+                }
+                else {
+                    profileDataViewModel.removeImageUriAt(
+                            binding.imageSliderProfileData.getCurrentItem());
+                }
+
+                ResponseBodyImageSliderAdapter deleteSliderAdapter =
+                        new ResponseBodyImageSliderAdapter(requireActivity(),
+                                profileDataViewModel.getImagesUrls());
+                binding.imageSliderProfileData.setAdapter(deleteSliderAdapter);
+
+                if (!noImage) {
+                    setAdapterAndIndicatorConfigs(deleteSliderAdapter);
+                }
+            }
+            else {
+                Toast.makeText(requireActivity(),
+                        "Фотографий нет: удаление невозможно", Toast.LENGTH_LONG).show();
+            }
+        });
+
         return binding.getRoot();
+    }
+
+    private void setImages(User user) {
+        List<String> viewModelImagesUrls =
+                profileDataViewModel.getImagesUrls();
+        if (viewModelImagesUrls != null && !viewModelImagesUrls.isEmpty()) {
+            imagesUrls = viewModelImagesUrls;
+        }
+        else if (user != null && user.getImageInfoDtoList() != null
+                && !user.getImageInfoDtoList().isEmpty()) {
+            List<ImageInfoDto> imagesInfosFromServer = user.getImageInfoDtoList();
+            for (ImageInfoDto info : imagesInfosFromServer) {
+                imagesUrls.add(info.getUrl());
+            }
+            profileDataViewModel.setImagesUrls(imagesUrls);
+        }
+        else {
+            imagesUrls.add(getString(R.string.no_image_url));
+        }
+    }
+
+    private void setAdapterAndIndicatorConfigs(ResponseBodyImageSliderAdapter adapter) {
+        binding.indicatorProfileData.setViewPager(binding.imageSliderProfileData);
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                binding.indicatorProfileData.setViewPager(binding.imageSliderProfileData);
+                adapter.setCurrentIndex(binding.imageSliderProfileData.getCurrentItem());
+            }
+        });
+        binding.imageSliderProfileData.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                adapter.setCurrentIndex(position);
+            }
+        });
+
+        adapter.setCurrentIndex(binding.imageSliderProfileData.getCurrentItem());
     }
 
     public void addNameTextChangedListener() {
@@ -208,6 +329,7 @@ public class ProfileDataFragment extends Fragment {
                             }
 
                             setUserInfoTextViews(user);
+                            setImages(user);
                             requireActivity().runOnUiThread(()
                                     -> binding.progressBar.setVisibility(View.GONE));
                         }
@@ -222,6 +344,60 @@ public class ProfileDataFragment extends Fragment {
                         disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
                     }
                 });
+    }
+
+    private void addUserImage(String imageStringUrl) {
+        try {
+            String bearer = "Bearer " + PreferenceManager.getDefaultSharedPreferences(requireActivity())
+                    .getString("jwtToken", null);
+
+            // Получение объекта File картинки пользователя.
+            URL imageUrl = new URL(imageStringUrl);
+            File imageFile = new File(imageUrl.getFile());
+
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
+            MultipartBody.Part filePart =
+                    MultipartBody.Part.createFormData("file", imageFile.getName(), requestFile);
+
+            binding.progressBar.setVisibility(View.VISIBLE);
+
+            // Создание API для совершения запроса к серверу.
+            UserAPI userAPI = retrofitService.getRetrofit().create(UserAPI.class);
+
+            userAPI.uploadUserImage(bearer, filePart)
+                    .enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ResponseBody> call,
+                                               @NonNull Response<ResponseBody> response) {
+                            if (response.isSuccessful()) {
+                                if (noImage) {
+                                    profileDataViewModel.setImagesUrls(new ArrayList<>());
+                                    noImage = false;
+                                }
+                                profileDataViewModel.addImageUri(imageStringUrl);
+
+                                ResponseBodyImageSliderAdapter addSliderAdapter =
+                                        new ResponseBodyImageSliderAdapter(requireActivity(),
+                                                profileDataViewModel.getImagesUrls());
+                                binding.imageSliderProfileData.setAdapter(addSliderAdapter);
+
+                                setAdapterAndIndicatorConfigs(addSliderAdapter);
+                            }
+                            else {
+                                disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<ResponseBody> call,
+                                              @NonNull Throwable t) {
+                            disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
+                        }
+                    });
+        }
+        catch (MalformedURLException e) {
+            disableProgressBarAndShowNotification("Ошибка получения фотографии");
+        }
     }
 
     private void setUserInfoTextViews(User user) {

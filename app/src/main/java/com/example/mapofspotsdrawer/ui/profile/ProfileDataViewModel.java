@@ -3,6 +3,8 @@ package com.example.mapofspotsdrawer.ui.profile;
 import androidx.lifecycle.ViewModel;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileDataViewModel extends ViewModel {
     private String name;
@@ -10,6 +12,8 @@ public class ProfileDataViewModel extends ViewModel {
     private String phone;
     private String birthday;
     private String registrationDate;
+
+    private List<String> imagesUrls = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -49,5 +53,22 @@ public class ProfileDataViewModel extends ViewModel {
 
     public void setRegistrationDate(String registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public void addImageUri(String uri) {
+        imagesUrls.add(uri);
+    }
+
+    public void removeImageUriAt(int index) {
+        imagesUrls.remove(index);
+    }
+
+
+    public List<String> getImagesUrls() {
+        return imagesUrls;
+    }
+
+    public void setImagesUrls(List<String> imagesUrls) {
+        this.imagesUrls = imagesUrls;
     }
 }
