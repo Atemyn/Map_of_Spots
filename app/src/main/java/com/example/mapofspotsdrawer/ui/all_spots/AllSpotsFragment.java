@@ -35,7 +35,9 @@ public class AllSpotsFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        allSpotsViewModel.setViewCreated(true);
+        if (allSpotsViewModel != null) {
+            allSpotsViewModel.setViewCreated(true);
+        }
     }
 
     @Override

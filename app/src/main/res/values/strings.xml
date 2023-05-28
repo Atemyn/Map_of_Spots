@@ -22,19 +22,17 @@
     <string name="mapkit_api_key" tools:ignore="TypographyDashes">7f04d30b-f7d6-4c8b-b90b-e088d4999767</string>
     <string name="menu_text">Меню</string>
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="main_settings">Основные</string>
+    <string name="map_settings">Карта</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <!-- Main Preferences -->
+    <string name="radius_dialog_title">Введите расстояние в километрах</string>
+    <string name="radius_title">Максимальное расстояние до спота, который может считаться спотом поблизости</string>
+    <string name="radius_summary">Введите положительное число в км</string>
 
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <!-- Map Preferences -->
+    <string name="night_vision_title">Ночной режим карты</string>
+    <string name="night_vision_summary">Если включен, ночной режим уменьшит яркость карты и улучшит контрастность</string>
 
     <string name="swipe_left_for_register">Проведите пальцем влево для регистрации</string>
     <string name="login_title">Авторизация</string>

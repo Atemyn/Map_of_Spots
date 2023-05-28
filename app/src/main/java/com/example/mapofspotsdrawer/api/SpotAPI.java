@@ -2,6 +2,7 @@ package com.example.mapofspotsdrawer.api;
 
 import com.example.mapofspotsdrawer.model.Spot;
 
+import java.sql.Date;
 import java.util.List;
 
 import okhttp3.MultipartBody;
@@ -14,6 +15,7 @@ import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 public interface SpotAPI {
     @GET("api/spots/get-all")
@@ -24,4 +26,9 @@ public interface SpotAPI {
     Call<ResponseBody> sendSpotToModeration(@Header("Authorization") String jwtToken,
                                             @Part List<MultipartBody.Part> files,
                                             @Part("spotDto") RequestBody spotDto);
+
+    @GET("api/spots/get-in-radius?")
+    Call<List<Spot>> getNearbySpots(@Query("lat") Double latitude,
+                                    @Query("lon") Double longitude,
+                                    @Query("radius") Double radius);
 }

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
+<PreferenceScreen
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Основные">
+    <PreferenceCategory android:title="@string/main_settings">
 
         <EditTextPreference
             app:key="radius"
             app:defaultValue="400"
-            android:dialogTitle="Введите расстояние в километрах"
-            android:inputType="textUri"
-            app:title="Максимальное расстояние до спота, который может считаться спотом поблизости"
-            android:summary="Введите положительное целое число в км"
+            android:dialogTitle="@string/radius_dialog_title"
+            android:inputType="number"
+            app:title="@string/radius_title"
+            android:summary="@string/radius_summary"
             android:minLines="1"
             android:maxLines="1" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Карта">
+    <PreferenceCategory app:title="@string/map_settings">
 
         <SwitchPreferenceCompat
             app:key="night_vision"
-            app:title="Ночной режим карты"
-            android:summary="Если включен, ночной режим уменьшит яркость карты и улучшит контрастность"/>
+            app:title="@string/night_vision_title"
+            android:summary="@string/night_vision_summary"/>
 
     </PreferenceCategory>
 
