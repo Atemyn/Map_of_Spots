@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.LikesFavoritesAPI;
-import com.example.mapofspotsdrawer.api.UserAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentSpotInfoBinding;
 import com.example.mapofspotsdrawer.model.ImageInfoDto;
 import com.example.mapofspotsdrawer.model.SpaceType;
@@ -29,7 +28,6 @@ import com.example.mapofspotsdrawer.model.SportType;
 import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.model.SpotType;
 import com.example.mapofspotsdrawer.model.SpotUserDto;
-import com.example.mapofspotsdrawer.model.User;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.ResponseBodyImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.utils.UIUtils;
@@ -50,7 +48,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class SpotInfoFragment extends Fragment {
 

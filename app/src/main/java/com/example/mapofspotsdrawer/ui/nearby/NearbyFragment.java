@@ -57,7 +57,7 @@ public class NearbyFragment extends Fragment {
         binding = FragmentNearbyBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        YandexMapManager.getInstance().setMapView(binding.mapview);
+        YandexMapManager.getInstance().setMapView(binding.mapviewNearbySpots);
 
         LocationManager locationManager =
                 (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -101,7 +101,8 @@ public class NearbyFragment extends Fragment {
     private void showSpotsOnMap(List<Spot> spots) {
         YandexMapManager mapManager = YandexMapManager.getInstance();
         mapManager.clearMap();
-        mapManager.addPlacemarks(spots, (AppCompatActivity) requireActivity());
+        mapManager.addPlacemarks(spots,
+                (AppCompatActivity) requireActivity(), R.id.fragment_container_nearby_spots);
     }
 
     private void getNearbySpots(double latitude, double longitude, double radius) {
@@ -149,7 +150,7 @@ public class NearbyFragment extends Fragment {
 
     @Override
     public void onStop() {
-        binding.mapview.onStop();
+        binding.mapviewNearbySpots.onStop();
         MapKitFactory.getInstance().onStop();
         super.onStop();
     }
@@ -158,7 +159,7 @@ public class NearbyFragment extends Fragment {
     public void onStart() {
         super.onStart();
         MapKitFactory.getInstance().onStart();
-        binding.mapview.onStart();
+        binding.mapviewNearbySpots.onStart();
         YandexMapManager mapManager = YandexMapManager.getInstance();
         // TODO Переделать, чтобы состояние сохранялось при повороте экрана.
         mapManager.moveMapTo(new Point(55.751574, 80.573856), 2.0f);

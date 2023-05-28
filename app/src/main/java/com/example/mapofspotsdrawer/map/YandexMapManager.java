@@ -110,8 +110,10 @@ public class YandexMapManager implements IMapManager{
     }
 
     @Override
-    public void addPlacemarks(List<Spot> spots, AppCompatActivity activity) {
+    public void addPlacemarks(List<Spot> spots,
+                              AppCompatActivity activity, int fragmentContainerId) {
         listener.setActivity(activity);
+        listener.setFragmentContainerId(fragmentContainerId);
 
         for (Spot spot : spots) {
             addPlacemark(spot, activity);

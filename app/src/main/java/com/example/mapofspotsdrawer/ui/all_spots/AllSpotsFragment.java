@@ -70,7 +70,8 @@ public class AllSpotsFragment extends Fragment {
     private void showSpotsOnMap(List<Spot> spots) {
         YandexMapManager mapManager = YandexMapManager.getInstance();
 
-        mapManager.addPlacemarks(spots, (AppCompatActivity) requireActivity());
+        mapManager.addPlacemarks(spots,
+                (AppCompatActivity) requireActivity(), R.id.fragment_container_all_spots);
     }
 
     private void getSpots() {

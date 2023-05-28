@@ -74,7 +74,8 @@ public class FavoriteInfoFragment extends Fragment {
     private void showSpotsOnMap(List<Spot> spots) {
         YandexMapManager mapManager = YandexMapManager.getInstance();
 
-        mapManager.addPlacemarks(spots, (AppCompatActivity) requireActivity());
+        mapManager.addPlacemarks(spots,
+                (AppCompatActivity) requireActivity(), R.id.fragment_container_favorite);
     }
 
     private void getFavoriteSpots() {
