@@ -46,7 +46,9 @@ public class YandexMapManager implements IMapManager{
 
     public void setMapView(MapView mapView) {
         this.mapView = mapView;
+        mapView.getMap().set2DMode(false);
         mapView.getMap().setRotateGesturesEnabled(false);
+        mapView.getMap().setZoomGesturesEnabled(true);
     }
 
     public void setApiKey(String apiKey) {
