@@ -56,7 +56,7 @@ public class FavoriteInfoFragment extends Fragment {
         binding = FragmentFavoriteInfoBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        YandexMapManager.getInstance().setMapView(binding.mapviewFavoriteSpots);
+        YandexMapManager.getInstance().setMapView(binding.mapviewFavoriteSpots, requireActivity());
 
         List<Spot> spots = viewModel.getSpots();
 

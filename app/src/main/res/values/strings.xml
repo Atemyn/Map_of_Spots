@@ -99,4 +99,6 @@
     <string name="fragment_profile_indicator">profile</string>
     <string name="fragment_favorite_indicator">favorite</string>
     <string name="fragment_create_spot_indicator">create_spot</string>
+
+    <string name="app_version">Версия приложения: 1.0.0</string>
 </resources>

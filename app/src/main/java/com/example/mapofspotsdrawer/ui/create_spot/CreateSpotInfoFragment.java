@@ -101,7 +101,7 @@ public class CreateSpotInfoFragment extends Fragment {
 
         mapView = binding.mapviewCreateSpot;
 
-        YandexMapManager.getInstance().setMapView(mapView);
+        YandexMapManager.getInstance().setMapView(mapView, requireActivity());
 
         SharedPreferences sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(requireActivity());

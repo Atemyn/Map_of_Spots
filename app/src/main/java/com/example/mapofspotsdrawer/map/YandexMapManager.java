@@ -1,12 +1,15 @@
 package com.example.mapofspotsdrawer.map;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.model.Spot;
@@ -38,11 +41,16 @@ public class YandexMapManager implements IMapManager{
         this.singleMapObject = singleMapObject;
     }
 
-    public void setMapView(MapView mapView) {
+    public void setMapView(MapView mapView, FragmentActivity activity) {
         this.mapView = mapView;
         mapView.getMap().set2DMode(false);
         mapView.getMap().setRotateGesturesEnabled(false);
         mapView.getMap().setZoomGesturesEnabled(true);
+
+        SharedPreferences sharedPreferences
+                = PreferenceManager.getDefaultSharedPreferences(activity);
+        boolean nightVisionEnabled = sharedPreferences.getBoolean("night_vision", false);
+        mapView.getMap().setNightModeEnabled(nightVisionEnabled);
     }
 
     public void setApiKey(String apiKey) {

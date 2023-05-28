@@ -57,7 +57,7 @@ public class NearbyFragment extends Fragment {
         binding = FragmentNearbyBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        YandexMapManager.getInstance().setMapView(binding.mapviewNearbySpots);
+        YandexMapManager.getInstance().setMapView(binding.mapviewNearbySpots, requireActivity());
 
         LocationManager locationManager =
                 (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);

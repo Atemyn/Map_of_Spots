@@ -53,7 +53,7 @@ public class AllSpotsFragment extends Fragment {
         binding = FragmentAllSpotsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        YandexMapManager.getInstance().setMapView(binding.mapviewAllSpots);
+        YandexMapManager.getInstance().setMapView(binding.mapviewAllSpots, requireActivity());
 
         List<Spot> spots = allSpotsViewModel.getSpots();
         // isViewCreated - создан ли фрагмент в результате поворота экрана.
