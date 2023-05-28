@@ -1,6 +1,9 @@
 package com.example.mapofspotsdrawer.api;
 
+import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.model.SpotUserDto;
+
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -22,4 +25,7 @@ public interface LikesFavoritesAPI {
     @PATCH("/api/spots-users/change-favorite-state/{spotId}")
     Call<ResponseBody> changeFavoriteStateForSpot(@Path("spotId") Long spotId,
                                                   @Header("Authorization") String jwtToken);
+
+    @GET("/api/spots-users/get-favorite-spots")
+    Call<List<Spot>> getUserFavoriteSpots(@Header("Authorization") String jwtToken);
 }

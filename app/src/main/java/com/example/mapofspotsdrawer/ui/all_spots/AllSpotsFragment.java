@@ -30,9 +30,13 @@ public class AllSpotsFragment extends Fragment {
 
     private FragmentAllSpotsBinding binding;
 
-    private boolean isViewCreated = false;
-
     private AllSpotsViewModel allSpotsViewModel;
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        allSpotsViewModel.setViewCreated(true);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,11 +55,10 @@ public class AllSpotsFragment extends Fragment {
 
         List<Spot> spots = allSpotsViewModel.getSpots();
         // isViewCreated - создан ли фрагмент в результате поворота экрана.
-        if (isViewCreated && spots != null && spots.size() != 0) {
+        if (allSpotsViewModel.isViewCreated() && spots != null && spots.size() != 0) {
             showSpotsOnMap(spots);
         }
         else {
-            isViewCreated = true;
             getSpots();
         }
 
@@ -129,6 +132,8 @@ public class AllSpotsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        allSpotsViewModel.setViewCreated(false);
+
         MapKitFactory.getInstance().onStart();
         binding.mapviewAllSpots.onStart();
         YandexMapManager mapManager = YandexMapManager.getInstance();
@@ -140,6 +145,5 @@ public class AllSpotsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        isViewCreated = false;
     }
 }

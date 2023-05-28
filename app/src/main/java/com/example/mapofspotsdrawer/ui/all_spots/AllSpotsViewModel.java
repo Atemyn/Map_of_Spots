@@ -10,7 +10,17 @@ import java.util.List;
 
 public class AllSpotsViewModel extends ViewModel {
 
+
+    private boolean isViewCreated = false;
     private List<Spot> spots;
+
+    public boolean isViewCreated() {
+        return isViewCreated;
+    }
+
+    public void setViewCreated(boolean viewCreated) {
+        isViewCreated = viewCreated;
+    }
 
     public List<Spot> getSpots() {
         return spots;
