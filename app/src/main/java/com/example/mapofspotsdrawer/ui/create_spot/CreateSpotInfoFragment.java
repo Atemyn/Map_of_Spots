@@ -495,7 +495,7 @@ public class CreateSpotInfoFragment extends Fragment {
             }
         });
 
-        mapManager.moveMapTo(new Point(55.751574, 37.573856), 5.0f);
+        mapManager.moveMapTo(new Point(55.751574, 80.573856), 2.0f);
     }
 
     @Override

@@ -10,11 +10,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentAboutBinding;
-import com.example.mapofspotsdrawer.ui.profile.ProfileDataFragment;
 import com.example.mapofspotsdrawer.ui.spot.SpotInfoFragment;
 
 public class AboutFragment extends Fragment {
@@ -24,20 +21,14 @@ public class AboutFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        AboutViewModel aboutViewModel =
-                new ViewModelProvider(this).get(AboutViewModel.class);
-
         binding = FragmentAboutBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        binding.btnSpotInfoTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.btnSpotInfoTest.setVisibility(View.GONE);
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(binding.fragmentContainer.getId(), new SpotInfoFragment())
-                        .commit();
-            }
+        binding.btnSpotInfoTest.setOnClickListener(view -> {
+            binding.btnSpotInfoTest.setVisibility(View.GONE);
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(binding.fragmentContainer.getId(), new SpotInfoFragment())
+                    .commit();
         });
 
         return root;

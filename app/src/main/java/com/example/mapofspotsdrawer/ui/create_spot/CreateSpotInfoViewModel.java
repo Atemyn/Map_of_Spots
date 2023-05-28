@@ -1,7 +1,5 @@
 package com.example.mapofspotsdrawer.ui.create_spot;
 
-import android.net.Uri;
-
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;

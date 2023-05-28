@@ -2,7 +2,6 @@ package com.example.mapofspotsdrawer.ui.spot;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.mapofspotsdrawer.model.ImageInfoDto;
 import com.example.mapofspotsdrawer.model.SpotUserDto;
 
 import java.util.List;

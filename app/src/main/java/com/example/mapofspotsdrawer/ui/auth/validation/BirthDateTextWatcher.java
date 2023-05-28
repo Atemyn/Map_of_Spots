@@ -5,7 +5,6 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 
 import java.time.LocalDate;
-import java.util.Calendar;
 
 public class BirthDateTextWatcher implements TextWatcher {
 
