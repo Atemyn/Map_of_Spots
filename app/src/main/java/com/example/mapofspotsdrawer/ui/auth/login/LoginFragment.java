@@ -18,6 +18,8 @@ import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.auth.validation.AuthValidator;
 import com.example.mapofspotsdrawer.ui.auth.validation.EmailTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.PasswordTextWatcher;
+import com.example.mapofspotsdrawer.ui.create_spot.CreateSpotInfoFragment;
+import com.example.mapofspotsdrawer.ui.favorite.FavoriteInfoFragment;
 import com.example.mapofspotsdrawer.ui.profile.ProfileDataFragment;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -55,12 +57,12 @@ public class LoginFragment extends Fragment {
 
         retrofitService = new RetrofitService(getString(R.string.server_url));
 
-        binding.btnLogin.setOnClickListener(view -> authorizeUser());
+        binding.btnLogin.setOnClickListener(view -> authorizeUser(getArguments()));
 
         return binding.getRoot();
     }
 
-    private void authorizeUser() {
+    private void authorizeUser(Bundle fragmentCallerIndicator) {
         AuthValidator authValidator = new AuthValidator(binding.etEmail, binding.etPassword);
 
         if(!authValidator.isAuthorizationDataValid()) {
@@ -92,7 +94,7 @@ public class LoginFragment extends Fragment {
 
                                     requireActivity().runOnUiThread(() -> {
                                         binding.progressBar.setVisibility(View.GONE);
-                                        showProfileDataFragment();
+                                        showAuthorizedInfoFragment(fragmentCallerIndicator);
                                     });
 
 
@@ -157,9 +159,24 @@ public class LoginFragment extends Fragment {
                 message, Toast.LENGTH_LONG).show();
     }
 
-    private void showProfileDataFragment() {
-        requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ProfileDataFragment())
-                .commit();
+    private void showAuthorizedInfoFragment(Bundle fragmentCallerIndicator) {
+        if (fragmentCallerIndicator != null) {
+            String fragmentCallerIndicatorString =
+                    fragmentCallerIndicator.getString(getString(R.string.fragment_indicator_key));
+            if (fragmentCallerIndicatorString.equals(getString(R.string.fragment_profile_indicator))) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new ProfileDataFragment())
+                        .commit();
+            } else if (fragmentCallerIndicatorString.equals(getString(R.string.fragment_favorite_indicator))) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container_favorite, new FavoriteInfoFragment())
+                        .commit();
+            } else if (fragmentCallerIndicatorString
+                    .equals(getString(R.string.fragment_create_spot_indicator))) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container_create_spot, new CreateSpotInfoFragment())
+                        .commit();
+            }
+        }
     }
 }

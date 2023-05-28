@@ -25,6 +25,8 @@ import com.example.mapofspotsdrawer.ui.auth.validation.EmailTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.NameTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.PasswordTextWatcher;
 import com.example.mapofspotsdrawer.ui.auth.validation.PhoneNumberTextWatcher;
+import com.example.mapofspotsdrawer.ui.create_spot.CreateSpotInfoFragment;
+import com.example.mapofspotsdrawer.ui.favorite.FavoriteInfoFragment;
 import com.example.mapofspotsdrawer.ui.profile.ProfileDataFragment;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -95,12 +97,12 @@ public class RegisterFragment extends Fragment {
 
         retrofitService = new RetrofitService(getString(R.string.server_url));
 
-        binding.btnRegister.setOnClickListener(view -> registerUser());
+        binding.btnRegister.setOnClickListener(view -> registerUser(getArguments()));
 
         return binding.getRoot();
     }
 
-    private void registerUser() {
+    private void registerUser(Bundle fragmentCallerIndicator) {
         AuthValidator authValidator = new AuthValidator(binding.etName, binding.etEmail,
                 binding.etPhoneNumber, binding.etBirthDate,
                 binding.etPassword, binding.etRepassword);
@@ -134,7 +136,7 @@ public class RegisterFragment extends Fragment {
 
                                     requireActivity().runOnUiThread(() -> {
                                         binding.progressBar.setVisibility(View.GONE);
-                                        showProfileDataFragment();
+                                        showProfileDataFragment(fragmentCallerIndicator);
                                     });
 
 
@@ -210,9 +212,24 @@ public class RegisterFragment extends Fragment {
                 message, Toast.LENGTH_LONG).show();
     }
 
-    private void showProfileDataFragment() {
-        requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ProfileDataFragment())
-                .commit();
+    private void showProfileDataFragment(Bundle fragmentCallerIndicator) {
+        if (fragmentCallerIndicator != null) {
+            String fragmentCallerIndicatorString =
+                    fragmentCallerIndicator.getString(getString(R.string.fragment_indicator_key));
+            if (fragmentCallerIndicatorString.equals(getString(R.string.fragment_profile_indicator))) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new ProfileDataFragment())
+                        .commit();
+            } else if (fragmentCallerIndicatorString.equals(getString(R.string.fragment_favorite_indicator))) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container_favorite, new FavoriteInfoFragment())
+                        .commit();
+            } else if (fragmentCallerIndicatorString
+                    .equals(getString(R.string.fragment_create_spot_indicator))) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container_create_spot, new CreateSpotInfoFragment())
+                        .commit();
+            }
+        }
     }
 }

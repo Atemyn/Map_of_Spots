@@ -96,4 +96,9 @@
     <string name="commentator_name">Commentator Name</string>
     <string name="actual_comment">Actual Comment</string>
     <string name="comment_date">Comment date</string>
+
+    <string name="fragment_indicator_key">fragment_caller</string>
+    <string name="fragment_profile_indicator">profile</string>
+    <string name="fragment_favorite_indicator">favorite</string>
+    <string name="fragment_create_spot_indicator">create_spot</string>
 </resources>

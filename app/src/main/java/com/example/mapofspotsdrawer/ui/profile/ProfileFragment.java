@@ -48,8 +48,15 @@ public class ProfileFragment extends Fragment {
     }
 
     private void showLoginFragment() {
+        Bundle fragmentProfileIndicator = new Bundle();
+        fragmentProfileIndicator.putString(getString(R.string.fragment_indicator_key),
+                getString(R.string.fragment_profile_indicator));
+
+        AuthFragment authFragment = new AuthFragment();
+        authFragment.setArguments(fragmentProfileIndicator);
+
         requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new AuthFragment(), "caller_fragment_tag")
+                .replace(R.id.fragment_container, authFragment)
                 .commit();
     }
 

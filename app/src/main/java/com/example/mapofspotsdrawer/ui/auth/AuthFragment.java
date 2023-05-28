@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentAuthBinding;
 import com.example.mapofspotsdrawer.ui.auth.adapter.AuthPagerAdapter;
 import com.example.mapofspotsdrawer.ui.auth.login.LoginFragment;
@@ -31,8 +32,16 @@ public class AuthFragment extends Fragment {
 
         AuthPagerAdapter authPagerAdapter
                 = new AuthPagerAdapter(getChildFragmentManager(), getLifecycle());
-        authPagerAdapter.addFragment(new LoginFragment());
-        authPagerAdapter.addFragment(new RegisterFragment());
+
+        LoginFragment loginFragment = new LoginFragment();
+        RegisterFragment registerFragment = new RegisterFragment();
+
+        // Передаче аргумента идентификации вызвавшего фрагмента.
+        loginFragment.setArguments(getArguments());
+        registerFragment.setArguments(getArguments());
+
+        authPagerAdapter.addFragment(loginFragment);
+        authPagerAdapter.addFragment(registerFragment);
         binding.viewPager.setAdapter(authPagerAdapter);
         return root;
     }
