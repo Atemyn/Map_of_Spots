@@ -7,16 +7,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentFavoriteBinding;
-import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
-import com.example.mapofspotsdrawer.ui.profile.ProfileDataFragment;
-import com.yandex.mapkit.MapKitFactory;
-import com.yandex.mapkit.geometry.Point;
 
 public class FavoriteFragment extends Fragment {
 

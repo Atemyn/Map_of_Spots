@@ -105,11 +105,6 @@ public class YandexMapManager implements IMapManager{
         return bitmap;
     }
 
-    @Override
-    public void clearMap() {
-        mapView.getMap().getMapObjects().clear();
-    }
-
     private void addPlacemark(Spot spot, AppCompatActivity activity) {
         PlacemarkMapObject placemark =
                 mapView.getMap().getMapObjects().addPlacemark(

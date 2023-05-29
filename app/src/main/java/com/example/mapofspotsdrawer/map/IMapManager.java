@@ -14,5 +14,4 @@ import java.util.List;
 public interface IMapManager {
     void moveMapTo(Point position, float zoom);
     void addPlacemarks(List<Spot> spots, AppCompatActivity activity, int fragmentContainerId);
-    void clearMap();
 }

@@ -49,6 +49,11 @@ public class NearbyFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapKitFactory.initialize(this.requireContext());
@@ -84,8 +89,8 @@ public class NearbyFragment extends Fragment {
                 try {
                     double radius = Double.parseDouble(radiusString);
 
-                    // isViewCreated - создан ли фрагмент в результате поворота экрана.
                     getNearbySpots(location.getLatitude(), location.getLongitude(), radius);
+
                 }
                 catch (NumberFormatException e) {
                     Toast.makeText(getActivity(), "В настройках указано" +
@@ -120,7 +125,7 @@ public class NearbyFragment extends Fragment {
 
     private void showSpotsOnMap(List<Spot> spots) {
         YandexMapManager mapManager = YandexMapManager.getInstance();
-        mapManager.clearMap();
+        mapManager.setMapView(binding.mapviewNearbySpots, requireActivity());
         mapManager.addPlacemarks(spots,
                 (AppCompatActivity) requireActivity(), R.id.fragment_container_nearby_spots);
     }
@@ -139,7 +144,7 @@ public class NearbyFragment extends Fragment {
                     public void onResponse(@NonNull Call<List<Spot>> call,
                                            @NonNull Response<List<Spot>> response) {
                         if (response.isSuccessful()) {
-                            if (response.body() != null && response.body().size() != 0) {
+                            if (isResponseBodyNotEmpty(response.body())) {
                                 requireActivity().runOnUiThread(() ->
                                         binding.progressBarNearbySpots.setVisibility(View.GONE));
                                 showSpotsOnMap(response.body());
@@ -159,6 +164,10 @@ public class NearbyFragment extends Fragment {
                         disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
                     }
                 });
+    }
+
+    private boolean isResponseBodyNotEmpty(List<Spot> spots) {
+        return spots != null && spots.size() != 0;
     }
 
     private void disableProgressBarAndShowNotification(String message) {

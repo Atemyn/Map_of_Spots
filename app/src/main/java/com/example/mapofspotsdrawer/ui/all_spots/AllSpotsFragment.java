@@ -9,7 +9,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.SpotAPI;
@@ -30,16 +29,6 @@ public class AllSpotsFragment extends Fragment {
 
     private FragmentAllSpotsBinding binding;
 
-    private AllSpotsViewModel allSpotsViewModel;
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (allSpotsViewModel != null) {
-            allSpotsViewModel.setViewCreated(true);
-        }
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,28 +37,20 @@ public class AllSpotsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        allSpotsViewModel = new ViewModelProvider(this).get(AllSpotsViewModel.class);
 
         binding = FragmentAllSpotsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         YandexMapManager.getInstance().setMapView(binding.mapviewAllSpots, requireActivity());
 
-        List<Spot> spots = allSpotsViewModel.getSpots();
-        // isViewCreated - создан ли фрагмент в результате поворота экрана.
-        if (allSpotsViewModel.isViewCreated() && spots != null && spots.size() != 0) {
-            showSpotsOnMap(spots);
-        }
-        else {
-            getSpots();
-        }
+        getSpots();
 
         return root;
     }
 
     private void showSpotsOnMap(List<Spot> spots) {
         YandexMapManager mapManager = YandexMapManager.getInstance();
-
+        mapManager.setMapView(binding.mapviewAllSpots, requireActivity());
         mapManager.addPlacemarks(spots,
                 (AppCompatActivity) requireActivity(), R.id.fragment_container_all_spots);
     }
@@ -88,7 +69,7 @@ public class AllSpotsFragment extends Fragment {
                     public void onResponse(@NonNull Call<List<Spot>> call,
                                            @NonNull Response<List<Spot>> response) {
                         if (response.isSuccessful()) {
-                            if (processSpotsResponseBody(response.body())) {
+                            if (isResponseBodyNotEmpty(response.body())) {
                                 requireActivity().runOnUiThread(() ->
                                         binding.progressBarAllSpots.setVisibility(View.GONE));
                                 showSpotsOnMap(response.body());
@@ -110,12 +91,8 @@ public class AllSpotsFragment extends Fragment {
                 });
     }
 
-    private boolean processSpotsResponseBody(List<Spot> spots) {
-        if (spots != null && spots.size() != 0) {
-            allSpotsViewModel.setSpots(spots);
-            return true;
-        }
-        return false;
+    private boolean isResponseBodyNotEmpty(List<Spot> spots) {
+        return spots != null && spots.size() != 0;
     }
 
     private void disableProgressBarAndShowNotification(String message) {
@@ -135,7 +112,6 @@ public class AllSpotsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        allSpotsViewModel.setViewCreated(false);
 
         MapKitFactory.getInstance().onStart();
         binding.mapviewAllSpots.onStart();

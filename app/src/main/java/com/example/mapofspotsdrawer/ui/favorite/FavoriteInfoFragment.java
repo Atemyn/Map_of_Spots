@@ -16,12 +16,10 @@ import android.widget.Toast;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.LikesFavoritesAPI;
-import com.example.mapofspotsdrawer.api.SpotAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentFavoriteInfoBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
-import com.example.mapofspotsdrawer.ui.all_spots.AllSpotsViewModel;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 
