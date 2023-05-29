@@ -53,6 +53,10 @@ public class YandexMapManager implements IMapManager{
         mapView.getMap().setNightModeEnabled(nightVisionEnabled);
     }
 
+    public MapView getMapView() {
+        return mapView;
+    }
+
     public void setApiKey(String apiKey) {
         if (this.apiKey == null) {
             this.apiKey = apiKey;

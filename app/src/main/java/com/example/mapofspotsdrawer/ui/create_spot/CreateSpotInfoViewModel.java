@@ -1,14 +1,16 @@
 package com.example.mapofspotsdrawer.ui.create_spot;
 
-import android.net.Uri;
-
 import androidx.lifecycle.ViewModel;
+
+import com.yandex.mapkit.geometry.Point;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CreateSpotInfoViewModel extends ViewModel {
     private List<String> imagesUrls = new ArrayList<>();
+
+    private Point placemarkPosition;
 
     public void addImageUri(String uri) {
         imagesUrls.add(uri);
@@ -25,5 +27,13 @@ public class CreateSpotInfoViewModel extends ViewModel {
 
     public void setImagesUrls(List<String> imagesUrls) {
         this.imagesUrls = imagesUrls;
+    }
+
+    public Point getPlacemarkPosition() {
+        return placemarkPosition;
+    }
+
+    public void setPlacemarkPosition(Point placemarkPosition) {
+        this.placemarkPosition = placemarkPosition;
     }
 }

@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.SparseBooleanArray;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +87,9 @@ public class CreateSpotInfoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapKitFactory.initialize(this.requireContext());
+
         viewModel = new ViewModelProvider(this).get(CreateSpotInfoViewModel.class);
+
         retrofitService = new RetrofitService(getString(R.string.server_url));
     }
 
@@ -99,9 +100,9 @@ public class CreateSpotInfoFragment extends Fragment {
         binding = FragmentCreateSpotInfoBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        mapView = binding.mapviewCreateSpot;
+        YandexMapManager.getInstance().setMapView(binding.mapviewCreateSpot, requireActivity());
 
-        YandexMapManager.getInstance().setMapView(mapView, requireActivity());
+        mapView = YandexMapManager.getInstance().getMapView();
 
         SharedPreferences sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(requireActivity());
@@ -122,16 +123,12 @@ public class CreateSpotInfoFragment extends Fragment {
                     == R.drawable.ic_open_fullscreen) {
                 binding.btnOpenFullscreen.setImageResource(R.drawable.ic_close_fullscreen);
                 binding.btnOpenFullscreen.setTag(R.drawable.ic_close_fullscreen);
-                ViewGroup.LayoutParams layoutParams = mapView.getLayoutParams();
-                layoutParams.height = transformDpUnitsInPx(250);
-                mapView.setLayoutParams(layoutParams);
+                mapView.setVisibility(View.VISIBLE);
             }
             else {
                 binding.btnOpenFullscreen.setImageResource(R.drawable.ic_open_fullscreen);
                 binding.btnOpenFullscreen.setTag(R.drawable.ic_open_fullscreen);
-                ViewGroup.LayoutParams layoutParams = mapView.getLayoutParams();
-                layoutParams.height = 0;
-                mapView.setLayoutParams(layoutParams);
+                mapView.setVisibility(View.GONE);
             }
         });
 
@@ -144,8 +141,7 @@ public class CreateSpotInfoFragment extends Fragment {
             binding.imageSliderCreateSpot.setAdapter(adapter);
         }
 
-        imagePickerLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
+        imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     int resultCode = result.getResultCode();
                     if (resultCode == Activity.RESULT_OK) {
@@ -230,11 +226,6 @@ public class CreateSpotInfoFragment extends Fragment {
         });
 
         adapter.setCurrentIndex(binding.imageSliderCreateSpot.getCurrentItem());
-    }
-
-    private int transformDpUnitsInPx(int unitsInPx) {
-        return  (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, unitsInPx, getResources().getDisplayMetrics());
     }
 
     private List<SpotType> getSpotTypesFromSharedPreferences(

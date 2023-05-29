@@ -55,11 +55,12 @@
             <com.yandex.mapkit.mapview.MapView
                 android:id="@+id/mapview_create_spot"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="250dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="30dp"/>
+                android:layout_marginBottom="30dp"
+                android:visibility="gone"/>
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/scroll_view_create_spot"

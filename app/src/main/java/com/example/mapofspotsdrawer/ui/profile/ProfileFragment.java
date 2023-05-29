@@ -56,13 +56,13 @@ public class ProfileFragment extends Fragment {
         authFragment.setArguments(fragmentProfileIndicator);
 
         requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, authFragment)
+                .replace(R.id.fragment_container_profile, authFragment)
                 .commit();
     }
 
     private void showProfileDataFragment() {
         requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ProfileDataFragment())
+                .replace(R.id.fragment_container_profile, new ProfileDataFragment())
                 .commit();
     }
 }

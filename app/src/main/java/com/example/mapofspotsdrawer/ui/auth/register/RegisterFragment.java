@@ -218,7 +218,7 @@ public class RegisterFragment extends Fragment {
                     fragmentCallerIndicator.getString(getString(R.string.fragment_indicator_key));
             if (fragmentCallerIndicatorString.equals(getString(R.string.fragment_profile_indicator))) {
                 requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new ProfileDataFragment())
+                        .replace(R.id.fragment_container_profile, new ProfileDataFragment())
                         .commit();
             } else if (fragmentCallerIndicatorString.equals(getString(R.string.fragment_favorite_indicator))) {
                 requireActivity().getSupportFragmentManager().beginTransaction()

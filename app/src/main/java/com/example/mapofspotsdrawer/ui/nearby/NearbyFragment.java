@@ -1,9 +1,12 @@
 package com.example.mapofspotsdrawer.ui.nearby;
 
+import static com.yandex.runtime.Runtime.getApplicationContext;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -60,7 +63,7 @@ public class NearbyFragment extends Fragment {
         YandexMapManager.getInstance().setMapView(binding.mapviewNearbySpots, requireActivity());
 
         LocationManager locationManager =
-                (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+                (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -73,7 +76,7 @@ public class NearbyFragment extends Fragment {
                 Toast.makeText(getActivity(), "Приложению требуется разрешение на использование геолокации",
                         Toast.LENGTH_LONG).show();
             } else {
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                Location location = getLastKnownLocation(locationManager);
 
                 SharedPreferences sharedPreferences
                         = PreferenceManager.getDefaultSharedPreferences(requireActivity());
@@ -96,6 +99,23 @@ public class NearbyFragment extends Fragment {
         }
 
         return root;
+    }
+
+    private Location getLastKnownLocation(LocationManager locationManager) {
+        List<String> providers = locationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            @SuppressLint("MissingPermission")
+            Location l = locationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+        return bestLocation;
     }
 
     private void showSpotsOnMap(List<Spot> spots) {

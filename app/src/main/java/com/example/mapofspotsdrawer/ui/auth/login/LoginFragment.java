@@ -41,6 +41,7 @@ public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
 
     private RetrofitService retrofitService;
+
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -62,7 +63,7 @@ public class LoginFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void authorizeUser(Bundle fragmentCallerIndicator) {
+    private void authorizeUser(Bundle callerFragmentArgument) {
         AuthValidator authValidator = new AuthValidator(binding.etEmail, binding.etPassword);
 
         if(!authValidator.isAuthorizationDataValid()) {
@@ -94,7 +95,7 @@ public class LoginFragment extends Fragment {
 
                                     requireActivity().runOnUiThread(() -> {
                                         binding.progressBar.setVisibility(View.GONE);
-                                        showAuthorizedInfoFragment(fragmentCallerIndicator);
+                                        showAuthorizedInfoFragment(callerFragmentArgument);
                                     });
 
 
@@ -159,13 +160,13 @@ public class LoginFragment extends Fragment {
                 message, Toast.LENGTH_LONG).show();
     }
 
-    private void showAuthorizedInfoFragment(Bundle fragmentCallerIndicator) {
-        if (fragmentCallerIndicator != null) {
+    private void showAuthorizedInfoFragment(Bundle callerFragmentArgument) {
+        if (callerFragmentArgument != null) {
             String fragmentCallerIndicatorString =
-                    fragmentCallerIndicator.getString(getString(R.string.fragment_indicator_key));
+                    callerFragmentArgument.getString(getString(R.string.fragment_indicator_key));
             if (fragmentCallerIndicatorString.equals(getString(R.string.fragment_profile_indicator))) {
                 requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new ProfileDataFragment())
+                        .replace(R.id.fragment_container_profile, new ProfileDataFragment())
                         .commit();
             } else if (fragmentCallerIndicatorString.equals(getString(R.string.fragment_favorite_indicator))) {
                 requireActivity().getSupportFragmentManager().beginTransaction()
