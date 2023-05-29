@@ -15,11 +15,14 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.text.Editable;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -27,12 +30,16 @@ import android.widget.Toast;
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.SpotAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentCreateSpotInfoBinding;
+import com.example.mapofspotsdrawer.map.PlacemarkInputListener;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.example.mapofspotsdrawer.model.SpaceType;
 import com.example.mapofspotsdrawer.model.SportType;
 import com.example.mapofspotsdrawer.model.SpotType;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.ImageSliderAdapter;
+import com.example.mapofspotsdrawer.ui.create_spot.validation.AllFieldsValidator;
+import com.example.mapofspotsdrawer.ui.create_spot.validation.EditTextOnFocusChangeListener;
+import com.example.mapofspotsdrawer.ui.create_spot.validation.ListViewOnItemClickListener;
 import com.example.mapofspotsdrawer.ui.utils.UIUtils;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.gson.Gson;
@@ -41,11 +48,13 @@ import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.InputListener;
 import com.yandex.mapkit.map.Map;
+import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.mapview.MapView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -83,6 +92,10 @@ public class CreateSpotInfoFragment extends Fragment {
 
     private RetrofitService retrofitService;
 
+    private AllFieldsValidator allFieldsValidator;
+
+    private PlacemarkInputListener placemarkInputListener;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +126,7 @@ public class CreateSpotInfoFragment extends Fragment {
         sportTypes = getSportTypesFromSharedPreferences(sharedPreferences, gson);
         spaceTypes = getSpaceTypesFromSharedPreferences(sharedPreferences, gson);
 
+
         setSpotTypesMultipleChoiceListView(spotTypes);
         setSportTypesMultipleChoiceListView(sportTypes);
         setSpaceTypeListView(spaceTypes);
@@ -141,6 +155,23 @@ public class CreateSpotInfoFragment extends Fragment {
             binding.imageSliderCreateSpot.setAdapter(adapter);
         }
 
+        allFieldsValidator
+                = new AllFieldsValidator(binding.btnAddSpot, binding.etSpotName,
+                binding.etSpotDescription, binding.listviewSpotTypes,
+                binding.listviewSportTypes, binding.listviewSpaceType,
+                viewModel, getString(R.string.no_image_url));
+
+        binding.etSpotName.setOnFocusChangeListener(new EditTextOnFocusChangeListener(allFieldsValidator));
+        binding.etSpotDescription.setOnFocusChangeListener(new EditTextOnFocusChangeListener(allFieldsValidator));
+        binding.listviewSpotTypes.setOnItemClickListener(new ListViewOnItemClickListener(allFieldsValidator));
+        binding.listviewSportTypes.setOnItemClickListener(new ListViewOnItemClickListener(allFieldsValidator));
+        binding.listviewSpaceType.setOnItemClickListener(new ListViewOnItemClickListener(allFieldsValidator));
+
+        placemarkInputListener
+                = new PlacemarkInputListener(allFieldsValidator, requireActivity());
+
+        mapView.getMap().addInputListener(placemarkInputListener);
+
         imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     int resultCode = result.getResultCode();
@@ -165,6 +196,7 @@ public class CreateSpotInfoFragment extends Fragment {
                         Toast.makeText(requireActivity(),
                                 "Добавление фотографии отменено", Toast.LENGTH_LONG).show();
                     }
+                    allFieldsValidator.validateFields();
                 });
 
         binding.btnAddSpotImage.setOnClickListener(
@@ -195,6 +227,8 @@ public class CreateSpotInfoFragment extends Fragment {
                 if (!noImage) {
                     setAdapterAndIndicatorConfigs(adapter);
                 }
+
+                allFieldsValidator.validateFields();
             }
             else {
                 Toast.makeText(requireActivity(),
@@ -472,21 +506,8 @@ public class CreateSpotInfoFragment extends Fragment {
         super.onStart();
         MapKitFactory.getInstance().onStart();
         mapView.onStart();
-        YandexMapManager mapManager = YandexMapManager.getInstance();
 
-        mapView.getMap().addInputListener(new InputListener() {
-            @Override
-            public void onMapTap(@NonNull Map map, @NonNull Point point) {
-                mapManager.setMapObject(point, requireActivity());
-            }
-
-            @Override
-            public void onMapLongTap(@NonNull Map map, @NonNull Point point) {
-
-            }
-        });
-
-        mapManager.moveMapTo(new Point(55.751574, 37.573856), 5.0f);
+        YandexMapManager.getInstance().moveMapTo(new Point(55.751574, 80.573856), 2.0f);
     }
 
     @Override
