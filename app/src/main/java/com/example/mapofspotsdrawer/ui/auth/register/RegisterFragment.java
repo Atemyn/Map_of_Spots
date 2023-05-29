@@ -10,7 +10,6 @@ import androidx.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -73,24 +72,19 @@ public class RegisterFragment extends Fragment {
         binding.etBirthDate.addTextChangedListener(new BirthDateTextWatcher(binding.etBirthDate));
         binding.etPassword.addTextChangedListener(new PasswordTextWatcher(binding.etPassword));
         binding.etRepassword.addTextChangedListener(new PasswordTextWatcher(binding.etRepassword));
-        View.OnClickListener editTextOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                date.set(year, month, dayOfMonth);
-                                month++;
-                                String textDay = dayOfMonth < 10 ? "0" + dayOfMonth : String.valueOf(dayOfMonth);
-                                String textMonth = month < 10 ? "0" + month : String.valueOf(month);
-                                String textDate = textDay + "." + textMonth + "." + year;
-                                EditText currentEditText = (EditText) v;
-                                currentEditText.setText(textDate);
-                            }
-                        }, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog.show();
-            }
+
+        View.OnClickListener editTextOnClickListener = v -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                    (view, year, month, dayOfMonth) -> {
+                        date.set(year, month, dayOfMonth);
+                        month++;
+                        String textDay = dayOfMonth < 10 ? "0" + dayOfMonth : String.valueOf(dayOfMonth);
+                        String textMonth = month < 10 ? "0" + month : String.valueOf(month);
+                        String textDate = textDay + "." + textMonth + "." + year;
+                        EditText currentEditText = (EditText) v;
+                        currentEditText.setText(textDate);
+                    }, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.show();
         };
 
         binding.etBirthDate.setOnClickListener(editTextOnClickListener);

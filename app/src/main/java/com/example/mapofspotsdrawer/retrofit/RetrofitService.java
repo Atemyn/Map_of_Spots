@@ -27,12 +27,8 @@ public class RetrofitService {
         GsonBuilder builder = new GsonBuilder();
 
         // Register an adapter to manage the date types as long values
-        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-            public Date deserialize(JsonElement json, Type typeOfT,
-                                    JsonDeserializationContext context) throws JsonParseException {
-                return new Date(json.getAsJsonPrimitive().getAsLong());
-            }
-        });
+        builder.registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, typeOfT, context)
+                -> new Date(json.getAsJsonPrimitive().getAsLong()));
         retrofit = new Retrofit.Builder()
                 // Server Url address that is defined in string resources.
                 .baseUrl(serverURL)

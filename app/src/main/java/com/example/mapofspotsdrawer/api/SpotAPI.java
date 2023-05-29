@@ -2,14 +2,12 @@ package com.example.mapofspotsdrawer.api;
 
 import com.example.mapofspotsdrawer.model.Spot;
 
-import java.sql.Date;
 import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;

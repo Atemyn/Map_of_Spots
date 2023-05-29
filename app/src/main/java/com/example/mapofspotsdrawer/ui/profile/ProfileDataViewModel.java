@@ -2,7 +2,6 @@ package com.example.mapofspotsdrawer.ui.profile;
 
 import androidx.lifecycle.ViewModel;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

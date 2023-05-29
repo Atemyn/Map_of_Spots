@@ -1,11 +1,8 @@
 package com.example.mapofspotsdrawer.map;
 
-import android.content.Context;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 
-import com.example.mapofspotsdrawer.model.Placemark;
 import com.example.mapofspotsdrawer.model.Spot;
 import com.yandex.mapkit.geometry.Point;
 

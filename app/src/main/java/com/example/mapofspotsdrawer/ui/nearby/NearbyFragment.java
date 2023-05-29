@@ -3,7 +3,6 @@ package com.example.mapofspotsdrawer.ui.nearby;
 import static com.yandex.runtime.Runtime.getApplicationContext;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -11,7 +10,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
