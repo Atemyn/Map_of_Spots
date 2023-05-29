@@ -30,16 +30,6 @@ public class AboutFragment extends Fragment {
         binding = FragmentAboutBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        binding.btnSpotInfoTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.btnSpotInfoTest.setVisibility(View.GONE);
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(binding.fragmentContainer.getId(), new SpotInfoFragment())
-                        .commit();
-            }
-        });
-
         return root;
     }
 
