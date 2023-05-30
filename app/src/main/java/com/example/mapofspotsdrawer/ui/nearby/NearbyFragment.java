@@ -17,6 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +32,7 @@ import com.example.mapofspotsdrawer.databinding.FragmentNearbyBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
+import com.example.mapofspotsdrawer.ui.adapter.recycler_view.SpotAdapter;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 
@@ -41,6 +45,8 @@ import retrofit2.Response;
 public class NearbyFragment extends Fragment {
 
     private FragmentNearbyBinding binding;
+
+    private RecyclerView nearbySpotsRecyclerView;
 
     public static NearbyFragment newInstance() {
         return new NearbyFragment();
@@ -62,6 +68,12 @@ public class NearbyFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentNearbyBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        nearbySpotsRecyclerView = binding.recyclerViewNearbySpots;
+        nearbySpotsRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        nearbySpotsRecyclerView
+                .addItemDecoration(new DividerItemDecoration(nearbySpotsRecyclerView.getContext(),
+                        DividerItemDecoration.VERTICAL));
 
         YandexMapManager.getInstance().setMapView(binding.mapviewNearbySpots, requireActivity());
 
@@ -121,13 +133,6 @@ public class NearbyFragment extends Fragment {
         return bestLocation;
     }
 
-    private void showSpotsOnMap(List<Spot> spots) {
-        YandexMapManager mapManager = YandexMapManager.getInstance();
-        mapManager.setMapView(binding.mapviewNearbySpots, requireActivity());
-        mapManager.addPlacemarks(spots,
-                (AppCompatActivity) requireActivity(), R.id.fragment_container_nearby_spots);
-    }
-
     private void getNearbySpots(double latitude, double longitude, double radius) {
         RetrofitService retrofitService = new RetrofitService(getString(R.string.server_url));
 
@@ -146,6 +151,7 @@ public class NearbyFragment extends Fragment {
                                 requireActivity().runOnUiThread(() ->
                                         binding.progressBarNearbySpots.setVisibility(View.GONE));
                                 showSpotsOnMap(response.body());
+                                setRecyclerView(response.body());
                             }
                             else {
                                 disableProgressBarAndShowNotification("Спотов поблизости не найдено");
@@ -162,6 +168,19 @@ public class NearbyFragment extends Fragment {
                         disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
                     }
                 });
+    }
+
+    private void showSpotsOnMap(List<Spot> spots) {
+        YandexMapManager mapManager = YandexMapManager.getInstance();
+        mapManager.setMapView(binding.mapviewNearbySpots, requireActivity());
+        mapManager.addPlacemarks(spots,
+                (AppCompatActivity) requireActivity(), R.id.fragment_container_nearby_spots);
+    }
+
+    private void setRecyclerView(List<Spot> spots) {
+        requireActivity().runOnUiThread(() ->
+                nearbySpotsRecyclerView.setAdapter(new SpotAdapter(requireActivity(),
+                        R.id.fragment_container_nearby_spots, spots)));
     }
 
     private boolean isResponseBodyNotEmpty(List<Spot> spots) {

@@ -70,15 +70,17 @@ public class MainActivity extends AppCompatActivity {
             if (navDestination != null && navDestination.getLabel() != null &&
                     actionBar != null && actionBar.getTitle() != null &&
                     !actionBar.getTitle().toString().equals(getString(R.string.spot_info_app_bar_title))) {
-                MapView mapView = null;
-                RecyclerView recyclerView = null;
+                MapView mapView;
+                RecyclerView recyclerView;
                 if (navDestination.getLabel().toString().equals(getString(R.string.menu_all_spots))) {
                     mapView = findViewById(R.id.mapview_all_spots);
                     recyclerView = findViewById(R.id.recycler_view_all_spots);
                 } else if (navDestination.getLabel().toString().equals(getString(R.string.menu_favorite))) {
-
+                    mapView = findViewById(R.id.mapview_favorite_spots);
+                    recyclerView = findViewById(R.id.recycler_view_favorite_spots);
                 } else if (navDestination.getLabel().toString().equals(getString(R.string.menu_nearby))) {
-
+                    mapView = findViewById(R.id.mapview_nearby_spots);
+                    recyclerView = findViewById(R.id.recycler_view_nearby_spots);
                 } else {
                     return;
                 }

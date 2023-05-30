@@ -133,14 +133,14 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.SpotViewHolder
             recyclerView = activity.findViewById(R.id.recycler_view_all_spots);
             progressBar = activity.findViewById(R.id.progressBar_all_spots);
         }
-/*        else if (fragmentContainerId == R.id.fragment_container_favorite) {
-            mapView = activity.findViewById(R.id.mapview_favorite_spots);
+        else if (fragmentContainerId == R.id.fragment_container_favorite_spots) {
+            recyclerView = activity.findViewById(R.id.recycler_view_favorite_spots);
             progressBar = activity.findViewById(R.id.progressBar_favorite_spots);
         }
         else if (fragmentContainerId == R.id.fragment_container_nearby_spots) {
-            mapView = activity.findViewById(R.id.mapview_nearby_spots);
+            recyclerView = activity.findViewById(R.id.recycler_view_nearby_spots);
             progressBar = activity.findViewById(R.id.progressBar_nearby_spots);
-        }*/
+        }
 
         if (recyclerView != null && progressBar != null) {
             recyclerView.setVisibility(View.GONE);

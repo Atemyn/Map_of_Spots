@@ -23,9 +23,7 @@
         android:id="@+id/recycler_view_all_spots"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:visibility="gone">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        android:visibility="gone" />
 
     <!-- Прогресс-бар -->
     <ProgressBar

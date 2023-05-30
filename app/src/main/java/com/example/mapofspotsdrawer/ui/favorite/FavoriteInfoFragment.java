@@ -8,6 +8,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +23,7 @@ import com.example.mapofspotsdrawer.databinding.FragmentFavoriteInfoBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
+import com.example.mapofspotsdrawer.ui.adapter.recycler_view.SpotAdapter;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 
@@ -32,6 +36,8 @@ import retrofit2.Response;
 public class FavoriteInfoFragment extends Fragment {
 
     private FragmentFavoriteInfoBinding binding;
+
+    private RecyclerView favoriteSpotsRecyclerView;
 
     private FavoriteInfoViewModel viewModel;
 
@@ -54,6 +60,12 @@ public class FavoriteInfoFragment extends Fragment {
         binding = FragmentFavoriteInfoBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        favoriteSpotsRecyclerView = binding.recyclerViewFavoriteSpots;
+        favoriteSpotsRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        favoriteSpotsRecyclerView
+                .addItemDecoration(new DividerItemDecoration(favoriteSpotsRecyclerView.getContext(),
+                        DividerItemDecoration.VERTICAL));
+
         YandexMapManager.getInstance().setMapView(binding.mapviewFavoriteSpots, requireActivity());
 
         List<Spot> spots = viewModel.getSpots();
@@ -67,13 +79,6 @@ public class FavoriteInfoFragment extends Fragment {
         }
 
         return root;
-    }
-
-    private void showSpotsOnMap(List<Spot> spots) {
-        YandexMapManager mapManager = YandexMapManager.getInstance();
-
-        mapManager.addPlacemarks(spots,
-                (AppCompatActivity) requireActivity(), R.id.fragment_container_favorite);
     }
 
     private void getFavoriteSpots() {
@@ -99,6 +104,7 @@ public class FavoriteInfoFragment extends Fragment {
                                 requireActivity().runOnUiThread(() ->
                                         binding.progressBarFavoriteSpots.setVisibility(View.GONE));
                                 showSpotsOnMap(response.body());
+                                setRecyclerView(response.body());
                             }
                             else {
                                 disableProgressBarAndShowNotification("У вас нет избранных спотов");
@@ -115,6 +121,19 @@ public class FavoriteInfoFragment extends Fragment {
                         disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
                     }
                 });
+    }
+
+    private void showSpotsOnMap(List<Spot> spots) {
+        YandexMapManager mapManager = YandexMapManager.getInstance();
+
+        mapManager.addPlacemarks(spots,
+                (AppCompatActivity) requireActivity(), R.id.fragment_container_favorite);
+    }
+
+    private void setRecyclerView(List<Spot> spots) {
+        requireActivity().runOnUiThread(() ->
+                favoriteSpotsRecyclerView.setAdapter(new SpotAdapter(requireActivity(),
+                        R.id.fragment_container_favorite_spots, spots)));
     }
 
     private boolean processSpotsResponseBody(List<Spot> spots) {

@@ -19,6 +19,12 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_favorite_spots"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:visibility="gone" />
+
     <!-- Прогресс-бар -->
     <ProgressBar
         android:id="@+id/progressBar_favorite_spots"
