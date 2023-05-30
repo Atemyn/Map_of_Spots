@@ -2,11 +2,13 @@ package com.example.mapofspotsdrawer;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.mapofspotsdrawer.api.SpaceTypeAPI;
 import com.example.mapofspotsdrawer.api.SportTypeAPI;
 import com.example.mapofspotsdrawer.api.SpotTypeAPI;
+import com.example.mapofspotsdrawer.databinding.ActivityMainBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.example.mapofspotsdrawer.model.SpaceType;
 import com.example.mapofspotsdrawer.model.SportType;
@@ -15,16 +17,19 @@ import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mapofspotsdrawer.databinding.ActivityMainBinding;
 import com.google.gson.Gson;
+import com.yandex.mapkit.mapview.MapView;
 
 import java.util.List;
 
@@ -57,6 +62,45 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        binding.appBarMain.ibListMap.setTag(R.drawable.icon_show_list);
+        binding.appBarMain.ibListMap.setOnClickListener(view -> {
+            NavDestination navDestination = navController.getCurrentDestination();
+            ActionBar actionBar = getSupportActionBar();
+            if (navDestination != null && navDestination.getLabel() != null &&
+                    actionBar != null && actionBar.getTitle() != null &&
+                    !actionBar.getTitle().toString().equals(getString(R.string.spot_info_app_bar_title))) {
+                MapView mapView = null;
+                RecyclerView recyclerView = null;
+                if (navDestination.getLabel().toString().equals(getString(R.string.menu_all_spots))) {
+                    mapView = findViewById(R.id.mapview_all_spots);
+                    recyclerView = findViewById(R.id.recycler_view_all_spots);
+                } else if (navDestination.getLabel().toString().equals(getString(R.string.menu_favorite))) {
+
+                } else if (navDestination.getLabel().toString().equals(getString(R.string.menu_nearby))) {
+
+                } else {
+                    return;
+                }
+                if (mapView != null && recyclerView != null) {
+                    if (mapView.getVisibility() == View.GONE) {
+                        mapView.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    } else {
+                        mapView.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
+                    if ((int) binding.appBarMain.ibListMap.getTag() == R.drawable.icon_show_list) {
+                        binding.appBarMain.ibListMap.setImageResource(R.drawable.icon_show_map);
+                        binding.appBarMain.ibListMap.setTag(R.drawable.icon_show_map);
+                    }
+                    else {
+                        binding.appBarMain.ibListMap.setImageResource(R.drawable.icon_show_list);
+                        binding.appBarMain.ibListMap.setTag(R.drawable.icon_show_list);
+                    }
+                }
+            }
+        });
 
         // Получение всех справочников (типы спотов, типы спорта, типы помещений).
         getSpotTypes();

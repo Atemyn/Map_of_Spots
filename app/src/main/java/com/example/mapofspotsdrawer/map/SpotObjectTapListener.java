@@ -13,6 +13,8 @@ import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.MapObject;
 import com.yandex.mapkit.map.MapObjectTapListener;
 
+import java.util.Objects;
+
 public class SpotObjectTapListener implements MapObjectTapListener {
     private AppCompatActivity activity;
 
@@ -38,6 +40,10 @@ public class SpotObjectTapListener implements MapObjectTapListener {
         spotInfoFragment.setArguments(bundle);
 
         hideAllViewsOnAllSpotsFragment(activity);
+
+
+        Objects.requireNonNull(
+                activity.getSupportActionBar()).setTitle(R.string.spot_info_app_bar_title);
 
         activity.getSupportFragmentManager().beginTransaction()
                 .add(fragmentContainerId, spotInfoFragment)

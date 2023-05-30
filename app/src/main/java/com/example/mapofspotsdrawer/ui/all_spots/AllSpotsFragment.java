@@ -9,6 +9,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.SpotAPI;
@@ -16,8 +19,10 @@ import com.example.mapofspotsdrawer.databinding.FragmentAllSpotsBinding;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
+import com.example.mapofspotsdrawer.ui.adapter.recycler_view.SpotAdapter;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.search.Line;
 
 import java.util.List;
 
@@ -28,6 +33,8 @@ import retrofit2.Response;
 public class AllSpotsFragment extends Fragment {
 
     private FragmentAllSpotsBinding binding;
+
+    private RecyclerView allSpotsRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,18 +48,17 @@ public class AllSpotsFragment extends Fragment {
         binding = FragmentAllSpotsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        allSpotsRecyclerView = binding.recyclerViewAllSpots;
+        allSpotsRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        allSpotsRecyclerView
+                .addItemDecoration(new DividerItemDecoration(allSpotsRecyclerView.getContext(),
+                        DividerItemDecoration.VERTICAL));
+
         YandexMapManager.getInstance().setMapView(binding.mapviewAllSpots, requireActivity());
 
         getSpots();
 
         return root;
-    }
-
-    private void showSpotsOnMap(List<Spot> spots) {
-        YandexMapManager mapManager = YandexMapManager.getInstance();
-        mapManager.setMapView(binding.mapviewAllSpots, requireActivity());
-        mapManager.addPlacemarks(spots,
-                (AppCompatActivity) requireActivity(), R.id.fragment_container_all_spots);
     }
 
     private void getSpots() {
@@ -73,6 +79,7 @@ public class AllSpotsFragment extends Fragment {
                                 requireActivity().runOnUiThread(() ->
                                         binding.progressBarAllSpots.setVisibility(View.GONE));
                                 showSpotsOnMap(response.body());
+                                setRecyclerView(response.body());
                             }
                             else {
                                 disableProgressBarAndShowNotification("Ошибка получения тела ответа");
@@ -89,6 +96,19 @@ public class AllSpotsFragment extends Fragment {
                         disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
                     }
                 });
+    }
+
+    private void showSpotsOnMap(List<Spot> spots) {
+        YandexMapManager mapManager = YandexMapManager.getInstance();
+        mapManager.setMapView(binding.mapviewAllSpots, requireActivity());
+        mapManager.addPlacemarks(spots,
+                (AppCompatActivity) requireActivity(), R.id.fragment_container_all_spots);
+    }
+
+    private void setRecyclerView(List<Spot> spots) {
+        requireActivity().runOnUiThread(() ->
+                allSpotsRecyclerView.setAdapter(new SpotAdapter(requireActivity(),
+                        R.id.fragment_container_all_spots, spots)));
     }
 
     private boolean isResponseBodyNotEmpty(List<Spot> spots) {

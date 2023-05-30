@@ -119,7 +119,6 @@ public class CreateSpotInfoFragment extends Fragment {
         sportTypes = getSportTypesFromSharedPreferences(sharedPreferences, gson);
         spaceTypes = getSpaceTypesFromSharedPreferences(sharedPreferences, gson);
 
-
         setSpotTypesMultipleChoiceListView(spotTypes);
         setSportTypesMultipleChoiceListView(sportTypes);
         setSpaceTypeListView(spaceTypes);
