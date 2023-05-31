@@ -29,7 +29,7 @@ import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.model.SpotType;
 import com.example.mapofspotsdrawer.model.SpotUserDto;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
-import com.example.mapofspotsdrawer.ui.adapter.ResponseBodyImageSliderAdapter;
+import com.example.mapofspotsdrawer.ui.adapter.image_slider.ResponseBodyImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.utils.UIUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

@@ -2,8 +2,12 @@ package com.example.mapofspotsdrawer.ui.profile;
 
 import androidx.lifecycle.ViewModel;
 
+import com.example.mapofspotsdrawer.model.ImageUrl;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProfileDataViewModel extends ViewModel {
     private String name;
@@ -12,7 +16,7 @@ public class ProfileDataViewModel extends ViewModel {
     private String birthday;
     private String registrationDate;
 
-    private List<String> imagesUrls = new ArrayList<>();
+    private List<ImageUrl> imagesUrls = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -54,8 +58,8 @@ public class ProfileDataViewModel extends ViewModel {
         this.registrationDate = registrationDate;
     }
 
-    public void addImageUri(String uri) {
-        imagesUrls.add(uri);
+    public void addImageUri(String uri, boolean isFromServer) {
+        imagesUrls.add(new ImageUrl(uri, isFromServer));
     }
 
     public void removeImageUriAt(int index) {
@@ -63,11 +67,11 @@ public class ProfileDataViewModel extends ViewModel {
     }
 
 
-    public List<String> getImagesUrls() {
+    public List<ImageUrl> getImagesUrls() {
         return imagesUrls;
     }
 
-    public void setImagesUrls(List<String> imagesUrls) {
+    public void setImagesUrls(List<ImageUrl> imagesUrls) {
         this.imagesUrls = imagesUrls;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.mapofspotsdrawer.ui.adapter;
+package com.example.mapofspotsdrawer.ui.adapter.image_slider;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,11 +24,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ResponseBodyImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.SliderViewHolder> {
+public class ResponseBodyImageSliderAdapter extends RecyclerView.Adapter<ResponseBodyImageSliderAdapter.SliderViewHolder> {
 
-    private FragmentActivity activity;
+    private final FragmentActivity activity;
 
-    private List<String> imagesUrls;
+    private final List<String> imagesUrls;
 
     private int currentIndex;
 
@@ -39,14 +39,14 @@ public class ResponseBodyImageSliderAdapter extends RecyclerView.Adapter<ImageSl
 
     @NonNull
     @Override
-    public ImageSliderAdapter.SliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View slideLayout = inflater.inflate(R.layout.slide_layout, parent, false);
-        return new ImageSliderAdapter.SliderViewHolder(slideLayout);
+        return new SliderViewHolder(slideLayout);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ImageSliderAdapter.SliderViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SliderViewHolder holder, int position) {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -58,13 +58,13 @@ public class ResponseBodyImageSliderAdapter extends RecyclerView.Adapter<ImageSl
             @Override
             public void onFailure(@NonNull Call call,
                                   @NonNull IOException e) {
-                Toast.makeText(activity,
-                        "Ошибка совершения запроса к серверу", Toast.LENGTH_LONG).show();
+                activity.runOnUiThread(() -> Toast.makeText(activity,
+                        "Ошибка совершения запроса к серверу", Toast.LENGTH_LONG).show());
             }
 
             @Override
             public void onResponse(@NonNull Call call,
-                                   @NonNull Response response) throws IOException {
+                                   @NonNull Response response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     InputStream inputStream = response.body().byteStream();
@@ -79,6 +79,7 @@ public class ResponseBodyImageSliderAdapter extends RecyclerView.Adapter<ImageSl
             }
         });
     }
+
 
     @Override
     public int getItemCount() {

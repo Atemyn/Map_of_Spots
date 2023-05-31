@@ -25,9 +25,11 @@ import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.UserAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentProfileDataBinding;
 import com.example.mapofspotsdrawer.model.ImageInfoDto;
+import com.example.mapofspotsdrawer.model.ImageUrl;
 import com.example.mapofspotsdrawer.model.User;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
-import com.example.mapofspotsdrawer.ui.adapter.ResponseBodyImageSliderAdapter;
+import com.example.mapofspotsdrawer.ui.adapter.image_slider.CreateReadDeleteImageSlider;
+import com.example.mapofspotsdrawer.ui.adapter.image_slider.ResponseBodyImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
@@ -38,8 +40,11 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -55,7 +60,7 @@ public class ProfileDataFragment extends Fragment {
 
     private ProfileDataViewModel profileDataViewModel;
 
-    private List<String> imagesUrls = new ArrayList<>();
+    private List<ImageUrl> imagesUrls = new ArrayList<>();
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
 
@@ -110,8 +115,8 @@ public class ProfileDataFragment extends Fragment {
             getUserInfo();
         }
 
-        ResponseBodyImageSliderAdapter adapter =
-                new ResponseBodyImageSliderAdapter(requireActivity(),
+        CreateReadDeleteImageSlider adapter =
+                new CreateReadDeleteImageSlider(requireActivity(),
                         profileDataViewModel.getImagesUrls());
         binding.imageSliderProfileData.setAdapter(adapter);
 
@@ -141,11 +146,11 @@ public class ProfileDataFragment extends Fragment {
                             return null;
                         }));
 
-        binding.btnDeleteUserImage.setOnClickListener(view -> {
+/*        binding.btnDeleteUserImage.setOnClickListener(view -> {
             if (!noImage) {
                 if (profileDataViewModel.getImagesUrls().size() <= 1) {
                     profileDataViewModel.setImagesUrls(new ArrayList<>());
-                    profileDataViewModel.addImageUri(getString(R.string.no_image_url));
+                    profileDataViewModel.addImageUri(getString(R.string.no_image_url), false);
                     noImage = true;
                 }
                 else {
@@ -153,8 +158,8 @@ public class ProfileDataFragment extends Fragment {
                             binding.imageSliderProfileData.getCurrentItem());
                 }
 
-                ResponseBodyImageSliderAdapter deleteSliderAdapter =
-                        new ResponseBodyImageSliderAdapter(requireActivity(),
+                CreateReadDeleteImageSlider deleteSliderAdapter =
+                        new CreateReadDeleteImageSlider(requireActivity(),
                                 profileDataViewModel.getImagesUrls());
                 binding.imageSliderProfileData.setAdapter(deleteSliderAdapter);
 
@@ -166,13 +171,13 @@ public class ProfileDataFragment extends Fragment {
                 Toast.makeText(requireActivity(),
                         "Фотографий нет: удаление невозможно", Toast.LENGTH_LONG).show();
             }
-        });
+        });*/
 
         return binding.getRoot();
     }
 
     private void setImages(User user) {
-        List<String> viewModelImagesUrls =
+        List<ImageUrl> viewModelImagesUrls =
                 profileDataViewModel.getImagesUrls();
         if (viewModelImagesUrls != null && !viewModelImagesUrls.isEmpty()) {
             imagesUrls = viewModelImagesUrls;
@@ -181,16 +186,28 @@ public class ProfileDataFragment extends Fragment {
                 && !user.getImageInfoDtoList().isEmpty()) {
             List<ImageInfoDto> imagesInfosFromServer = user.getImageInfoDtoList();
             for (ImageInfoDto info : imagesInfosFromServer) {
-                imagesUrls.add(info.getUrl());
+                imagesUrls.add(new ImageUrl(info.getUrl(), true));
             }
             profileDataViewModel.setImagesUrls(imagesUrls);
         }
         else {
-            imagesUrls.add(getString(R.string.no_image_url));
+            imagesUrls.add(new ImageUrl(getString(R.string.no_image_url), false));
+        }
+        Collections.reverse(imagesUrls);
+
+        CreateReadDeleteImageSlider imageSliderAdapter =
+                new CreateReadDeleteImageSlider(requireActivity(), imagesUrls);
+        binding.imageSliderProfileData.setAdapter(imageSliderAdapter);
+
+        setAdapterAndIndicatorConfigs(imageSliderAdapter);
+
+        if (imagesUrls.size() > 1 || (imagesUrls.size() == 1 &&
+                imagesUrls.get(0).getImageUrl().equals(getString(R.string.no_image_url)))) {
+            noImage = false;
         }
     }
 
-    private void setAdapterAndIndicatorConfigs(ResponseBodyImageSliderAdapter adapter) {
+    private void setAdapterAndIndicatorConfigs(CreateReadDeleteImageSlider adapter) {
         binding.indicatorProfileData.setViewPager(binding.imageSliderProfileData);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -374,14 +391,18 @@ public class ProfileDataFragment extends Fragment {
                                     profileDataViewModel.setImagesUrls(new ArrayList<>());
                                     noImage = false;
                                 }
-                                profileDataViewModel.addImageUri(imageStringUrl);
+                                profileDataViewModel.addImageUri(imageStringUrl, false);
 
-                                ResponseBodyImageSliderAdapter addSliderAdapter =
-                                        new ResponseBodyImageSliderAdapter(requireActivity(),
+                                CreateReadDeleteImageSlider addSliderAdapter =
+                                        new CreateReadDeleteImageSlider(requireActivity(),
                                                 profileDataViewModel.getImagesUrls());
                                 binding.imageSliderProfileData.setAdapter(addSliderAdapter);
 
                                 setAdapterAndIndicatorConfigs(addSliderAdapter);
+
+                                requireActivity().runOnUiThread(() ->
+                                        binding.progressBar.setVisibility(View.GONE));
+
                             }
                             else {
                                 disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");

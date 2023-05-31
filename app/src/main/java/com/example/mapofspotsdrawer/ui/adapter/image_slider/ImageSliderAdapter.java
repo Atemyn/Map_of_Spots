@@ -1,4 +1,4 @@
-package com.example.mapofspotsdrawer.ui.adapter;
+package com.example.mapofspotsdrawer.ui.adapter.image_slider;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,9 +16,9 @@ import java.util.List;
 
 public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.SliderViewHolder> {
 
-    private Context context;
+    private final Context context;
 
-    private List<String> imagesUrls;
+    private final List<String> imagesUrls;
 
     private int currentIndex;
 

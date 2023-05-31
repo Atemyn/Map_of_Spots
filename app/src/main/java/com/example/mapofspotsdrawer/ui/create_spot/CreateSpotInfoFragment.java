@@ -33,7 +33,7 @@ import com.example.mapofspotsdrawer.model.SpaceType;
 import com.example.mapofspotsdrawer.model.SportType;
 import com.example.mapofspotsdrawer.model.SpotType;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
-import com.example.mapofspotsdrawer.ui.adapter.ImageSliderAdapter;
+import com.example.mapofspotsdrawer.ui.adapter.image_slider.ImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.create_spot.validation.AllFieldsValidator;
 import com.example.mapofspotsdrawer.ui.create_spot.validation.EditTextOnFocusChangeListener;
 import com.example.mapofspotsdrawer.ui.create_spot.validation.ListViewOnItemClickListener;
