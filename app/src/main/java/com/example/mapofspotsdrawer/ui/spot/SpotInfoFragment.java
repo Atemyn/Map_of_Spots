@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.CommentsAPI;
 import com.example.mapofspotsdrawer.api.LikesFavoritesAPI;
+import com.example.mapofspotsdrawer.api.UserAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentSpotInfoBinding;
 import com.example.mapofspotsdrawer.model.Comment;
 import com.example.mapofspotsdrawer.model.ImageInfoDto;
@@ -31,6 +32,7 @@ import com.example.mapofspotsdrawer.model.SportType;
 import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.model.SpotType;
 import com.example.mapofspotsdrawer.model.SpotUserDto;
+import com.example.mapofspotsdrawer.model.User;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.image_slider.ResponseBodyImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.adapter.recycler_view.CommentAdapter;
@@ -69,6 +71,8 @@ public class SpotInfoFragment extends Fragment {
 
     private RecyclerView commentsRecyclerView;
 
+    private String userEmail = null;
+
     private List<String> imagesUrls = new ArrayList<>();
 
     @Override
@@ -91,8 +95,32 @@ public class SpotInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentSpotInfoBinding.inflate(inflater, container, false);
 
+        if (isLoggedIn()) {
+            binding.enterCommentContainer.setVisibility(View.VISIBLE);
+            getUserEmail();
+        }
+        else {
+            binding.enterCommentContainer.setVisibility(View.GONE);
+            doPostUserEmailGetWork();
+        }
+
+        return binding.getRoot();
+    }
+
+    private void doPostUserEmailGetWork() {
+        commentsRecyclerView = binding.recyclerViewComments;
+        commentsRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+
         UIManager.hideListMapImageButton(requireActivity().findViewById(R.id.ib_list_map));
 
+        configureFragmentViews();
+
+        configureOnClickListeners();
+
+        configureImageSlider();
+    }
+
+    private void configureFragmentViews() {
         SharedPreferences sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(requireActivity());
         Gson gson = new Gson();
@@ -104,9 +132,6 @@ public class SpotInfoFragment extends Fragment {
                 getSportTypesFromSharedPreferences(sharedPreferences, gson);
         List<SpaceType> spaceTypes =
                 getSpaceTypesFromSharedPreferences(sharedPreferences, gson);
-
-        commentsRecyclerView = binding.recyclerViewComments;
-        commentsRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         Spot spot = getSpotFromArguments();
 
@@ -134,6 +159,19 @@ public class SpotInfoFragment extends Fragment {
             binding.cvFavorites.setVisibility(View.GONE);
         }
 
+        binding.ibPostComment.setOnClickListener(view -> {
+            if (binding.etEnterComment.getText() == null
+                    || binding.etEnterComment.getText().toString().isEmpty()) {
+                Toast.makeText(getActivity(),
+                        "Текст комментария не может быть пустым", Toast.LENGTH_LONG).show();
+            }
+            else if (spot != null) {
+                postComment(spot.getId());
+            }
+        });
+    }
+
+    private void configureOnClickListeners() {
         binding.ibLike.setOnClickListener(view -> {
             SpotUserDto spotUserDto = spotInfoViewModel.getSpotUserDto();
             if (spotUserDto != null) {
@@ -147,25 +185,9 @@ public class SpotInfoFragment extends Fragment {
                 changeFavoriteStateOnServer(spotUserDto);
             }
         });
+    }
 
-        if (isLoggedIn()) {
-            binding.enterCommentContainer.setVisibility(View.VISIBLE);
-        }
-        else {
-            binding.enterCommentContainer.setVisibility(View.GONE);
-        }
-
-        binding.ibPostComment.setOnClickListener(view -> {
-            if (binding.etEnterComment.getText() == null
-                    || binding.etEnterComment.getText().toString().isEmpty()) {
-                Toast.makeText(getActivity(),
-                        "Текст комментария не может быть пустым", Toast.LENGTH_LONG).show();
-            }
-            else if (spot != null) {
-                postComment(spot.getId());
-            }
-        });
-
+    private void configureImageSlider() {
         ResponseBodyImageSliderAdapter imageSliderAdapter =
                 new ResponseBodyImageSliderAdapter(requireActivity(), imagesUrls);
         binding.imageSlider.setAdapter(imageSliderAdapter);
@@ -190,8 +212,6 @@ public class SpotInfoFragment extends Fragment {
         });
 
         imageSliderAdapter.setCurrentIndex(binding.imageSlider.getCurrentItem());
-
-        return binding.getRoot();
     }
 
     private boolean isLoggedIn() {
@@ -199,6 +219,38 @@ public class SpotInfoFragment extends Fragment {
         String token = PreferenceManager.getDefaultSharedPreferences(requireActivity())
                 .getString("jwtToken", null);
         return token != null && !token.isEmpty();
+    }
+
+    private void getUserEmail() {
+        SharedPreferences preferences =
+                android.preference.PreferenceManager.getDefaultSharedPreferences(requireActivity());
+        String token = preferences.getString("jwtToken", null);
+        if (token != null && !token.isEmpty()) {
+            String serverURL = preferences.getString("URL", "");
+
+            RetrofitService retrofitService = new RetrofitService(serverURL);
+
+            UserAPI userAPI = retrofitService.getRetrofit().create(UserAPI.class);
+
+            userAPI.getUserInfo("Bearer " + token)
+                    .enqueue(new retrofit2.Callback<User>() {
+                        @Override
+                        public void onResponse(@NonNull retrofit2.Call<User> call,
+                                               @NonNull retrofit2.Response<User> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                User user = response.body();
+                                userEmail = user.getEmail();
+                                doPostUserEmailGetWork();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull retrofit2.Call<User> call,
+                                              @NonNull Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+        }
     }
 
     private void getSpotComments(Long spotId) {
@@ -233,7 +285,8 @@ public class SpotInfoFragment extends Fragment {
 
     private void setRecyclerView(List<Comment> comments) {
         requireActivity().runOnUiThread(() ->
-                commentsRecyclerView.setAdapter(new CommentAdapter(requireActivity(), comments)));
+                commentsRecyclerView.setAdapter(new CommentAdapter(commentsRecyclerView, requireActivity(),
+                        comments, userEmail)));
     }
 
     private void postComment(Long spotId) {
