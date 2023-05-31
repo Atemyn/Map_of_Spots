@@ -2,9 +2,6 @@ package com.example.mapofspotsdrawer.ui.create_spot;
 
 import androidx.lifecycle.ViewModel;
 
-import com.yandex.mapkit.geometry.Point;
-import com.yandex.mapkit.map.PlacemarkMapObject;
-
 import java.util.ArrayList;
 import java.util.List;
 

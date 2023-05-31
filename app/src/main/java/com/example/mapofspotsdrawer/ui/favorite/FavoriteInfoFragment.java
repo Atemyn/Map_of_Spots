@@ -25,6 +25,7 @@ import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.recycler_view.SpotAdapter;
+import com.example.mapofspotsdrawer.ui.manager.UIManager;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 
@@ -60,6 +61,8 @@ public class FavoriteInfoFragment extends Fragment {
 
         binding = FragmentFavoriteInfoBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        UIManager.showListMapImageButton(requireActivity().findViewById(R.id.ib_list_map));
 
         favoriteSpotsRecyclerView = binding.recyclerViewFavoriteSpots;
         favoriteSpotsRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));

@@ -5,9 +5,8 @@ import androidx.lifecycle.ViewModel;
 import com.example.mapofspotsdrawer.model.ImageUrl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 public class ProfileDataViewModel extends ViewModel {
     private String name;

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,9 +23,9 @@ import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.recycler_view.SpotAdapter;
+import com.example.mapofspotsdrawer.ui.manager.UIManager;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
-import com.yandex.mapkit.search.Line;
 
 import java.util.List;
 
@@ -45,7 +47,6 @@ public class AllSpotsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentAllSpotsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -137,6 +138,8 @@ public class AllSpotsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        UIManager.showListMapImageButton(requireActivity().findViewById(R.id.ib_list_map));
 
         MapKitFactory.getInstance().onStart();
         binding.mapviewAllSpots.onStart();

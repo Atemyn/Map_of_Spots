@@ -1,6 +1,5 @@
 package com.example.mapofspotsdrawer.ui.create_spot.validation;
 
-import android.text.Editable;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -8,7 +7,6 @@ import android.widget.ListView;
 import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.example.mapofspotsdrawer.ui.create_spot.CreateSpotInfoViewModel;
 
-import java.util.List;
 
 public class AllFieldsValidator {
     private final Button addSpotButton;

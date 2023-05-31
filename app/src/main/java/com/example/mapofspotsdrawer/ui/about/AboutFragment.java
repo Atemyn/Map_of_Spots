@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentAboutBinding;
+import com.example.mapofspotsdrawer.ui.manager.UIManager;
 import com.example.mapofspotsdrawer.ui.profile.ProfileDataFragment;
 import com.example.mapofspotsdrawer.ui.spot.SpotInfoFragment;
 
@@ -29,6 +30,8 @@ public class AboutFragment extends Fragment {
 
         binding = FragmentAboutBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        UIManager.hideListMapImageButton(requireActivity().findViewById(R.id.ib_list_map));
 
         return root;
     }

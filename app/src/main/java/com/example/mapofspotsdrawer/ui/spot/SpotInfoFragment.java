@@ -34,6 +34,7 @@ import com.example.mapofspotsdrawer.model.SpotUserDto;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.image_slider.ResponseBodyImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.adapter.recycler_view.CommentAdapter;
+import com.example.mapofspotsdrawer.ui.manager.UIManager;
 import com.example.mapofspotsdrawer.ui.utils.UIUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -70,10 +71,6 @@ public class SpotInfoFragment extends Fragment {
 
     private List<String> imagesUrls = new ArrayList<>();
 
-    public static SpotInfoFragment newInstance() {
-        return new SpotInfoFragment();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +90,8 @@ public class SpotInfoFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSpotInfoBinding.inflate(inflater, container, false);
+
+        UIManager.hideListMapImageButton(requireActivity().findViewById(R.id.ib_list_map));
 
         SharedPreferences sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(requireActivity());

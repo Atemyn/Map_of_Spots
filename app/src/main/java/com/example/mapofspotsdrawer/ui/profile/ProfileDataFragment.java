@@ -32,6 +32,7 @@ import com.example.mapofspotsdrawer.model.User;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.image_slider.CreateReadDeleteImageSlider;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
+import com.example.mapofspotsdrawer.ui.manager.UIManager;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import java.io.File;
