@@ -3,6 +3,7 @@ package com.example.mapofspotsdrawer.ui.favorite;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -86,7 +87,11 @@ public class FavoriteInfoFragment extends Fragment {
         String bearer = "Bearer " + PreferenceManager.getDefaultSharedPreferences(requireActivity())
                 .getString("jwtToken", null);
 
-        RetrofitService retrofitService = new RetrofitService(getString(R.string.server_url));
+        SharedPreferences preferences =
+                android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
+        String serverURL = preferences.getString("URL", "");
+
+        RetrofitService retrofitService = new RetrofitService(serverURL);
 
         binding.progressBarFavoriteSpots.setVisibility(View.VISIBLE);
 

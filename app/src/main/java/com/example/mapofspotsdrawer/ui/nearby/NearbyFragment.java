@@ -134,7 +134,11 @@ public class NearbyFragment extends Fragment {
     }
 
     private void getNearbySpots(double latitude, double longitude, double radius) {
-        RetrofitService retrofitService = new RetrofitService(getString(R.string.server_url));
+        SharedPreferences preferences =
+                android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
+        String serverURL = preferences.getString("URL", "");
+
+        RetrofitService retrofitService = new RetrofitService(serverURL);
 
         binding.progressBarNearbySpots.setVisibility(View.VISIBLE);
 

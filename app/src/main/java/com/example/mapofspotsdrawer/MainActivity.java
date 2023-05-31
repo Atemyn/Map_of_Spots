@@ -1,5 +1,6 @@
 package com.example.mapofspotsdrawer;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -109,7 +110,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getSpotTypes() {
-        RetrofitService retrofitService = new RetrofitService(getString(R.string.server_url));
+        SharedPreferences preferences =
+                android.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String serverURL = preferences.getString("URL", "");
+
+        RetrofitService retrofitService = new RetrofitService(serverURL);
 
         // Создание API для совершения запроса к серверу.
         SpotTypeAPI spotTypeAPI = retrofitService.getRetrofit().create(SpotTypeAPI.class);

@@ -1,5 +1,6 @@
 package com.example.mapofspotsdrawer.ui.all_spots;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +63,11 @@ public class AllSpotsFragment extends Fragment {
     }
 
     private void getSpots() {
-        RetrofitService retrofitService = new RetrofitService(getString(R.string.server_url));
+        SharedPreferences preferences =
+                android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
+        String serverURL = preferences.getString("URL", "");
+
+        RetrofitService retrofitService = new RetrofitService(serverURL);
 
         binding.progressBarAllSpots.setVisibility(View.VISIBLE);
 

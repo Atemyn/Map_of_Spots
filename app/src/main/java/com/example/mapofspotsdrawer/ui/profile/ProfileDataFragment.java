@@ -2,6 +2,7 @@ package com.example.mapofspotsdrawer.ui.profile;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -76,7 +77,11 @@ public class ProfileDataFragment extends Fragment {
         profileDataViewModel
                 = new ViewModelProvider(this).get(ProfileDataViewModel.class);
 
-        retrofitService = new RetrofitService(getString(R.string.server_url));
+        SharedPreferences preferences =
+                android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
+        String serverURL = preferences.getString("URL", "");
+
+        retrofitService = new RetrofitService(serverURL);
     }
 
     @Override

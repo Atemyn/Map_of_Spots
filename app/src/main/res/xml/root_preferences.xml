@@ -26,4 +26,14 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="Разработчикам">
+        <EditTextPreference
+            android:defaultValue="@string/default_server_url"
+            android:title="URL сервера"
+            android:summary="Нажмите, чтобы задать свой URL сервера"
+            android:key="URL"
+            android:inputType="textUri"
+            android:dialogTitle="Введите URL сервера" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

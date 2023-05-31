@@ -1,6 +1,7 @@
 package com.example.mapofspotsdrawer.ui.auth.register;
 
 import android.app.DatePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -89,7 +90,11 @@ public class RegisterFragment extends Fragment {
 
         binding.etBirthDate.setOnClickListener(editTextOnClickListener);
 
-        retrofitService = new RetrofitService(getString(R.string.server_url));
+        SharedPreferences preferences =
+                android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
+        String serverURL = preferences.getString("URL", "");
+
+        retrofitService = new RetrofitService(serverURL);
 
         binding.btnRegister.setOnClickListener(view -> registerUser(getArguments()));
 

@@ -1,5 +1,6 @@
 package com.example.mapofspotsdrawer.ui.auth.login;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -56,7 +57,11 @@ public class LoginFragment extends Fragment {
         binding.etEmail.addTextChangedListener(new EmailTextWatcher(binding.etEmail));
         binding.etPassword.addTextChangedListener(new PasswordTextWatcher(binding.etPassword));
 
-        retrofitService = new RetrofitService(getString(R.string.server_url));
+        SharedPreferences preferences =
+                android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
+        String serverURL = preferences.getString("URL", "");
+
+        retrofitService = new RetrofitService(serverURL);
 
         binding.btnLogin.setOnClickListener(view -> authorizeUser(getArguments()));
 

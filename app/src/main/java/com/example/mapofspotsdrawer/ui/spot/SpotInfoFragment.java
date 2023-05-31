@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -35,7 +34,6 @@ import com.example.mapofspotsdrawer.model.SpotUserDto;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.image_slider.ResponseBodyImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.adapter.recycler_view.CommentAdapter;
-import com.example.mapofspotsdrawer.ui.adapter.recycler_view.SpotAdapter;
 import com.example.mapofspotsdrawer.ui.utils.UIUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -83,7 +81,11 @@ public class SpotInfoFragment extends Fragment {
         spotInfoViewModel
                 = new ViewModelProvider(this).get(SpotInfoViewModel.class);
 
-        retrofitService = new RetrofitService(getString(R.string.server_url));
+        SharedPreferences preferences =
+                android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
+        String serverURL = preferences.getString("URL", "");
+
+        retrofitService = new RetrofitService(serverURL);
     }
 
     @Override

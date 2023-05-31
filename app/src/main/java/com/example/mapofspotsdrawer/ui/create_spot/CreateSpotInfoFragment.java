@@ -96,7 +96,11 @@ public class CreateSpotInfoFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(CreateSpotInfoViewModel.class);
 
-        retrofitService = new RetrofitService(getString(R.string.server_url));
+        SharedPreferences preferences =
+                android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
+        String serverURL = preferences.getString("URL", "");
+
+        retrofitService = new RetrofitService(serverURL);
     }
 
     @Override
