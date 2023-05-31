@@ -7,6 +7,9 @@ import java.time.LocalDate;
 import java.util.Date;
 
 public class ImageInfoDto implements Serializable {
+
+    private Long id;
+
     private String url;
 
     private int size;
@@ -16,10 +19,19 @@ public class ImageInfoDto implements Serializable {
     public ImageInfoDto() {
     }
 
-    public ImageInfoDto(String url, int size, Date uploadDate) {
+    public ImageInfoDto(Long id, String url, int size, Date uploadDate) {
+        this.id = id;
         this.url = url;
         this.size = size;
         this.uploadDate = uploadDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUrl() {

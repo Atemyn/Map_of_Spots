@@ -58,8 +58,8 @@ public class ProfileDataViewModel extends ViewModel {
         this.registrationDate = registrationDate;
     }
 
-    public void addImageUri(String uri, boolean isFromServer) {
-        imagesUrls.add(new ImageUrl(uri, isFromServer));
+    public void addImageUri(Long id, String uri, boolean isFromServer) {
+        imagesUrls.add(new ImageUrl(id, uri, isFromServer));
     }
 
     public void removeImageUriAt(int index) {

@@ -25,12 +25,12 @@ import android.widget.Toast;
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.UserAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentProfileDataBinding;
+import com.example.mapofspotsdrawer.model.ImageIdWrapper;
 import com.example.mapofspotsdrawer.model.ImageInfoDto;
 import com.example.mapofspotsdrawer.model.ImageUrl;
 import com.example.mapofspotsdrawer.model.User;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.image_slider.CreateReadDeleteImageSlider;
-import com.example.mapofspotsdrawer.ui.adapter.image_slider.ResponseBodyImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
@@ -42,10 +42,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -151,14 +149,16 @@ public class ProfileDataFragment extends Fragment {
                             return null;
                         }));
 
-/*        binding.btnDeleteUserImage.setOnClickListener(view -> {
+        binding.btnDeleteUserImage.setOnClickListener(view -> {
             if (!noImage) {
-                if (profileDataViewModel.getImagesUrls().size() <= 1) {
+                if (profileDataViewModel.getImagesUrls().size() == 1) {
+                    deleteUserImage(profileDataViewModel.getImagesUrls().get(0).getId());
                     profileDataViewModel.setImagesUrls(new ArrayList<>());
-                    profileDataViewModel.addImageUri(getString(R.string.no_image_url), false);
+                    profileDataViewModel.addImageUri((long) -1, getString(R.string.no_image_url), false);
                     noImage = true;
                 }
                 else {
+                    deleteUserImage(profileDataViewModel.getImagesUrls().get(binding.imageSliderProfileData.getCurrentItem()).getId());
                     profileDataViewModel.removeImageUriAt(
                             binding.imageSliderProfileData.getCurrentItem());
                 }
@@ -176,7 +176,7 @@ public class ProfileDataFragment extends Fragment {
                 Toast.makeText(requireActivity(),
                         "Фотографий нет: удаление невозможно", Toast.LENGTH_LONG).show();
             }
-        });*/
+        });
 
         return binding.getRoot();
     }
@@ -191,12 +191,12 @@ public class ProfileDataFragment extends Fragment {
                 && !user.getImageInfoDtoList().isEmpty()) {
             List<ImageInfoDto> imagesInfosFromServer = user.getImageInfoDtoList();
             for (ImageInfoDto info : imagesInfosFromServer) {
-                imagesUrls.add(new ImageUrl(info.getUrl(), true));
+                imagesUrls.add(new ImageUrl(info.getId(), info.getUrl(), true));
             }
             profileDataViewModel.setImagesUrls(imagesUrls);
         }
         else {
-            imagesUrls.add(new ImageUrl(getString(R.string.no_image_url), false));
+            imagesUrls.add(new ImageUrl((long) -1, getString(R.string.no_image_url), false));
         }
         Collections.reverse(imagesUrls);
 
@@ -207,7 +207,7 @@ public class ProfileDataFragment extends Fragment {
         setAdapterAndIndicatorConfigs(imageSliderAdapter);
 
         if (imagesUrls.size() > 1 || (imagesUrls.size() == 1 &&
-                imagesUrls.get(0).getImageUrl().equals(getString(R.string.no_image_url)))) {
+                !imagesUrls.get(0).getImageUrl().equals(getString(R.string.no_image_url)))) {
             noImage = false;
         }
     }
@@ -387,16 +387,16 @@ public class ProfileDataFragment extends Fragment {
             UserAPI userAPI = retrofitService.getRetrofit().create(UserAPI.class);
 
             userAPI.uploadUserImage(bearer, filePart)
-                    .enqueue(new Callback<ResponseBody>() {
+                    .enqueue(new Callback<ImageIdWrapper>() {
                         @Override
-                        public void onResponse(@NonNull Call<ResponseBody> call,
-                                               @NonNull Response<ResponseBody> response) {
-                            if (response.isSuccessful()) {
+                        public void onResponse(@NonNull Call<ImageIdWrapper> call,
+                                               @NonNull Response<ImageIdWrapper> response) {
+                            if (response.isSuccessful() && response.body() != null) {
                                 if (noImage) {
                                     profileDataViewModel.setImagesUrls(new ArrayList<>());
                                     noImage = false;
                                 }
-                                profileDataViewModel.addImageUri(imageStringUrl, false);
+                                profileDataViewModel.addImageUri(response.body().getId(), imageStringUrl, false);
 
                                 CreateReadDeleteImageSlider addSliderAdapter =
                                         new CreateReadDeleteImageSlider(requireActivity(),
@@ -415,7 +415,7 @@ public class ProfileDataFragment extends Fragment {
                         }
 
                         @Override
-                        public void onFailure(@NonNull Call<ResponseBody> call,
+                        public void onFailure(@NonNull Call<ImageIdWrapper> call,
                                               @NonNull Throwable t) {
                             disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
                         }
@@ -424,6 +424,36 @@ public class ProfileDataFragment extends Fragment {
         catch (MalformedURLException e) {
             disableProgressBarAndShowNotification("Ошибка получения фотографии");
         }
+    }
+
+    private void deleteUserImage(Long imageId) {
+        String bearer = "Bearer " + PreferenceManager.getDefaultSharedPreferences(requireActivity())
+                .getString("jwtToken", null);
+
+        binding.progressBar.setVisibility(View.VISIBLE);
+
+        // Создание API для совершения запроса к серверу.
+        UserAPI userAPI = retrofitService.getRetrofit().create(UserAPI.class);
+
+        userAPI.deleteUserImage(bearer, imageId).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call,
+                                   @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    requireActivity().runOnUiThread(() ->
+                            binding.progressBar.setVisibility(View.GONE));
+                }
+                else {
+                    disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call,
+                                  @NonNull Throwable t) {
+                disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
+            }
+        });
     }
 
     private void setUserInfoTextViews(User user) {
