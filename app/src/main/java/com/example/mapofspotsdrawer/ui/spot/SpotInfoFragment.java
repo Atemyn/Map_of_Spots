@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -20,8 +22,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.example.mapofspotsdrawer.R;
+import com.example.mapofspotsdrawer.api.CommentsAPI;
 import com.example.mapofspotsdrawer.api.LikesFavoritesAPI;
 import com.example.mapofspotsdrawer.databinding.FragmentSpotInfoBinding;
+import com.example.mapofspotsdrawer.model.Comment;
 import com.example.mapofspotsdrawer.model.ImageInfoDto;
 import com.example.mapofspotsdrawer.model.SpaceType;
 import com.example.mapofspotsdrawer.model.SportType;
@@ -30,9 +34,14 @@ import com.example.mapofspotsdrawer.model.SpotType;
 import com.example.mapofspotsdrawer.model.SpotUserDto;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.image_slider.ResponseBodyImageSliderAdapter;
+import com.example.mapofspotsdrawer.ui.adapter.recycler_view.CommentAdapter;
+import com.example.mapofspotsdrawer.ui.adapter.recycler_view.SpotAdapter;
 import com.example.mapofspotsdrawer.ui.utils.UIUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
@@ -44,6 +53,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,6 +67,8 @@ public class SpotInfoFragment extends Fragment {
     private SpotInfoViewModel spotInfoViewModel;
 
     private RetrofitService retrofitService;
+
+    private RecyclerView commentsRecyclerView;
 
     private List<String> imagesUrls = new ArrayList<>();
 
@@ -91,18 +104,24 @@ public class SpotInfoFragment extends Fragment {
         List<SpaceType> spaceTypes =
                 getSpaceTypesFromSharedPreferences(sharedPreferences, gson);
 
+        commentsRecyclerView = binding.recyclerViewComments;
+        commentsRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+
         Spot spot = getSpotFromArguments();
 
-        setNameTextView(spot);
-        setDescriptionTextView(spot);
-        setLikeNumberTextView(spot);
-        setFavoriteNumberTextView(spot);
-        setSpotTypesListView(spot, spotTypes);
-        setSportTypesListView(spot, sportTypes);
-        setSpaceTypeTextView(spot, spaceTypes);
-        setAddingDateTextView(spot);
-        setUpdateDateTextView(spot);
-        setImages(spot);
+        if (spot != null) {
+            setNameTextView(spot);
+            setDescriptionTextView(spot);
+            setLikeNumberTextView(spot);
+            setFavoriteNumberTextView(spot);
+            setSpotTypesListView(spot, spotTypes);
+            setSportTypesListView(spot, sportTypes);
+            setSpaceTypeTextView(spot, spaceTypes);
+            setAddingDateTextView(spot);
+            setUpdateDateTextView(spot);
+            setImages(spot);
+            getSpotComments(spot.getId());
+        }
 
         String token = PreferenceManager.getDefaultSharedPreferences(requireActivity())
                 .getString("jwtToken", null);
@@ -125,6 +144,24 @@ public class SpotInfoFragment extends Fragment {
             SpotUserDto spotUserDto = spotInfoViewModel.getSpotUserDto();
             if (spotUserDto != null) {
                 changeFavoriteStateOnServer(spotUserDto);
+            }
+        });
+
+        if (isLoggedIn()) {
+            binding.enterCommentContainer.setVisibility(View.VISIBLE);
+        }
+        else {
+            binding.enterCommentContainer.setVisibility(View.GONE);
+        }
+
+        binding.ibPostComment.setOnClickListener(view -> {
+            if (binding.etEnterComment.getText() == null
+                    || binding.etEnterComment.getText().toString().isEmpty()) {
+                Toast.makeText(getActivity(),
+                        "Текст комментария не может быть пустым", Toast.LENGTH_LONG).show();
+            }
+            else if (spot != null) {
+                postComment(spot.getId());
             }
         });
 
@@ -154,6 +191,100 @@ public class SpotInfoFragment extends Fragment {
         imageSliderAdapter.setCurrentIndex(binding.imageSlider.getCurrentItem());
 
         return binding.getRoot();
+    }
+
+    private boolean isLoggedIn() {
+        // Проверка, авторизован ли пользователь
+        String token = PreferenceManager.getDefaultSharedPreferences(requireActivity())
+                .getString("jwtToken", null);
+        return token != null && !token.isEmpty();
+    }
+
+    private void getSpotComments(Long spotId) {
+        binding.progressBar.setVisibility(View.VISIBLE);
+
+        CommentsAPI commentsAPI = retrofitService.getRetrofit().create(CommentsAPI.class);
+
+        commentsAPI.getSpotComments(spotId)
+                .enqueue(new Callback<List<Comment>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<Comment>> call,
+                                           @NonNull Response<List<Comment>> response) {
+                        if (response.isSuccessful()) {
+                            requireActivity().runOnUiThread(()
+                                    -> binding.progressBar.setVisibility(View.GONE));
+                            setRecyclerView(response.body());
+                        }
+                        else {
+                            disableProgressBarAndShowNotification(
+                                    "Ошибка обработки запроса на получение комментариев на сервере");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<Comment>> call,
+                                          @NonNull Throwable t) {
+                        disableProgressBarAndShowNotification(
+                                "Ошибка отправки запроса на получение комментариев на сервер");
+                    }
+                });
+    }
+
+    private void setRecyclerView(List<Comment> comments) {
+        requireActivity().runOnUiThread(() ->
+                commentsRecyclerView.setAdapter(new CommentAdapter(requireActivity(), comments)));
+    }
+
+    private void postComment(Long spotId) {
+        String token = PreferenceManager.getDefaultSharedPreferences(requireActivity())
+                .getString("jwtToken", null);
+        if (token == null || token.isEmpty())
+            return;
+
+        String bearer = "Bearer " + token;
+
+        try {
+
+            RequestBody requestBody =
+                    RequestBody.create(MediaType.parse("application/json"),
+                            createJSONObject().toString());
+
+            binding.progressBar.setVisibility(View.VISIBLE);
+
+            CommentsAPI commentsAPI = retrofitService.getRetrofit().create(CommentsAPI.class);
+
+            commentsAPI.postComment(spotId, bearer, requestBody)
+                    .enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ResponseBody> call,
+                                               @NonNull Response<ResponseBody> response) {
+                            if (response.isSuccessful()) {
+                                binding.etEnterComment.setText("");
+                                getSpotComments(spotId);
+                                disableProgressBarAndShowNotification("Комментарий успешно добавлен!");
+                            }
+                            else {
+                                disableProgressBarAndShowNotification("Ошибка обработки комментария на сервере");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<ResponseBody> call,
+                                              @NonNull Throwable t) {
+                            disableProgressBarAndShowNotification("Ошибка отправки комментария на сервер");
+                        }
+                    });
+        }
+        catch (JSONException e) {
+            disableProgressBarAndShowNotification("Ошибка формирования запроса к серверу");
+        }
+    }
+
+    private JSONObject createJSONObject() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("text", binding.etEnterComment.getText().toString());
+
+        return jsonObject;
     }
 
     private void changeLikeStateOnServer(SpotUserDto spotUserDto) {

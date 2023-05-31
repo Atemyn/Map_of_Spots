@@ -112,4 +112,7 @@
     <string name="list_map_icon">List-Map Icon</string>
 
     <string name="spot_info_app_bar_title">Информация о споте</string>
+    <string name="comments">Комментарии</string>
+    <string name="enter_comment">Введите комментарий</string>
+    <string name="post_comment_button">Post Comment Button</string>
 </resources>
