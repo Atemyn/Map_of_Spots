@@ -92,9 +92,14 @@ public class RegisterFragment extends Fragment {
 
         SharedPreferences preferences =
                 android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
-        String serverURL = preferences.getString("URL", "");
+        String serverURL = preferences.getString("URL", getString(R.string.server_url));
 
-        retrofitService = new RetrofitService(serverURL);
+        if (serverURL.isEmpty() || serverURL.isBlank()) {
+            retrofitService = new RetrofitService(getString(R.string.server_url));
+        }
+        else {
+            retrofitService = new RetrofitService(serverURL);
+        }
 
         binding.btnRegister.setOnClickListener(view -> registerUser(getArguments()));
 
@@ -122,7 +127,7 @@ public class RegisterFragment extends Fragment {
             AuthAPI authAPI = retrofitService.getRetrofit().create(AuthAPI.class);
 
             authAPI.registerUser(requestBody)
-                    .enqueue(new Callback<ResponseBody>() {
+                    .enqueue(new Callback<>() {
                         @Override
                         public void onResponse(@NonNull Call<ResponseBody> call,
                                                @NonNull Response<ResponseBody> response) {

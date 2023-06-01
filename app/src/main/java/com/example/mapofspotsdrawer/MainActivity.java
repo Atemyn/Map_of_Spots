@@ -112,27 +112,31 @@ public class MainActivity extends AppCompatActivity {
     private void getSpotTypes() {
         SharedPreferences preferences =
                 android.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String serverURL = preferences.getString("URL", "");
+        String serverURL = preferences.getString("URL", getString(R.string.server_url));
 
-        RetrofitService retrofitService = new RetrofitService(serverURL);
+        RetrofitService retrofitService;
+        if (serverURL.isEmpty() || serverURL.isBlank()) {
+            retrofitService = new RetrofitService(getString(R.string.server_url));
+        }
+        else {
+            retrofitService = new RetrofitService(serverURL);
+        }
 
         // Создание API для совершения запроса к серверу.
         SpotTypeAPI spotTypeAPI = retrofitService.getRetrofit().create(SpotTypeAPI.class);
 
         spotTypeAPI.getAllSpotTypes()
-                .enqueue(new Callback<List<SpotType>>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<List<SpotType>> call,
-                                               @NonNull Response<List<SpotType>> response) {
+                                           @NonNull Response<List<SpotType>> response) {
                         if (response.isSuccessful()) {
-                            if(processSpotTypesResponseBody(response.body())) {
+                            if (processSpotTypesResponseBody(response.body())) {
                                 getSportTypes(retrofitService);
-                            }
-                            else {
+                            } else {
                                 showNotification("Ошибка получения тела ответа");
                             }
-                        }
-                        else {
+                        } else {
                             showNotification("Ошибка обработки запроса на сервере");
                         }
                     }
@@ -150,19 +154,17 @@ public class MainActivity extends AppCompatActivity {
         SportTypeAPI spotTypeAPI = retrofitService.getRetrofit().create(SportTypeAPI.class);
 
         spotTypeAPI.getAllSportTypes()
-                .enqueue(new Callback<List<SportType>>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<List<SportType>> call,
                                            @NonNull Response<List<SportType>> response) {
                         if (response.isSuccessful()) {
-                            if(processSportTypesResponseBody(response.body())) {
+                            if (processSportTypesResponseBody(response.body())) {
                                 getSpaceTypes(retrofitService);
-                            }
-                            else {
+                            } else {
                                 showNotification("Ошибка получения тела ответа");
                             }
-                        }
-                        else {
+                        } else {
                             showNotification("Ошибка обработки запроса на сервере");
                         }
                     }
@@ -180,16 +182,15 @@ public class MainActivity extends AppCompatActivity {
         SpaceTypeAPI spotTypeAPI = retrofitService.getRetrofit().create(SpaceTypeAPI.class);
 
         spotTypeAPI.getAllSpaceTypes()
-                .enqueue(new Callback<List<SpaceType>>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<List<SpaceType>> call,
                                            @NonNull Response<List<SpaceType>> response) {
                         if (response.isSuccessful()) {
-                            if(!processSpaceTypesResponseBody(response.body())) {
+                            if (!processSpaceTypesResponseBody(response.body())) {
                                 showNotification("Ошибка получения тела ответа");
                             }
-                        }
-                        else {
+                        } else {
                             showNotification("Ошибка обработки запроса на сервере");
                         }
                     }

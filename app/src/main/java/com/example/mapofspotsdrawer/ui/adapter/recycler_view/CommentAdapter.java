@@ -13,14 +13,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.api.CommentsAPI;
-import com.example.mapofspotsdrawer.api.UserAPI;
 import com.example.mapofspotsdrawer.model.Comment;
-import com.example.mapofspotsdrawer.model.User;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 
 import java.io.IOException;
@@ -130,14 +127,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 android.preference.PreferenceManager.getDefaultSharedPreferences(activity);
         String token = preferences.getString("jwtToken", null);
         if (token != null && !token.isEmpty()) {
-            String serverURL = preferences.getString("URL", "");
+            String serverURL = preferences.getString("URL", activity.getString(R.string.server_url));
 
-            RetrofitService retrofitService = new RetrofitService(serverURL);
+            RetrofitService retrofitService;
+            if (serverURL.isEmpty() || serverURL.isBlank()) {
+                retrofitService = new RetrofitService(activity.getString(R.string.server_url));
+            }
+            else {
+                retrofitService = new RetrofitService(serverURL);
+            }
 
             CommentsAPI commentsAPI = retrofitService.getRetrofit().create(CommentsAPI.class);
 
             commentsAPI.deleteComment(currentComment.getId(), "Bearer " + token)
-                    .enqueue(new retrofit2.Callback<ResponseBody>() {
+                    .enqueue(new retrofit2.Callback<>() {
                         @Override
                         public void onResponse(@NonNull retrofit2.Call<ResponseBody> call,
                                                @NonNull retrofit2.Response<ResponseBody> response) {
@@ -145,8 +148,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                 comments.remove(currentComment);
                                 Toast.makeText(activity, "Комментарий успешно удален!", Toast.LENGTH_LONG).show();
                                 recyclerView.setAdapter(new CommentAdapter(recyclerView, activity, comments, userEmail));
-                            }
-                            else {
+                            } else {
                                 Toast.makeText(activity, "Ошибка обработки запроса на сервере", Toast.LENGTH_LONG).show();
                             }
                         }

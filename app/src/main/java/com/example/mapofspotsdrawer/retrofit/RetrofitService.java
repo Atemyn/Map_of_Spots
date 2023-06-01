@@ -18,7 +18,7 @@ public class RetrofitService {
 
     // Constructor with initializing retrofit field.
     public RetrofitService(String serverURL) {
-        this.serverURL = serverURL;
+        this.serverURL = "http://" + serverURL;
         initializeRetrofit();
     }
 

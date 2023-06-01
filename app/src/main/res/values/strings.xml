@@ -48,9 +48,9 @@
     <string name="re_type_password">Пароль еще раз</string>
     <string name="your_name">Логин</string>
 
-    <string name="server_url1">http://185.249.227.104:8080</string>
-    <string name="server_url">http://192.168.1.4:8080</string>
-    <string name="default_server_url">http://192.168.1.4:8080</string>
+    <string name="server_url1">185.249.227.104:8080</string>
+    <string name="server_url">192.168.1.4:8080</string>
+    <string name="default_server_url">192.168.1.4:8080</string>
     <string name="user_image">Фото пользователя</string>
     <string name="iv_name_desc">Иконка имени</string>
     <string name="iv_email_desc">Иконка для email</string>
@@ -116,4 +116,5 @@
     <string name="comments">Комментарии</string>
     <string name="enter_comment">Введите комментарий</string>
     <string name="post_comment_button">Post Comment Button</string>
+    <string name="delete_comment_icon">Delete Comment Icon</string>
 </resources>

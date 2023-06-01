@@ -98,9 +98,14 @@ public class CreateSpotInfoFragment extends Fragment {
 
         SharedPreferences preferences =
                 android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
-        String serverURL = preferences.getString("URL", "");
+        String serverURL = preferences.getString("URL", getString(R.string.server_url));
 
-        retrofitService = new RetrofitService(serverURL);
+        if (serverURL.isEmpty() || serverURL.isBlank()) {
+            retrofitService = new RetrofitService(getString(R.string.server_url));
+        }
+        else {
+            retrofitService = new RetrofitService(serverURL);
+        }
     }
 
     @Override
@@ -353,25 +358,24 @@ public class CreateSpotInfoFragment extends Fragment {
 
             SpotAPI spotAPI = retrofitService.getRetrofit().create(SpotAPI.class);
             spotAPI.sendSpotToModeration(bearer, files, spotDtoRequestBody)
-                    .enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(@NonNull Call<ResponseBody> call,
-                                       @NonNull Response<ResponseBody> response) {
-                    if (response.isSuccessful()) {
-                        disableProgressBarAndShowNotification("Спот успешно добавлен");
-                        requireActivity().onBackPressed();
-                    }
-                    else {
-                        disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
-                    }
-                }
+                    .enqueue(new Callback<>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ResponseBody> call,
+                                               @NonNull Response<ResponseBody> response) {
+                            if (response.isSuccessful()) {
+                                disableProgressBarAndShowNotification("Спот успешно добавлен");
+                                requireActivity().onBackPressed();
+                            } else {
+                                disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                            }
+                        }
 
-                @Override
-                public void onFailure(@NonNull Call<ResponseBody> call,
-                                      @NonNull Throwable t) {
-                    disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
-                }
-            });
+                        @Override
+                        public void onFailure(@NonNull Call<ResponseBody> call,
+                                              @NonNull Throwable t) {
+                            disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
+                        }
+                    });
         }
         catch (JSONException e) {
             Toast.makeText(requireActivity(),

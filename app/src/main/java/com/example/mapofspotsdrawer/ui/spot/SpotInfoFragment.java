@@ -84,9 +84,14 @@ public class SpotInfoFragment extends Fragment {
 
         SharedPreferences preferences =
                 android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
-        String serverURL = preferences.getString("URL", "");
+        String serverURL = preferences.getString("URL", getString(R.string.server_url));
 
-        retrofitService = new RetrofitService(serverURL);
+        if (serverURL.isEmpty() || serverURL.isBlank()) {
+            retrofitService = new RetrofitService(getString(R.string.server_url));
+        }
+        else {
+            retrofitService = new RetrofitService(serverURL);
+        }
     }
 
     @Override
@@ -226,14 +231,20 @@ public class SpotInfoFragment extends Fragment {
                 android.preference.PreferenceManager.getDefaultSharedPreferences(requireActivity());
         String token = preferences.getString("jwtToken", null);
         if (token != null && !token.isEmpty()) {
-            String serverURL = preferences.getString("URL", "");
+            String serverURL = preferences.getString("URL", getString(R.string.server_url));
 
-            RetrofitService retrofitService = new RetrofitService(serverURL);
+            RetrofitService retrofitService;
+            if (serverURL.isEmpty() || serverURL.isBlank()) {
+                retrofitService = new RetrofitService(getString(R.string.server_url));
+            }
+            else {
+                retrofitService = new RetrofitService(serverURL);
+            }
 
             UserAPI userAPI = retrofitService.getRetrofit().create(UserAPI.class);
 
             userAPI.getUserInfo("Bearer " + token)
-                    .enqueue(new retrofit2.Callback<User>() {
+                    .enqueue(new retrofit2.Callback<>() {
                         @Override
                         public void onResponse(@NonNull retrofit2.Call<User> call,
                                                @NonNull retrofit2.Response<User> response) {
@@ -259,7 +270,7 @@ public class SpotInfoFragment extends Fragment {
         CommentsAPI commentsAPI = retrofitService.getRetrofit().create(CommentsAPI.class);
 
         commentsAPI.getSpotComments(spotId)
-                .enqueue(new Callback<List<Comment>>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<List<Comment>> call,
                                            @NonNull Response<List<Comment>> response) {
@@ -267,8 +278,7 @@ public class SpotInfoFragment extends Fragment {
                             requireActivity().runOnUiThread(()
                                     -> binding.progressBar.setVisibility(View.GONE));
                             setRecyclerView(response.body());
-                        }
-                        else {
+                        } else {
                             disableProgressBarAndShowNotification(
                                     "Ошибка обработки запроса на получение комментариев на сервере");
                         }
@@ -308,7 +318,7 @@ public class SpotInfoFragment extends Fragment {
             CommentsAPI commentsAPI = retrofitService.getRetrofit().create(CommentsAPI.class);
 
             commentsAPI.postComment(spotId, bearer, requestBody)
-                    .enqueue(new Callback<ResponseBody>() {
+                    .enqueue(new Callback<>() {
                         @Override
                         public void onResponse(@NonNull Call<ResponseBody> call,
                                                @NonNull Response<ResponseBody> response) {
@@ -316,8 +326,7 @@ public class SpotInfoFragment extends Fragment {
                                 binding.etEnterComment.setText("");
                                 getSpotComments(spotId);
                                 disableProgressBarAndShowNotification("Комментарий успешно добавлен!");
-                            }
-                            else {
+                            } else {
                                 disableProgressBarAndShowNotification("Ошибка обработки комментария на сервере");
                             }
                         }
@@ -356,44 +365,43 @@ public class SpotInfoFragment extends Fragment {
                 retrofitService.getRetrofit().create(LikesFavoritesAPI.class);
 
         likesFavoritesAPI.changeLikeStateForSpot(spotUserDto.getSpotId(), bearer)
-                .enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call,
-                                   @NonNull Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() == null) {
-                        disableProgressBarAndShowNotification("Ошибка получения тела ответа");
-                        return;
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ResponseBody> call,
+                                           @NonNull Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            if (response.body() == null) {
+                                disableProgressBarAndShowNotification("Ошибка получения тела ответа");
+                                return;
+                            }
+
+                            SpotUserDto spotUserDto = spotInfoViewModel.getSpotUserDto();
+                            if (spotUserDto.getLiked()) {
+                                binding.ibLike.setImageResource(R.drawable.heart_empty);
+                                spotUserDto.setLiked(false);
+                                spotInfoViewModel.setLikeNumber(
+                                        Integer.toString(Integer.parseInt(spotInfoViewModel.getLikeNumber()) - 1));
+                            } else {
+                                binding.ibLike.setImageResource(R.drawable.heart_filled);
+                                spotUserDto.setLiked(true);
+                                spotInfoViewModel.setLikeNumber(
+                                        Integer.toString(Integer.parseInt(spotInfoViewModel.getLikeNumber()) + 1));
+                            }
+                            binding.tvLikes.setText(spotInfoViewModel.getLikeNumber());
+
+                            requireActivity().runOnUiThread(()
+                                    -> binding.progressBar.setVisibility(View.GONE));
+                        } else {
+                            disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
+                        }
                     }
 
-                    SpotUserDto spotUserDto = spotInfoViewModel.getSpotUserDto();
-                    if (spotUserDto.getLiked()) {
-                        binding.ibLike.setImageResource(R.drawable.heart_empty);
-                        spotUserDto.setLiked(false);
-                        spotInfoViewModel.setLikeNumber(
-                                Integer.toString(Integer.parseInt(spotInfoViewModel.getLikeNumber()) - 1));
-                    } else {
-                        binding.ibLike.setImageResource(R.drawable.heart_filled);
-                        spotUserDto.setLiked(true);
-                        spotInfoViewModel.setLikeNumber(
-                                Integer.toString(Integer.parseInt(spotInfoViewModel.getLikeNumber()) + 1));
+                    @Override
+                    public void onFailure(@NonNull Call<ResponseBody> call,
+                                          @NonNull Throwable t) {
+                        disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
                     }
-                    binding.tvLikes.setText(spotInfoViewModel.getLikeNumber());
-
-                    requireActivity().runOnUiThread(()
-                            -> binding.progressBar.setVisibility(View.GONE));
-                }
-                else {
-                    disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call,
-                                  @NonNull Throwable t) {
-                disableProgressBarAndShowNotification("Ошибка отправки запроса на сервер");
-            }
-        });
+                });
     }
 
     private void changeFavoriteStateOnServer(SpotUserDto spotUserDto) {
@@ -411,7 +419,7 @@ public class SpotInfoFragment extends Fragment {
                 retrofitService.getRetrofit().create(LikesFavoritesAPI.class);
 
         likesFavoritesAPI.changeFavoriteStateForSpot(spotUserDto.getSpotId(), bearer)
-                .enqueue(new Callback<ResponseBody>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<ResponseBody> call,
                                            @NonNull Response<ResponseBody> response) {
@@ -426,8 +434,7 @@ public class SpotInfoFragment extends Fragment {
                                 spotUserDto.setFavorite(false);
                                 spotInfoViewModel.setFavoriteNumber(
                                         Integer.toString(Integer.parseInt(spotInfoViewModel.getFavoriteNumber()) - 1));
-                            }
-                            else {
+                            } else {
                                 binding.ibFavorite.setImageResource(R.drawable.star_filled);
                                 spotUserDto.setFavorite(true);
                                 spotInfoViewModel.setFavoriteNumber(
@@ -437,8 +444,7 @@ public class SpotInfoFragment extends Fragment {
 
                             requireActivity().runOnUiThread(()
                                     -> binding.progressBar.setVisibility(View.GONE));
-                        }
-                        else {
+                        } else {
                             disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
                         }
                     }
@@ -542,7 +548,7 @@ public class SpotInfoFragment extends Fragment {
         LikesFavoritesAPI likesFavoritesAPI = retrofitService.getRetrofit().create(LikesFavoritesAPI.class);
 
         likesFavoritesAPI.getLikesAndFavoritesForSpot(spotId, bearer)
-                .enqueue(new Callback<SpotUserDto>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<SpotUserDto> call,
                                            @NonNull Response<SpotUserDto> response) {
@@ -557,8 +563,7 @@ public class SpotInfoFragment extends Fragment {
                             setLikedAndAddedToFavoriteIcons(spotUserDto.getLiked(), spotUserDto.getFavorite());
                             requireActivity().runOnUiThread(()
                                     -> binding.progressBar.setVisibility(View.GONE));
-                        }
-                        else {
+                        } else {
                             disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
                         }
                     }

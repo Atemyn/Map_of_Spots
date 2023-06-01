@@ -32,7 +32,6 @@ import com.example.mapofspotsdrawer.model.User;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.image_slider.CreateReadDeleteImageSlider;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
-import com.example.mapofspotsdrawer.ui.manager.UIManager;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import java.io.File;
@@ -78,9 +77,14 @@ public class ProfileDataFragment extends Fragment {
 
         SharedPreferences preferences =
                 android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
-        String serverURL = preferences.getString("URL", "");
+        String serverURL = preferences.getString("URL", getString(R.string.server_url));
 
-        retrofitService = new RetrofitService(serverURL);
+        if (serverURL.isEmpty() || serverURL.isBlank()) {
+            retrofitService = new RetrofitService(getString(R.string.server_url));
+        }
+        else {
+            retrofitService = new RetrofitService(serverURL);
+        }
     }
 
     @Override
@@ -340,7 +344,7 @@ public class ProfileDataFragment extends Fragment {
         UserAPI userAPI = retrofitService.getRetrofit().create(UserAPI.class);
 
         userAPI.getUserInfo(bearer)
-                .enqueue(new Callback<User>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<User> call,
                                            @NonNull Response<User> response) {
@@ -355,8 +359,7 @@ public class ProfileDataFragment extends Fragment {
                             setImages(user);
                             requireActivity().runOnUiThread(()
                                     -> binding.progressBar.setVisibility(View.GONE));
-                        }
-                        else {
+                        } else {
                             disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
                         }
                     }
@@ -388,7 +391,7 @@ public class ProfileDataFragment extends Fragment {
             UserAPI userAPI = retrofitService.getRetrofit().create(UserAPI.class);
 
             userAPI.uploadUserImage(bearer, filePart)
-                    .enqueue(new Callback<ImageIdWrapper>() {
+                    .enqueue(new Callback<>() {
                         @Override
                         public void onResponse(@NonNull Call<ImageIdWrapper> call,
                                                @NonNull Response<ImageIdWrapper> response) {
@@ -409,8 +412,7 @@ public class ProfileDataFragment extends Fragment {
                                 requireActivity().runOnUiThread(() ->
                                         binding.progressBar.setVisibility(View.GONE));
 
-                            }
-                            else {
+                            } else {
                                 disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
                             }
                         }
@@ -436,15 +438,14 @@ public class ProfileDataFragment extends Fragment {
         // Создание API для совершения запроса к серверу.
         UserAPI userAPI = retrofitService.getRetrofit().create(UserAPI.class);
 
-        userAPI.deleteUserImage(bearer, imageId).enqueue(new Callback<ResponseBody>() {
+        userAPI.deleteUserImage(bearer, imageId).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call,
                                    @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     requireActivity().runOnUiThread(() ->
                             binding.progressBar.setVisibility(View.GONE));
-                }
-                else {
+                } else {
                     disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
                 }
             }

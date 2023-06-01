@@ -135,9 +135,15 @@ public class NearbyFragment extends Fragment {
     private void getNearbySpots(double latitude, double longitude, double radius) {
         SharedPreferences preferences =
                 android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
-        String serverURL = preferences.getString("URL", "");
+        String serverURL = preferences.getString("URL", getString(R.string.server_url));
 
-        RetrofitService retrofitService = new RetrofitService(serverURL);
+        RetrofitService retrofitService;
+        if (serverURL.isEmpty() || serverURL.isBlank()) {
+            retrofitService = new RetrofitService(getString(R.string.server_url));
+        }
+        else {
+            retrofitService = new RetrofitService(serverURL);
+        }
 
         binding.progressBarNearbySpots.setVisibility(View.VISIBLE);
 
@@ -145,7 +151,7 @@ public class NearbyFragment extends Fragment {
         SpotAPI spotAPI = retrofitService.getRetrofit().create(SpotAPI.class);
 
         spotAPI.getNearbySpots(latitude, longitude, radius)
-                .enqueue(new Callback<List<Spot>>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<List<Spot>> call,
                                            @NonNull Response<List<Spot>> response) {
@@ -155,12 +161,10 @@ public class NearbyFragment extends Fragment {
                                         binding.progressBarNearbySpots.setVisibility(View.GONE));
                                 showSpotsOnMap(response.body());
                                 setRecyclerView(response.body());
-                            }
-                            else {
+                            } else {
                                 disableProgressBarAndShowNotification("Спотов поблизости не найдено");
                             }
-                        }
-                        else {
+                        } else {
                             disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
                         }
                     }

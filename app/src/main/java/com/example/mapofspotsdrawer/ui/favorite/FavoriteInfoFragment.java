@@ -92,9 +92,15 @@ public class FavoriteInfoFragment extends Fragment {
 
         SharedPreferences preferences =
                 android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
-        String serverURL = preferences.getString("URL", "");
+        String serverURL = preferences.getString("URL", getString(R.string.server_url));
 
-        RetrofitService retrofitService = new RetrofitService(serverURL);
+        RetrofitService retrofitService;
+        if (serverURL.isEmpty() || serverURL.isBlank()) {
+            retrofitService = new RetrofitService(getString(R.string.server_url));
+        }
+        else {
+            retrofitService = new RetrofitService(serverURL);
+        }
 
         binding.progressBarFavoriteSpots.setVisibility(View.VISIBLE);
 
@@ -103,7 +109,7 @@ public class FavoriteInfoFragment extends Fragment {
                 = retrofitService.getRetrofit().create(LikesFavoritesAPI.class);
 
         likesFavoritesAPI.getUserFavoriteSpots(bearer)
-                .enqueue(new Callback<List<Spot>>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<List<Spot>> call,
                                            @NonNull Response<List<Spot>> response) {
@@ -113,12 +119,10 @@ public class FavoriteInfoFragment extends Fragment {
                                         binding.progressBarFavoriteSpots.setVisibility(View.GONE));
                                 showSpotsOnMap(response.body());
                                 setRecyclerView(response.body());
-                            }
-                            else {
+                            } else {
                                 disableProgressBarAndShowNotification("У вас нет избранных спотов");
                             }
-                        }
-                        else {
+                        } else {
                             disableProgressBarAndShowNotification("Ошибка обработки запроса на сервере");
                         }
                     }
