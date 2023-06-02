@@ -160,8 +160,8 @@ public class FavoriteInfoFragment extends Fragment {
     private void disableProgressBarAndShowNotification(String message) {
         requireActivity().runOnUiThread(() ->
                 binding.progressBarFavoriteSpots.setVisibility(View.GONE));
-        Toast.makeText(getActivity(),
-                message, Toast.LENGTH_LONG).show();
+        requireActivity().runOnUiThread(() -> Toast.makeText(getActivity(),
+                message, Toast.LENGTH_LONG).show());
     }
 
     @Override

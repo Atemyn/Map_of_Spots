@@ -100,8 +100,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             @Override
             public void onFailure(@NonNull Call call,
                                   @NonNull IOException e) {
-                Toast.makeText(activity,
-                        "Ошибка совершения запроса к серверу", Toast.LENGTH_LONG).show();
+                activity.runOnUiThread(() -> Toast.makeText(activity,
+                        "Ошибка совершения запроса к серверу", Toast.LENGTH_LONG).show());
             }
 
             @Override
@@ -115,8 +115,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                     activity.runOnUiThread(() -> holder.commentatorImage.setImageBitmap(bitmap));
                 }
                 else {
-                    Toast.makeText(activity,
-                            "Ошибка получения фото спота с сервера", Toast.LENGTH_LONG).show();
+                    activity.runOnUiThread(() -> Toast.makeText(activity,
+                            "Ошибка получения фото спота с сервера", Toast.LENGTH_LONG).show());
                 }
             }
         });
@@ -146,17 +146,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                                @NonNull retrofit2.Response<ResponseBody> response) {
                             if (response.isSuccessful()) {
                                 comments.remove(currentComment);
-                                Toast.makeText(activity, "Комментарий успешно удален!", Toast.LENGTH_LONG).show();
+                                activity.runOnUiThread(() -> Toast.makeText(activity,
+                                        "Комментарий успешно удален!", Toast.LENGTH_LONG).show());
                                 recyclerView.setAdapter(new CommentAdapter(recyclerView, activity, comments, userEmail));
                             } else {
-                                Toast.makeText(activity, "Ошибка обработки запроса на сервере", Toast.LENGTH_LONG).show();
+                                activity.runOnUiThread(() -> Toast.makeText(activity,
+                                        "Ошибка обработки запроса на сервере", Toast.LENGTH_LONG).show());
                             }
                         }
 
                         @Override
                         public void onFailure(@NonNull retrofit2.Call<ResponseBody> call,
                                               @NonNull Throwable t) {
-                            Toast.makeText(activity, "Ошибка отправки запроса на сервер", Toast.LENGTH_LONG).show();
+                            activity.runOnUiThread(() -> Toast.makeText(activity,
+                                    "Ошибка отправки запроса на сервер", Toast.LENGTH_LONG).show());
                         }
                     });
         }

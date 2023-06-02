@@ -166,8 +166,8 @@ public class LoginFragment extends Fragment {
     private void disableProgressBarAndShowNotification(String message) {
         requireActivity().runOnUiThread(() ->
                 binding.progressBar.setVisibility(View.GONE));
-        Toast.makeText(getActivity(),
-                message, Toast.LENGTH_LONG).show();
+        requireActivity().runOnUiThread(() -> Toast.makeText(getActivity(),
+                message, Toast.LENGTH_LONG).show());
     }
 
     private void showAuthorizedInfoFragment(Bundle callerFragmentArgument) {

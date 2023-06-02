@@ -136,11 +136,11 @@ public class ProfileDataFragment extends Fragment {
                         assert result.getData() != null;
                         addUserImage(result.getData().getData().toString());
                     } else if (resultCode == ImagePicker.RESULT_ERROR) {
-                        Toast.makeText(requireActivity(),
-                                ImagePicker.getError(result.getData()), Toast.LENGTH_LONG).show();
+                        requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(),
+                                ImagePicker.getError(result.getData()), Toast.LENGTH_LONG).show());
                     } else {
-                        Toast.makeText(requireActivity(),
-                                "Добавление фотографии отменено", Toast.LENGTH_LONG).show();
+                        requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(),
+                                "Добавление фотографии отменено", Toast.LENGTH_LONG).show());
                     }
                 });
 
@@ -178,8 +178,8 @@ public class ProfileDataFragment extends Fragment {
                 }
             }
             else {
-                Toast.makeText(requireActivity(),
-                        "Фотографий нет: удаление невозможно", Toast.LENGTH_LONG).show();
+                requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(),
+                        "Фотографий нет: удаление невозможно", Toast.LENGTH_LONG).show());
             }
         });
 
@@ -494,8 +494,8 @@ public class ProfileDataFragment extends Fragment {
     private void disableProgressBarAndShowNotification(String message) {
         requireActivity().runOnUiThread(() ->
                 binding.progressBar.setVisibility(View.GONE));
-        Toast.makeText(getActivity(),
-                message, Toast.LENGTH_LONG).show();
+        requireActivity().runOnUiThread(() -> Toast.makeText(getActivity(),
+                message, Toast.LENGTH_LONG).show());
     }
 
     public void showLoginFragment() {

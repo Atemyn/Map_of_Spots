@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void showNotification(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        runOnUiThread(() ->Toast.makeText(this, message, Toast.LENGTH_LONG).show());
     }
 
     @Override

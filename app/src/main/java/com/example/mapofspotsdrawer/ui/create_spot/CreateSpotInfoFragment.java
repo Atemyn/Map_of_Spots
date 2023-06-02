@@ -191,11 +191,11 @@ public class CreateSpotInfoFragment extends Fragment {
                         setAdapterAndIndicatorConfigs(adapter);
 
                     } else if (resultCode == ImagePicker.RESULT_ERROR) {
-                        Toast.makeText(requireActivity(),
-                                ImagePicker.getError(result.getData()), Toast.LENGTH_LONG).show();
+                        requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(),
+                                ImagePicker.getError(result.getData()), Toast.LENGTH_LONG).show());
                     } else {
-                        Toast.makeText(requireActivity(),
-                                "Добавление фотографии отменено", Toast.LENGTH_LONG).show();
+                        requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(),
+                                "Добавление фотографии отменено", Toast.LENGTH_LONG).show());
                     }
                     allFieldsValidator.validateFields();
                 });
@@ -232,8 +232,8 @@ public class CreateSpotInfoFragment extends Fragment {
                 allFieldsValidator.validateFields();
             }
             else {
-                Toast.makeText(requireActivity(),
-                        "Фотографий нет: удаление невозможно", Toast.LENGTH_LONG).show();
+                requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(),
+                        "Фотографий нет: удаление невозможно", Toast.LENGTH_LONG).show());
             }
         });
 
@@ -378,19 +378,19 @@ public class CreateSpotInfoFragment extends Fragment {
                     });
         }
         catch (JSONException e) {
-            Toast.makeText(requireActivity(),
-                    "Ошибка формирования тела запроса", Toast.LENGTH_LONG).show();
+            requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(),
+                    "Ошибка формирования тела запроса", Toast.LENGTH_LONG).show());
         } catch (MalformedURLException e) {
-            Toast.makeText(requireActivity(),
-                    "Ошибка получения фотографий", Toast.LENGTH_LONG).show();
+            requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(),
+                    "Ошибка получения фотографий", Toast.LENGTH_LONG).show());
         }
     }
 
     private void disableProgressBarAndShowNotification(String message) {
         requireActivity().runOnUiThread(() ->
                 binding.progressBar.setVisibility(View.GONE));
-        Toast.makeText(getActivity(),
-                message, Toast.LENGTH_LONG).show();
+        requireActivity().runOnUiThread(() -> Toast.makeText(getActivity(),
+                message, Toast.LENGTH_LONG).show());
     }
 
     private JSONObject createSpotDtoJSONObject() throws JSONException {

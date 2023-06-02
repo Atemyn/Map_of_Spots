@@ -73,8 +73,8 @@ public class ResponseBodyImageSliderAdapter extends RecyclerView.Adapter<Respons
                     activity.runOnUiThread(() -> holder.imageView.setImageBitmap(bitmap));
                 }
                 else {
-                    Toast.makeText(activity,
-                            "Ошибка получения фото спота с сервера", Toast.LENGTH_LONG).show();
+                    activity.runOnUiThread(() -> Toast.makeText(activity,
+                            "Ошибка получения фото спота с сервера", Toast.LENGTH_LONG).show());
                 }
             }
         });

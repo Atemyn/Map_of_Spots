@@ -87,8 +87,9 @@ public class NearbyFragment extends Fragment {
                     && requireActivity().checkSelfPermission(
                             Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // Нет разрешения на доступ к геолокации
-                Toast.makeText(getActivity(), "Приложению требуется разрешение на использование геолокации",
-                        Toast.LENGTH_LONG).show();
+                requireActivity().runOnUiThread(() -> Toast.makeText(getActivity(),
+                        "Приложению требуется разрешение на использование геолокации",
+                        Toast.LENGTH_LONG).show());
             } else {
                 Location location = getLastKnownLocation(locationManager);
 
@@ -102,14 +103,15 @@ public class NearbyFragment extends Fragment {
 
                 }
                 catch (NumberFormatException e) {
-                    Toast.makeText(getActivity(), "В настройках указано" +
+                    requireActivity().runOnUiThread(() -> Toast.makeText(getActivity(), "В настройках указано" +
                                     "неверное число для максимального расстояния до спота",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_LONG).show());
                 }
             }
         } else {
-            Toast.makeText(getActivity(), "Чтобы пользоваться данной функцией, включите геолокация",
-                    Toast.LENGTH_LONG).show();
+            requireActivity().runOnUiThread(() -> Toast.makeText(getActivity(),
+                    "Чтобы пользоваться данной функцией, включите геолокация",
+                    Toast.LENGTH_LONG).show());
         }
 
         return root;
@@ -197,8 +199,8 @@ public class NearbyFragment extends Fragment {
     private void disableProgressBarAndShowNotification(String message) {
         requireActivity().runOnUiThread(() ->
                 binding.progressBarNearbySpots.setVisibility(View.GONE));
-        Toast.makeText(getActivity(),
-                message, Toast.LENGTH_LONG).show();
+        requireActivity().runOnUiThread(() -> Toast.makeText(getActivity(),
+                message, Toast.LENGTH_LONG).show());
     }
 
     @Override

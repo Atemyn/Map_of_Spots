@@ -166,8 +166,8 @@ public class SpotInfoFragment extends Fragment {
         binding.ibPostComment.setOnClickListener(view -> {
             if (binding.etEnterComment.getText() == null
                     || binding.etEnterComment.getText().toString().isEmpty()) {
-                Toast.makeText(getActivity(),
-                        "Текст комментария не может быть пустым", Toast.LENGTH_LONG).show();
+                requireActivity().runOnUiThread(() -> Toast.makeText(getActivity(),
+                        "Текст комментария не может быть пустым", Toast.LENGTH_LONG).show());
             }
             else if (spot != null) {
                 postComment(spot.getId());
@@ -578,8 +578,8 @@ public class SpotInfoFragment extends Fragment {
     private void disableProgressBarAndShowNotification(String message) {
         requireActivity().runOnUiThread(() ->
                 binding.progressBar.setVisibility(View.GONE));
-        Toast.makeText(getActivity(),
-                message, Toast.LENGTH_LONG).show();
+        requireActivity().runOnUiThread(() -> Toast.makeText(getActivity(),
+                message, Toast.LENGTH_LONG).show());
     }
 
     @SuppressLint("SetTextI18n")

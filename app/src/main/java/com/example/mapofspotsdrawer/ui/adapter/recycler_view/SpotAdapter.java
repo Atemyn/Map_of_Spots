@@ -101,8 +101,8 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.SpotViewHolder
             @Override
             public void onFailure(@NonNull Call call,
                                   @NonNull IOException e) {
-                Toast.makeText(activity,
-                        "Ошибка совершения запроса к серверу", Toast.LENGTH_LONG).show();
+                activity.runOnUiThread(() -> Toast.makeText(activity,
+                        "Ошибка совершения запроса к серверу", Toast.LENGTH_LONG).show());
             }
 
             @Override
@@ -116,8 +116,8 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.SpotViewHolder
                     activity.runOnUiThread(() -> holder.imageView.setImageBitmap(bitmap));
                 }
                 else {
-                    Toast.makeText(activity,
-                            "Ошибка получения фото спота с сервера", Toast.LENGTH_LONG).show();
+                    activity.runOnUiThread(() -> Toast.makeText(activity,
+                            "Ошибка получения фото спота с сервера", Toast.LENGTH_LONG).show());
                 }
             }
         });
