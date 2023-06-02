@@ -12,7 +12,7 @@ import androidx.preference.PreferenceManager;
 import com.example.mapofspotsdrawer.R;
 import com.example.mapofspotsdrawer.databinding.FragmentProfileBinding;
 import com.example.mapofspotsdrawer.ui.auth.AuthFragment;
-import com.example.mapofspotsdrawer.ui.manager.UIManager;
+import com.example.mapofspotsdrawer.ui.utils.UIUtils;
 
 public class ProfileFragment extends Fragment {
 
@@ -25,7 +25,7 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        UIManager.hideListMapImageButton(requireActivity().findViewById(R.id.ib_list_map));
+        UIUtils.hideListMapImageButton(requireActivity().findViewById(R.id.ib_list_map));
 
         if (isLoggedIn()) {
             showProfileDataFragment();

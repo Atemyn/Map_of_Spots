@@ -33,7 +33,7 @@ import com.example.mapofspotsdrawer.map.YandexMapManager;
 import com.example.mapofspotsdrawer.model.Spot;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.recycler_view.SpotAdapter;
-import com.example.mapofspotsdrawer.ui.manager.UIManager;
+import com.example.mapofspotsdrawer.ui.utils.UIUtils;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 
@@ -66,7 +66,7 @@ public class NearbyFragment extends Fragment {
         binding = FragmentNearbyBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        UIManager.showListMapImageButton(requireActivity().findViewById(R.id.ib_list_map));
+        UIUtils.showListMapImageButton(requireActivity().findViewById(R.id.ib_list_map));
 
         nearbySpotsRecyclerView = binding.recyclerViewNearbySpots;
         nearbySpotsRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));

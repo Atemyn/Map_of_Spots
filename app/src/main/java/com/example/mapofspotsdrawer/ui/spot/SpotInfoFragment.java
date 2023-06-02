@@ -36,7 +36,6 @@ import com.example.mapofspotsdrawer.model.User;
 import com.example.mapofspotsdrawer.retrofit.RetrofitService;
 import com.example.mapofspotsdrawer.ui.adapter.image_slider.ResponseBodyImageSliderAdapter;
 import com.example.mapofspotsdrawer.ui.adapter.recycler_view.CommentAdapter;
-import com.example.mapofspotsdrawer.ui.manager.UIManager;
 import com.example.mapofspotsdrawer.ui.utils.UIUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -116,7 +115,7 @@ public class SpotInfoFragment extends Fragment {
         commentsRecyclerView = binding.recyclerViewComments;
         commentsRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
-        UIManager.hideListMapImageButton(requireActivity().findViewById(R.id.ib_list_map));
+        UIUtils.hideListMapImageButton(requireActivity().findViewById(R.id.ib_list_map));
 
         configureFragmentViews();
 
